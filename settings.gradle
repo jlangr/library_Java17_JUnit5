@@ -1,0 +1,4 @@
+rootProject.name='library2020'
+
+include 'acceptanceTests'
+include 'library'
