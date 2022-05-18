@@ -1,6 +1,6 @@
-# library2020
+# library_Java17_JUnit_5
 
-This source base requires JDK 11 or later.
+This source base requires JDK 17 or later.
 
 Contact me at jeff @ langrsoft.com if you have any problems.
 

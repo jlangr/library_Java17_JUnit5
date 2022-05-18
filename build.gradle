@@ -6,8 +6,8 @@ plugins {
 allprojects {
   apply plugin: 'java'
 
-  targetCompatibility = 1.11
-  sourceCompatibility = 1.11
+  targetCompatibility = 1.17
+  sourceCompatibility = 1.17
 
   repositories {
     mavenCentral()
