@@ -33,7 +33,7 @@ class LibraryDataTest {
         when(classificationApi.retrieveMaterial("3")).thenReturn(material);
         holdingService.add(material.getSourceId(), Branch.CHECKED_OUT.getScanCode());
 
-        LibraryData.deleteAll();
+        new LibraryData().deleteBranchesHoldingsPatrons();
 
         assertThat(patronService.allPatrons().isEmpty(), equalTo(true));
         assertThat(holdingService.allHoldings().isEmpty(), equalTo(true));

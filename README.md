@@ -58,4 +58,5 @@ TODO:
   - stepdefs using AssertJ
   - SonarLint
   - Coverage -- working on it. Mostly controllers
-  - Java 17
+  - java.util.Date -> DateTime
+  - records?

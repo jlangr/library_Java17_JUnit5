@@ -1,15 +1,15 @@
 package com.langrsoft.controller;
 
-import com.langrsoft.external.Material;
 import com.langrsoft.domain.Holding;
+import com.langrsoft.external.Material;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class HoldingResponse implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String author;
@@ -24,9 +24,7 @@ public class HoldingResponse implements Serializable {
     private boolean isAvailable;
 
     public static List<HoldingResponse> create(List<Holding> holdings) {
-        return holdings.stream()
-                .map(HoldingResponse::new)
-                .collect(toList());
+        return holdings.stream().map(HoldingResponse::new).toList();
     }
 
     public HoldingResponse() {

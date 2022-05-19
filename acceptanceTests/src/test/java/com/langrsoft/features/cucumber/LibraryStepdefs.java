@@ -4,15 +4,14 @@ import com.langrsoft.controller.HoldingResponse;
 import com.langrsoft.controller.MaterialRequest;
 import com.langrsoft.controller.PatronRequest;
 import com.langrsoft.external.MaterialType;
+import com.langrsoft.features.library.MaterialRequestBuilder;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import com.langrsoft.features.library.MaterialRequestBuilder;
 
 import java.util.Date;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -132,7 +131,7 @@ public class LibraryStepdefs {
                         .sourceId(book.get(0))
                         .classification(book.get(1))
                         .format(book.get(2)).build())
-                .collect(toList());
+                .toList();
     }
 
     @Given("a local classification service with:")

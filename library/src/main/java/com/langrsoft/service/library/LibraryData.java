@@ -5,8 +5,9 @@ import com.langrsoft.persistence.HoldingStore;
 import com.langrsoft.persistence.PatronStore;
 
 public class LibraryData {
-    private LibraryData() {}
-    public static void deleteAll() {
+    public LibraryData() {}
+
+    public void deleteBranchesHoldingsPatrons() {
         BranchStore.deleteAll();
         HoldingStore.deleteAll();
         PatronStore.deleteAll();

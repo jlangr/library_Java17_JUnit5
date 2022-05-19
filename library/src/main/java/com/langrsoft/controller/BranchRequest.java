@@ -5,16 +5,12 @@ import com.langrsoft.domain.Branch;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.toList;
-
 public class BranchRequest {
     private String name;
     private String id;
 
     public static List<BranchRequest> create(List<Branch> branches) {
-        return branches.stream()
-                .map(BranchRequest::new)
-                .collect(toList());
+        return branches.stream().map(BranchRequest::new).toList();
     }
 
     public BranchRequest() {

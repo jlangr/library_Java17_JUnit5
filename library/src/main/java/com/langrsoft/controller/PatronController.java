@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 @RestController
 @RequestMapping("/patrons")
 public class PatronController {
@@ -21,7 +19,7 @@ public class PatronController {
     public List<PatronRequest> retrieveAll() {
         return service.allPatrons().stream()
                 .map(PatronRequest::new)
-                .collect(toList());
+                .toList();
     }
 
     @GetMapping(value = "{patronId}")

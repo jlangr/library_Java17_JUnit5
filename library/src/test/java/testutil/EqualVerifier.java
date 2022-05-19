@@ -5,7 +5,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EqualVerifier {
     private List<String> errorMessages = new ArrayList<>();
@@ -16,7 +15,6 @@ public class EqualVerifier {
         return field;
     }
 
-    // TODO Java 17 record?
     class FieldComparison {
         Object expected;
         Object actual;
@@ -53,7 +51,7 @@ public class EqualVerifier {
                 .map(field -> new FieldComparison(field, expected, actual))
                 .filter(fieldComparison -> !fieldComparison.areEqual())
                 .map(FieldComparison::message)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private <T> Object value(Field field, T obj) {

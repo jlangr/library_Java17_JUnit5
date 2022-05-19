@@ -9,10 +9,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class HoldingStore implements Iterable<Holding> {
-    private static MultiMap<String, Holding> holdingsByClassification = new MultiMap<>();
+    private static final MultiMap<String, Holding> holdingsByClassification = new MultiMap<>();
 
     public static void deleteAll() {
         holdingsByClassification.clear();
@@ -66,6 +64,6 @@ public class HoldingStore implements Iterable<Holding> {
     public List<Holding> findByBranch(String branchScanCode) {
         return allHoldings().stream()
                 .filter(holding -> holding.getBranch().getScanCode().equals(branchScanCode))
-                .collect(toList());
+                .toList();
     }
 }

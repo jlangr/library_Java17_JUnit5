@@ -1,12 +1,10 @@
 package com.langrsoft.service.library;
 
+import com.langrsoft.domain.ClassificationApiFactory;
 import com.langrsoft.external.ClassificationApi;
 import com.langrsoft.external.Material;
-import com.langrsoft.domain.ClassificationApiFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,7 +19,7 @@ class HoldingService_FindByBranchTest {
 
     @BeforeEach
     void initialize() {
-        LibraryData.deleteAll();
+        new LibraryData().deleteBranchesHoldingsPatrons();
         ClassificationApiFactory.setService(classificationApi);
     }
 
@@ -43,7 +41,7 @@ class HoldingService_FindByBranchTest {
 
         var holdingSourceIds = holdings.stream()
                 .map(h -> h.getMaterial().getSourceId())
-                .collect(Collectors.toList());
+                .toList();
         assertThat(holdingSourceIds, equalTo(asList("123", "456")));
     }
 }

@@ -23,7 +23,7 @@ class HoldingService_WithBranchCreatedTest {
 
     @BeforeEach
     void initialize() {
-        LibraryData.deleteAll();
+        new LibraryData().deleteBranchesHoldingsPatrons();
         ClassificationApiFactory.setService(classificationApi);
         branchScanCode = new BranchService().add("a branch name");
     }

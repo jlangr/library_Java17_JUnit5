@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -131,7 +130,7 @@ class HoldingControllerTest {
 
             var retrieved = resultContent(result, HoldingResponse[].class);
             var authors = Arrays.stream(retrieved)
-                    .map(HoldingResponse::getAuthor).collect(Collectors.toList());
+                    .map(HoldingResponse::getAuthor).toList();
             assertThat(authors, hasItems("Heller", "Kafka"));
         }
     }

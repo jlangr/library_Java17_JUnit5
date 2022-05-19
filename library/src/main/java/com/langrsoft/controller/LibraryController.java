@@ -6,17 +6,17 @@ import com.langrsoft.external.Material;
 import com.langrsoft.external.MaterialType;
 import com.langrsoft.service.library.LibraryData;
 import com.langrsoft.util.DateUtil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
 @RestController
 public class LibraryController {
+    LibraryData libraryData;
+
     @PostMapping(value = "/clear")
     public void clear() {
-        LibraryData.deleteAll();
+        libraryData.deleteBranchesHoldingsPatrons();
     }
 
     @PostMapping(value = "/use_local_classification")
@@ -34,14 +34,25 @@ public class LibraryController {
         DateUtil.fixClockAt(date);
     }
 
+    @GetMapping(value = "/current_date")
+    public Date getCurrentDate() {
+        return DateUtil.getCurrentDate();
+    }
+
     @PostMapping(value = "/materials")
     public void addMaterial(@RequestBody MaterialRequest materialRequest) {
-        LocalClassificationService service = (LocalClassificationService) ClassificationApiFactory.getService();
+        var service = (LocalClassificationService) ClassificationApiFactory.getService();
         service.addBook(createMaterial(materialRequest));
     }
 
+    @GetMapping(value = "/retrieveMaterial/{classification}")
+    public Material retrieveMaterial(@PathVariable String classification) {
+        var service = (LocalClassificationService) ClassificationApiFactory.getService();
+        return service.retrieveMaterial(classification);
+    }
+
     private Material createMaterial(MaterialRequest materialRequest) {
-        Material material = new Material();
+        var material = new Material();
         material.setSourceId(materialRequest.getSourceId());
         material.setClassification(materialRequest.getClassification());
         material.setTitle(materialRequest.getTitle());

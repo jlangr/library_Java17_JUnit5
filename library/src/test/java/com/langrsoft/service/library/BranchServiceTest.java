@@ -16,7 +16,7 @@ class BranchServiceTest {
     @BeforeEach
     void initialize() {
         service = new BranchService();
-        LibraryData.deleteAll();
+        new LibraryData().deleteBranchesHoldingsPatrons();
     }
 
     @Test
