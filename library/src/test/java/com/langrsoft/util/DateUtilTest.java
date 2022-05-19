@@ -9,6 +9,7 @@ import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.langrsoft.util.DateUtil.*;
 import static java.util.Calendar.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -34,35 +35,35 @@ class DateUtilTest {
 
     @Test
     void addDaysAnswersLaterDate() {
-        MatcherAssert.assertThat(DateUtil.addDays(DateUtil.create(2017, MARCH, 1), 21), equalTo(DateUtil.create(2017, MARCH, 22)));
-        MatcherAssert.assertThat(DateUtil.addDays(NEW_YEARS_DAY, 367), equalTo(DateUtil.create(2012, JANUARY, 3)));
-        MatcherAssert.assertThat(DateUtil.addDays(DateUtil.create(2017, DECEMBER, 31), 32), equalTo(DateUtil.create(2018, FEBRUARY, 1)));
+        MatcherAssert.assertThat(addDays(create(2017, MARCH, 1), 21), equalTo(DateUtil.create(2017, MARCH, 22)));
+        MatcherAssert.assertThat(addDays(NEW_YEARS_DAY, 367), equalTo(DateUtil.create(2012, JANUARY, 3)));
+        MatcherAssert.assertThat(addDays(create(2017, DECEMBER, 31), 32), equalTo(DateUtil.create(2018, FEBRUARY, 1)));
     }
 
     @Test
     void answersDaysFromWithinSameYear() {
-        var laterBy15 = DateUtil.addDays(NEW_YEARS_DAY, 15);
+        var laterBy15 = addDays(NEW_YEARS_DAY, 15);
 
-        MatcherAssert.assertThat(DateUtil.daysFrom(NEW_YEARS_DAY, laterBy15), equalTo(15));
+        MatcherAssert.assertThat(daysFrom(NEW_YEARS_DAY, laterBy15), equalTo(15));
     }
 
     @Test
     void answersDaysFromToNextYear() {
-        var laterBy375 = DateUtil.addDays(NEW_YEARS_DAY, 375);
+        var laterBy375 = addDays(NEW_YEARS_DAY, 375);
 
-        MatcherAssert.assertThat(DateUtil.daysFrom(NEW_YEARS_DAY, laterBy375), equalTo(375));
+        MatcherAssert.assertThat(daysFrom(NEW_YEARS_DAY, laterBy375), equalTo(375));
     }
 
     @Test
     void answersDaysFromManyYearsOut() {
-        var later = DateUtil.addDays(NEW_YEARS_DAY, 2100);
+        var later = addDays(NEW_YEARS_DAY, 2100);
 
-        MatcherAssert.assertThat(DateUtil.daysFrom(NEW_YEARS_DAY, later), equalTo(2100));
+        MatcherAssert.assertThat(daysFrom(NEW_YEARS_DAY, later), equalTo(2100));
     }
 
     @Test
     void convertsJavaUtilDateToLocalDate() {
-        var converted = DateUtil.toLocalDate(DateUtil.create(2016, MAY, 15));
+        var converted = toLocalDate(create(2016, MAY, 15));
 
         assertThat(converted.getDayOfMonth(), equalTo(15));
         assertThat(converted.getYear(), equalTo(2016));
@@ -71,77 +72,86 @@ class DateUtilTest {
 
     @Test
     void getCurrentDateReturnsInjectedValue() {
-        DateUtil.fixClockAt(NEW_YEARS_DAY);
+        fixClockAt(NEW_YEARS_DAY);
 
-        var date = DateUtil.getCurrentDate();
+        var date = getCurrentDate();
 
         assertThat(date, equalTo(NEW_YEARS_DAY));
     }
 
     @Test
     void getCurrentLocalDateReturnsInjectedValue() {
-        DateUtil.fixClockAt(NEW_YEARS_DAY);
+        fixClockAt(NEW_YEARS_DAY);
 
-        var date = DateUtil.getCurrentLocalDate();
+        var date = getCurrentLocalDate();
 
-        MatcherAssert.assertThat(date, equalTo(DateUtil.toLocalDate(NEW_YEARS_DAY)));
+        MatcherAssert.assertThat(date, equalTo(toLocalDate(NEW_YEARS_DAY)));
     }
 
     @Test
     void ageInYearsDeterminesYearsBetweenTwoLocalDates() {
-        var age = DateUtil.ageInYears(LocalDate.of(2010, Month.MAY, 1), LocalDate.of(2015, Month.MAY, 2));
+        var age = ageInYears(LocalDate.of(2010, Month.MAY, 1), LocalDate.of(2015, Month.MAY, 2));
 
         assertThat(age, equalTo(5));
     }
 
     @Nested
     class DaysAfter {
-        Date janOne2025 = DateUtil.create(2025, JANUARY, 1);
+        Date janOne2025 = create(2025, JANUARY, 1);
 
         @Test
         void isZeroWhenSecondDayNotAfterFirst() {
-            assertThat(DateUtil.daysAfter(janOne2025, DateUtil.create(2025, JANUARY, 1)), equalTo(0));
+            assertThat(daysAfter(janOne2025, create(2025, JANUARY, 1)), equalTo(0));
         }
 
         @Test
         void whenDayWithinSameYear() {
-            assertThat(DateUtil.daysAfter(janOne2025, DateUtil.create(2025, JANUARY, 31)), equalTo(30));
+            assertThat(DateUtil.daysAfter(janOne2025, create(2025, JANUARY, 31)), equalTo(30));
         }
 
         @Test
         void whenInSubsequentYear() {
-            assertThat(DateUtil.daysAfter(janOne2025, DateUtil.create(2026, JANUARY, 1)), equalTo(365));
+            assertThat(DateUtil.daysAfter(janOne2025, create(2026, JANUARY, 1)), equalTo(365));
         }
 
         @Test
         void whenYearsFromFirstDay() {
-            assertThat(DateUtil.daysAfter(janOne2025, DateUtil.create(2028, JANUARY, 1)), equalTo(1095));
+            assertThat(DateUtil.daysAfter(janOne2025, create(2028, JANUARY, 1)), equalTo(1095));
         }
 
         @Test
         void accountsForLeapDay() {
-            assertThat(DateUtil.daysAfter(DateUtil.create(2024, JANUARY, 1),
+            assertThat(DateUtil.daysAfter(create(2024, JANUARY, 1),
                     DateUtil.create(2025, JANUARY, 1)), equalTo(366));
+        }
+    }
+
+    @Nested
+    class Tomorrow {
+        @Test
+        void isAlwaysADayAway() {
+            assertThat(toLocalDate(tomorrow()),
+                    equalTo(toLocalDate(addDays(new Date(), 1))));
         }
     }
 
     @Nested
     class MockUse {
         @Test
-        void fixedClock() {
-            var ides2025 = DateUtil.create(2025, MARCH, 17);
+        void currentDateFromFixedClockReturnsInjectedTime() {
+            var ides2025 = create(2025, MARCH, 17);
 
-            DateUtil.fixClockAt(ides2025);
+            fixClockAt(ides2025);
 
-            assertThat(DateUtil.getCurrentDate(), equalTo(ides2025));
+            assertThat(getCurrentDate(), equalTo(ides2025));
         }
 
         @Test
-        void resetClock() {
-            var ides2025 = DateUtil.create(2025, MARCH, 17);
-            DateUtil.fixClockAt(ides2025);
+        void currentDateAfterResetClockReturnsRealTime() {
+            var ides2025 = create(2025, MARCH, 17);
+            fixClockAt(ides2025);
 
-            DateUtil.resetClock();
+            resetClock();
 
             assertThat(DateUtil.getCurrentDate(), not(equalTo(ides2025)));
         }
