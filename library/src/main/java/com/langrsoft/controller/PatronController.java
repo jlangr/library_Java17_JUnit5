@@ -1,5 +1,6 @@
 package com.langrsoft.controller;
 
+import com.langrsoft.domain.Patron;
 import com.langrsoft.service.library.PatronService;
 import org.springframework.web.bind.annotation.*;
 

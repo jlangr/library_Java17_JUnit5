@@ -32,4 +32,19 @@ class PointTest {
 
         assertThat(pointA, is(not(equalTo(pointB))));
     }
+
+    @Test
+    void hashCodeValue() {
+        var a = new Point(1, 2);
+        var aCopy = new Point(1, 2);
+        var b = new Point(2, 2);
+
+        assertThat(a.hashCode(), equalTo(aCopy.hashCode()));
+        assertThat(a.hashCode(), not(equalTo(b.hashCode())));
+    }
+
+    @Test
+    void toStringValue() {
+        assertThat(new Point(3, 4).toString(), equalTo("(3.0, 4.0)"));
+    }
 }

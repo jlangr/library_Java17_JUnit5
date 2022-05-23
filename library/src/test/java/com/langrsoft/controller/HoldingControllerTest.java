@@ -131,7 +131,7 @@ class HoldingControllerTest {
             var retrieved = resultContent(result, HoldingResponse[].class);
             var authors = Arrays.stream(retrieved)
                     .map(HoldingResponse::getAuthor).toList();
-            assertThat(authors, hasItems("Heller", "Kafka"));
+            assertThat(authors, equalTo(List.of("Heller", "Kafka")));
         }
     }
 }

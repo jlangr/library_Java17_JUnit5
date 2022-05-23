@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static testutil.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
 
@@ -20,6 +21,7 @@ class MultiMapTest {
     void isEmptyOnCreation() {
         assertThat(map.size(), equalTo(0));
         assertThat(map.valuesSize(), equalTo(0));
+        assertThat(map.isEmpty(), is(true));
     }
 
     @Test

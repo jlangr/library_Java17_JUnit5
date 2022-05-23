@@ -3,9 +3,9 @@ package com.langrsoft.controller;
 import com.langrsoft.domain.Patron;
 
 public class PatronRequest {
-    private String name;
-    private String id;
-    private int fineBalance;
+    String name;
+    String id;
+    int fineBalance;
 
     public PatronRequest() {
     }
