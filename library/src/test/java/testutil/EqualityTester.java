@@ -25,8 +25,8 @@ public class EqualityTester {
         assertThat(object1.equals(object2), equalTo(false));
         assertThat(object1.equals(object1Subtype), equalTo(false));
 
-        // assert null (object1.equals(null)) is true
-        // as long as object1 isn't null itself (and it never should be)
+        assertThat(object1.equals(null), is(false));
+
         assertConsistency();
         assertTransitivity();
         assertReflexivity();

@@ -60,6 +60,7 @@ class LibraryControllerTest {
             materialRequest.setFormat("BOOK");
             materialRequest.setClassification("QB234");
             materialRequest.setSourceId("QB234");
+            materialRequest.setYear("1923");
             mockMvc.perform(postAsJson("/materials", materialRequest));
 
             var result = mockMvc.perform(get("/retrieveMaterial/QB234"))
@@ -68,6 +69,7 @@ class LibraryControllerTest {
 
             var retrieved = resultContent(result, Material.class);
             assertThat(retrieved.getAuthor(), equalTo("Kafka"));
+            assertThat(retrieved.getYear(), equalTo("1923"));
         }
     }
 

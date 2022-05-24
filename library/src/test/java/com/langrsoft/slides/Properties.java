@@ -1,4 +1,4 @@
-package com.langrsoft.util;
+package com.langrsoft.slides;
 
 import java.util.Map;
 

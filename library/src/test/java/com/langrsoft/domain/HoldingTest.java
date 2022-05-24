@@ -57,6 +57,13 @@ class HoldingTest {
     }
 
     @Test
+    void canSetCopyNumber() {
+        h.setCopyNumber(2);
+
+        assertThat(h.getCopyNumber(), equalTo(2));
+    }
+
+    @Test
     void changesBranchOnTransfer() {
         h.transfer(westBranch);
         assertThat(h.getBranch(), equalTo(westBranch));
@@ -155,17 +162,31 @@ class HoldingTest {
         assertThat(calendar.get(Calendar.DAY_OF_YEAR), equalTo(expectedDayOfYear));
     }
 
+    Holding holding1 = new Holding(THE_TRIAL, eastBranch, 1);
+    Holding holding1Copy1 = new Holding(THE_TRIAL, westBranch, 1); // diff loc but same copy
+    Holding holding1Copy2 = new Holding(THE_TRIAL, Branch.CHECKED_OUT, 1);
+    Holding holding2 = new Holding(THE_TRIAL, eastBranch, 2); // 2nd copy
+    Holding holding1Subtype = new Holding(THE_TRIAL, eastBranch,
+            1) {
+    };
+
+    @Test
+    void toStringContainsHoldingAttributes() {
+       var s = holding1.toString();
+
+       assertThat(s, containsString(THE_TRIAL.getAuthor()));
+       assertThat(s, containsString(holding1.getBranch().getName()));
+    }
+
     @Test
     void equality() {
-        var holding1 = new Holding(THE_TRIAL, eastBranch, 1);
-        var holding1Copy1 = new Holding(THE_TRIAL, westBranch, 1); // diff loc but same copy
-        var holding1Copy2 = new Holding(THE_TRIAL, Branch.CHECKED_OUT, 1);
-        var holding2 = new Holding(THE_TRIAL, eastBranch, 2); // 2nd copy
-        var holding1Subtype = new Holding(THE_TRIAL, eastBranch,
-                1) {
-        };
-
         new EqualityTester(holding1, holding1Copy1, holding1Copy2, holding2,
                 holding1Subtype).verify();
+    }
+
+    @Test
+    void hashCodes() {
+        assertThat(holding1.hashCode(), equalTo(holding1Copy1.hashCode()));
+        assertThat(holding1.hashCode(), not(equalTo(holding2.hashCode())));
     }
 }

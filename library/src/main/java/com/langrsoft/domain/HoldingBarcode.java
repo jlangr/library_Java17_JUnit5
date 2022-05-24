@@ -90,7 +90,7 @@ public class HoldingBarcode {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass())
             return false;
-        HoldingBarcode that = (HoldingBarcode) object;
+        var that = (HoldingBarcode) object;
         return getBarcode().equals(that.getBarcode());
     }
 }

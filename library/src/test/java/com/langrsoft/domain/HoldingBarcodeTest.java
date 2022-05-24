@@ -51,6 +51,16 @@ class HoldingBarcodeTest {
             assertThat(barcode.equals(barcode1copy), is(true));
             assertThat(barcode.equals(barcode2), is(false));
         }
+
+        @Test
+        void returnsFalseWhenComparingToNull() {
+            assertThat(barcode.equals(null), is(false));
+        }
+
+        @Test
+        void returnsFalseWhenComparingToWrongType() {
+            assertThat(barcode.equals(""), is(false));
+        }
     }
 
     @Test

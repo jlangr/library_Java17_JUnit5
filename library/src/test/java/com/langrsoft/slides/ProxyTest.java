@@ -1,5 +1,6 @@
-package com.langrsoft.util;
+package com.langrsoft.slides;
 
+import com.langrsoft.slides.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

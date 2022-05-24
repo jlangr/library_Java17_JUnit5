@@ -10,7 +10,7 @@ public class StateService {
     public List<State> findNameStartingWith(String startingWith) {
         var filtered = new ArrayList<State>();
         for (var each : allStates)
-            if (each.name.startsWith(startingWith))
+            if (each.name().startsWith(startingWith))
                 filtered.add(each);
         return filtered;
     }
