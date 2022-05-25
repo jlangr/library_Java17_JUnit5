@@ -10,9 +10,9 @@ public class ListUtil {
             String methodName,
             Class<ListType> listClass,
             Class<ToType> toClass) {
-        Method method = getMethod(methodName, listClass);
+        var method = getMethod(methodName, listClass);
         List<ToType> results = new ArrayList<>();
-        for (ListType each : c)
+        for (var each : c)
             results.add(invokeMethod(method, each, toClass));
         return results;
     }

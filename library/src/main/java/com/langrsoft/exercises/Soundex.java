@@ -1,4 +1,4 @@
-package com.langrsoft.util;
+package com.langrsoft.exercises;
 
 import java.util.HashMap;
 import java.util.Map;

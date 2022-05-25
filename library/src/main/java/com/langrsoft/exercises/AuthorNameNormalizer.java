@@ -1,5 +1,7 @@
-package com.langrsoft.util;
+package com.langrsoft.exercises;
 
+
+import com.langrsoft.util.NotYetImplementedException;
 
 public class AuthorNameNormalizer {
 
