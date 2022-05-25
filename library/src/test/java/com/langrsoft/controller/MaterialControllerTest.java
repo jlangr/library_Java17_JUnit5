@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static testutil.ControllerTestUtil.resultContent;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,5 +36,11 @@ class MaterialControllerTest {
         var materialType = resultContent(result, MaterialType.class);
         assertSame(MaterialType.BOOK, materialType);
         assertThat(materialType.getDailyFine(), equalTo(MaterialType.BOOK.getDailyFine()));
+    }
+
+    @Test
+    void getMaterialTypeReturns404OnInvalidMaterialType() throws Exception {
+        var result = mockMvc.perform(get("/material/BADTYPE"))
+                .andExpect(status().isNotFound());
     }
 }
