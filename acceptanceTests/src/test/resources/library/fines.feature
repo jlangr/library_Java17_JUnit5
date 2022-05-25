@@ -36,5 +36,5 @@ Scenario: Late book fine balance is multiple of days
    Then the patron's fine balance is 30
 
 Scenario: Can request fine amounts by material type
-   Given a request for the daily fine for a microfiche
+   Given a request for the daily fine for a MICRO_FICHE
    Then the fine amount is 200

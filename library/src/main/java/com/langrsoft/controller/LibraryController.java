@@ -6,12 +6,14 @@ import com.langrsoft.external.Material;
 import com.langrsoft.external.MaterialType;
 import com.langrsoft.service.library.LibraryData;
 import com.langrsoft.util.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
 @RestController
 public class LibraryController {
+    @Autowired
     LibraryData libraryData;
 
     @PostMapping(value = "/clear")
