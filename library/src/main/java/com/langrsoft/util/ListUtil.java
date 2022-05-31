@@ -1,35 +1,17 @@
 package com.langrsoft.util;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListUtil {
-    public <ListType, ToType> List<ToType> map(
-            List<ListType> c,
+    private final ReflectUtil reflectUtil = new ReflectUtil();
+    public <F, T> List<T> map(
+            List<F> list,
             String methodName,
-            Class<ListType> listClass,
-            Class<ToType> toClass) {
-        var method = getMethod(methodName, listClass);
-        List<ToType> results = new ArrayList<>();
-        for (var each : c)
-            results.add(invokeMethod(method, each, toClass));
-        return results;
-    }
-
-    private <ListType, ToType> ToType invokeMethod(Method method, ListType receiver, Class<ToType> toTypeClass) {
-        try {
-            return toTypeClass.cast(method.invoke(receiver));
-        } catch (Exception e) {
-            throw new RuntimeException("unable to invoke " + method);
-        }
-    }
-
-    private <T> Method getMethod(String method, Class<T> klass) {
-        try {
-            return klass.getMethod(method);
-        } catch (Exception e) {
-            throw new RuntimeException("invalid method");
-        }
+            Class<F> listClass,
+            Class<T> toClass) {
+        var method = reflectUtil.getMethod(methodName, listClass);
+        return list.stream()
+                .map(each -> reflectUtil.mapAccessorToString(method, each, toClass))
+                .toList();
     }
 }

@@ -37,3 +37,10 @@ JetBrains IDEA Instructions
 * From the IntelliJ IDEA menu, select `Run->Run 'All Tests'`.
 
 You should see about 190 or so passing (green) unit tests.
+
+Code Coverage
+---
+You will want to configure an appropriate run configuration that ignores these packages / classes:
+com.langrsoft.reporting
+com.langrsoft.cucumber
+com.langrsoft.controller.Application

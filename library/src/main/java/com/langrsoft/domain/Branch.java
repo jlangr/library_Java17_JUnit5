@@ -2,7 +2,7 @@ package com.langrsoft.domain;
 
 public class Branch {
     public static final Branch CHECKED_OUT = new Branch("b999999", "unavailable");
-    private String name;
+    private final String name;
     private String scanCode;
 
     public Branch(String name) {
@@ -44,9 +44,5 @@ public class Branch {
     @Override
     public String toString() {
         return "[Branch] " + name + " " + scanCode;
-    }
-
-    public static Branch createTest(String name, String scanCode) {
-        return new Branch(scanCode, name);
     }
 }
