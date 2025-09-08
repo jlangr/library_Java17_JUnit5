@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CollectionsUtilTest {
@@ -24,15 +23,15 @@ class CollectionsUtilTest {
 
         var soleElement = CollectionsUtil.soleElement(collection);
 
-        assertThat(soleElement, equalTo("a"));
+        assertThat(soleElement).isEqualTo("a");
     }
 
     @Test
     void soleElementThrowsWhenNoElementsExist() {
         var thrown = assertThrows(AssertionError.class, () ->
-                CollectionsUtil.soleElement(collection));
+           CollectionsUtil.soleElement(collection));
 
-        assertThat(thrown.getMessage(), equalTo(CollectionsUtil.NO_ELEMENTS));
+        assertThat(thrown.getMessage()).isEqualTo(CollectionsUtil.NO_ELEMENTS);
     }
 
     @Test
@@ -41,7 +40,8 @@ class CollectionsUtilTest {
         collection.add("b");
 
         var thrown = assertThrows(AssertionError.class, () ->
-                CollectionsUtil.soleElement(collection));
-        assertThat(thrown.getMessage(), equalTo(CollectionsUtil.MORE_THAN_ONE_ELEMENT));
+           CollectionsUtil.soleElement(collection));
+
+        assertThat(thrown.getMessage()).isEqualTo(CollectionsUtil.MORE_THAN_ONE_ELEMENT);
     }
 }
