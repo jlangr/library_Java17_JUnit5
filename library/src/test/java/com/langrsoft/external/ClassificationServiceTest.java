@@ -6,8 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,11 +35,10 @@ class ClassificationServiceTest {
 
         var material = service.retrieveMaterial(THE_ROAD_ISBN);
 
-        assertThat(material.getTitle(), equalTo(THE_ROAD_TITLE));
-        assertThat(material.getYear(), equalTo(THE_ROAD_YEAR));
-        assertThat(material.getAuthor(), equalTo(THE_ROAD_AUTHOR));
-        assertThat(material.getSourceId(), equalTo(THE_ROAD_ISBN));
-        assertThat(material.getClassification(), equalTo(THE_ROAD_CLASSIFICATION));
+        assertThat(material.getTitle()).isEqualTo(THE_ROAD_TITLE);
+        assertThat(material.getYear()).isEqualTo(THE_ROAD_YEAR);
+        assertThat(material.getAuthor()).isEqualTo(THE_ROAD_AUTHOR);
+        assertThat(material.getSourceId()).isEqualTo(THE_ROAD_ISBN);
+        assertThat(material.getClassification()).isEqualTo(THE_ROAD_CLASSIFICATION);
     }
-
 }

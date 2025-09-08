@@ -12,8 +12,7 @@ import com.langrsoft.util.RestUtil;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -33,20 +32,20 @@ class OpenLibraryApiClientTest {
     @Test
     void retrieveMaterialPopulatesFromResponse() {
         var bookDataMap = Map.of("title", THE_ROAD_TITLE,
-                "publish_date", THE_ROAD_YEAR,
-                "classifications", Map.of("lc_classifications", singletonList(THE_ROAD_CLASSIFICATION)),
-                "authors", singletonList(Map.of("name", THE_ROAD_AUTHOR)));
+           "publish_date", THE_ROAD_YEAR,
+           "classifications", Map.of("lc_classifications", singletonList(THE_ROAD_CLASSIFICATION)),
+           "authors", singletonList(Map.of("name", THE_ROAD_AUTHOR)));
         var responseMap = Map.of("ISBN:" + THE_ROAD_ISBN, bookDataMap);
         var expectedUrl = openLibraryApiClient.createGetUrl(THE_ROAD_ISBN);
         when(restTemplate.getForObject(expectedUrl, Map.class))
-                .thenReturn(responseMap);
+           .thenReturn(responseMap);
 
         var bookData = openLibraryApiClient.retrieveBookData(THE_ROAD_ISBN);
 
-        assertThat(bookData.getTitle(), equalTo(THE_ROAD_TITLE));
-        assertThat(bookData.getPublishDate(), equalTo(THE_ROAD_YEAR));
-        assertThat(bookData.getFirstAuthorName(), equalTo(THE_ROAD_AUTHOR));
-        assertThat(bookData.getLibraryOfCongressClassification(), equalTo(THE_ROAD_CLASSIFICATION));
+        assertThat(bookData.getTitle()).isEqualTo(THE_ROAD_TITLE);
+        assertThat(bookData.getPublishDate()).isEqualTo(THE_ROAD_YEAR);
+        assertThat(bookData.getFirstAuthorName()).isEqualTo(THE_ROAD_AUTHOR);
+        assertThat(bookData.getLibraryOfCongressClassification()).isEqualTo(THE_ROAD_CLASSIFICATION);
     }
 
     @Test
@@ -55,7 +54,7 @@ class OpenLibraryApiClientTest {
         when(restTemplate.getForObject(expectedUrl, Map.class)).thenReturn(null);
 
         assertThrows(OpenLibraryApiRetrieveException.class, () ->
-                openLibraryApiClient.retrieveBookData(THE_ROAD_ISBN));
+           openLibraryApiClient.retrieveBookData(THE_ROAD_ISBN));
     }
 
     @Tag("slow")
@@ -65,9 +64,9 @@ class OpenLibraryApiClientTest {
 
         var bookData = client.retrieveBookData(THE_ROAD_ISBN);
 
-        assertThat(bookData.getTitle(), equalTo(THE_ROAD_TITLE));
-        assertThat(bookData.getPublishDate(), equalTo(THE_ROAD_YEAR));
-        assertThat(bookData.getFirstAuthorName(), equalTo(THE_ROAD_AUTHOR));
-        assertThat(bookData.getLibraryOfCongressClassification(), equalTo(THE_ROAD_CLASSIFICATION));
+        assertThat(bookData.getTitle()).isEqualTo(THE_ROAD_TITLE);
+        assertThat(bookData.getPublishDate()).isEqualTo(THE_ROAD_YEAR);
+        assertThat(bookData.getFirstAuthorName()).isEqualTo(THE_ROAD_AUTHOR);
+        assertThat(bookData.getLibraryOfCongressClassification()).isEqualTo(THE_ROAD_CLASSIFICATION);
     }
 }

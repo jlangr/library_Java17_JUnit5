@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("slow")
 abstract class ClassificationApiContract {
@@ -21,26 +20,27 @@ abstract class ClassificationApiContract {
 
     @Test
     void populatesCriticalFields() {
-        assertThat(material.getAuthor(), not(nullValue()));
-        assertThat(material.getTitle(), not(nullValue()));
-        assertThat(material.getClassification(), not(nullValue()));
+        assertThat(material.getAuthor()).isNotNull();
+        assertThat(material.getTitle()).isNotNull();
+        assertThat(material.getClassification()).isNotNull();
     }
 
     @Test
     void echosSourceId() {
-        assertThat(material.getSourceId(), is(equalTo(validQueryIsbn())));
+        assertThat(material.getSourceId()).isEqualTo(validQueryIsbn());
     }
 
     @Test
     void populatesFormatWithEnumValue() {
-        assertThat(material.getFormat(), isIn(MaterialType.values()));
+        assertThat(material.getFormat()).isIn((Object[]) MaterialType.values());
     }
 
     @Test
     void populatesYearWithReasonableValue() {
         var currentYear = LocalDate.now().getYear();
-        assertThat(Integer.parseInt(material.getYear()),
-                is(both(greaterThan(1440)).and(lessThanOrEqualTo(currentYear))));
+        assertThat(Integer.parseInt(material.getYear()))
+           .isGreaterThan(1440)
+           .isLessThanOrEqualTo(currentYear);
     }
 
 
