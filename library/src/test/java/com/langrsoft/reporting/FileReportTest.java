@@ -7,8 +7,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FileReportTest {
     @Disabled("uncomment when ready")
@@ -22,7 +21,7 @@ class FileReportTest {
         // When load is called (statically)
         // Then it should be a 2-element array with first line + rest of lines
 
-        assertThat(true, equalTo(true));
+        assertThat(true).isTrue();
     }
 
     // TODO move to IO util class and add test

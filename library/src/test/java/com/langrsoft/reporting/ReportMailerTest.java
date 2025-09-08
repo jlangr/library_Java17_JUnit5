@@ -1,8 +1,8 @@
 package com.langrsoft.reporting;
 
 import org.junit.jupiter.api.Test;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ReportMailerTest {
     @Test
@@ -11,7 +11,7 @@ class ReportMailerTest {
             new ReportMailer(new MailDestination[] {});
         }
         catch (Exception expected) {
-            assertThat(expected, notNullValue());
+            assertThat(expected).isNotNull();
         }
     }
 }
