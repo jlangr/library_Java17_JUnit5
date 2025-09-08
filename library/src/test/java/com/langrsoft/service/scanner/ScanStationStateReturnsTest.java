@@ -8,8 +8,7 @@ import com.langrsoft.util.TimestampSource;
 
 import java.util.Calendar;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +41,7 @@ class ScanStationStateReturnsTest extends ScanStationStateTestBase {
         state.scanPatron("p222");
 
         assertCurrentState(ScanStationStateCheckout.class);
-        assertThat(scanner.getPatronId(), equalTo("p222"));
+        assertThat(scanner.getPatronId()).isEqualTo("p222");
     }
 
     @Test
@@ -54,7 +53,7 @@ class ScanStationStateReturnsTest extends ScanStationStateTestBase {
         state.scanBranchId("b222");
 
         assertStateUnchanged();
-        assertThat(scanner.getBranchId(), equalTo(eastBranch.getScanCode()));
+        assertThat(scanner.getBranchId()).isEqualTo(eastBranch.getScanCode());
     }
 
     @Test

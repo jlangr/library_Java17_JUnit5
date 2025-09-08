@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.langrsoft.service.scanner.ScanStationStateInventory.MSG_COMPLETE_INVENTORY_FIRST;
 import static com.langrsoft.service.scanner.ScanStationStateInventory.MSG_SCANNED_HOLDING;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +33,7 @@ class ScanStationStateInventoryTest extends ScanStationStateTestBase {
 
         state.scanBranchId("b222");
 
-        assertThat(scanner.getBranchId(), equalTo("b222"));
+        assertThat(scanner.getBranchId()).isEqualTo("b222");
         assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, "West"));
         assertStateUnchanged();
     }
@@ -62,6 +61,6 @@ class ScanStationStateInventoryTest extends ScanStationStateTestBase {
     void changesStateToReturnsWhenCompletePressed() {
         state.pressComplete();
 
-        assertThat(scanner.getCurrentState(), is(instanceOf(ScanStationStateReturns.class)));
+        assertThat(scanner.getCurrentState()).isInstanceOf(ScanStationStateReturns.class);
     }
 }

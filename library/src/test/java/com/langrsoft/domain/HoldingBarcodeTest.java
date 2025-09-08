@@ -3,10 +3,7 @@ package com.langrsoft.domain;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HoldingBarcodeTest {
@@ -14,8 +11,8 @@ class HoldingBarcodeTest {
     void splitsBarcodeProvidedIntoCopyAndClassification() {
         var barcode = new HoldingBarcode("ABC:42");
 
-        assertThat(barcode.getClassification(), equalTo("ABC"));
-        assertThat(barcode.getCopyNumber(), equalTo(42));
+        assertThat(barcode.getClassification()).isEqualTo("ABC");
+        assertThat(barcode.getCopyNumber()).isEqualTo(42);
     }
 
     @Test
@@ -33,7 +30,6 @@ class HoldingBarcodeTest {
         assertThrows(IllegalArgumentException.class, () -> new HoldingBarcode("abc:xyz"));
     }
 
-
     @Nested
     class EqualsAndHashcode {
         HoldingBarcode barcode = new HoldingBarcode("A", 1);
@@ -42,24 +38,24 @@ class HoldingBarcodeTest {
 
         @Test
         void usesHashCode() {
-            assertThat(barcode.hashCode(), equalTo(barcode1copy.hashCode()));
-            assertThat(barcode.hashCode(), not(equalTo(barcode2.hashCode())));
+            assertThat(barcode.hashCode()).isEqualTo(barcode1copy.hashCode());
+            assertThat(barcode.hashCode()).isNotEqualTo(barcode2.hashCode());
         }
 
         @Test
         void equality() {
-            assertThat(barcode.equals(barcode1copy), is(true));
-            assertThat(barcode.equals(barcode2), is(false));
+            assertThat(barcode.equals(barcode1copy)).isTrue();
+            assertThat(barcode.equals(barcode2)).isFalse();
         }
 
         @Test
         void returnsFalseWhenComparingToNull() {
-            assertThat(barcode.equals(null), is(false));
+            assertThat(barcode.equals(null)).isFalse();
         }
 
         @Test
         void returnsFalseWhenComparingToWrongType() {
-            assertThat(barcode.equals(""), is(false));
+            assertThat(barcode.equals("")).isFalse();
         }
     }
 
@@ -67,28 +63,24 @@ class HoldingBarcodeTest {
     void canBeConstructedFromClassificatonAndCopy() {
         var barcode = new HoldingBarcode("ABC", 42);
 
-        assertThat(barcode.getClassification(), equalTo("ABC"));
-        assertThat(barcode.getCopyNumber(), equalTo(42));
+        assertThat(barcode.getClassification()).isEqualTo("ABC");
+        assertThat(barcode.getCopyNumber()).isEqualTo(42);
     }
 
     @Test
     void canDeriveCopyNumberFromBarcode() {
-        assertThat(HoldingBarcode.getCopyNumber("QA123:2"),
-               equalTo(2));
+        assertThat(HoldingBarcode.getCopyNumber("QA123:2")).isEqualTo(2);
     }
 
     @Test
     void canDeriveClassificationFromBarcode() {
-        assertThat(HoldingBarcode.getClassification("QA123:2"),
-                equalTo("QA123"));
+        assertThat(HoldingBarcode.getClassification("QA123:2")).isEqualTo("QA123");
     }
 
     @Test
     void usesBarcodeForToString() {
         var barcode = HoldingBarcode.createCode("QA123", 20);
-        assertThat(barcode, equalTo("QA123:20"));
-        assertThat(new HoldingBarcode("QA123:20").toString(), equalTo(barcode));
+        assertThat(barcode).isEqualTo("QA123:20");
+        assertThat(new HoldingBarcode("QA123:20").toString()).isEqualTo(barcode);
     }
-
-
 }

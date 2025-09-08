@@ -1,119 +1,130 @@
 package com.langrsoft.service.scanner;
 
-import com.langrsoft.domain.Holding;
+import com.langrsoft.domain.Branch;
 import com.langrsoft.domain.Patron;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.langrsoft.util.TimestampSource;
 
-import java.util.Date;
-
-import static com.langrsoft.service.scanner.ScanStationStateCheckout.*;
-import static java.util.Calendar.JANUARY;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static com.langrsoft.util.DateUtil.create;
 
-class ScanStationStateCheckoutTest extends ScanStationStateTestBase {
-    static final String PATRON_JOE_ID = "p111";
-    static final Patron PATRON_JOE = new Patron(PATRON_JOE_ID, "Joe");
-    static final Date NEW_YEARS_DAY = create(2011, JANUARY, 1);
+class ScanStationTest extends MockedScannerSubsystemFields {
+    private ScanStationState state;
 
-    Holding holdingWithAvailability;
-    Holding holdingWithUnavailability;
-
-    @Override
-    protected ScanStationState createStateObject() {
-        return new ScanStationStateCheckout(scanner);
-    }
-
-    @BeforeEach
-    void initialize() {
-        holdingWithAvailability = createHoldingWithAvailability(true);
-        holdingWithUnavailability = createHoldingWithAvailability(false);
-    }
-
-    Holding createHoldingWithAvailability(boolean isAvailable) {
-        Holding holding = mock(Holding.class);
-        when(holding.isAvailable()).thenReturn(isAvailable);
-        return holding;
-    }
-
-    @BeforeEach
-    void addPatronJoe() {
-        when(patronService.find(PATRON_JOE_ID)).thenReturn(PATRON_JOE);
+    private void setScannerToMockState() {
+        state = mock(ScanStationState.class);
+        scanner.setCurrentState(state);
     }
 
     @Test
-    void displaysWarningWhenPatronCardScanned() {
-        state.scanPatron(PATRON_JOE_ID);
-
-        assertMessageDisplayed(MSG_COMPLETE_CHECKOUT_FIRST);
-        assertStateUnchanged();
+    void initializesToWaitingState() {
+        assertThat(scanner.getCurrentState()).isInstanceOf(ScanStationStateWaiting.class);
     }
 
     @Test
-    void displaysWarningWhenInventoryCardScanned() {
-        state.scanInventoryCard();
+    void branchIdScannedDelegatesToScanBranchId() {
+        setScannerToMockState();
 
-        assertMessageDisplayed(MSG_COMPLETE_CHECKOUT_FIRST);
-        assertStateUnchanged();
+        scanner.scan("b123");
+
+        verify(state).scanBranchId("b123");
     }
 
     @Test
-    void displaysMessageIfNoHoldingExists() {
-        scanner.scanPatronId(PATRON_JOE_ID);
-        when(holdingService.find("123:1")).thenReturn(null);
+    void holdingBarcodeScannedDelegatesToScanHolding() {
+        setScannerToMockState();
 
-        state.scanHolding("123:1");
+        scanner.scan("123:1");
 
-        assertMessageDisplayed(String.format(MSG_INVALID_HOLDING_ID, "123:1"));
-        assertStateUnchanged();
+        verify(state).scanHolding("123:1");
     }
 
     @Test
-    void checksOutHoldingWhenHoldingIdScanned() {
-        scanner.scanPatronId(PATRON_JOE_ID);
-        when(holdingService.find("123:1")).thenReturn(holdingWithAvailability);
-        TimestampSource.queueNextTime(NEW_YEARS_DAY);
+    void patronIdScannedDelegatesToScanPatron() {
+        setScannerToMockState();
 
-        state.scanHolding("123:1");
+        scanner.scan("p123");
 
-        verify(holdingService).checkOut(PATRON_JOE_ID, "123:1", NEW_YEARS_DAY);
-        assertMessageDisplayed(String.format(MSG_CHECKED_OUT, "123:1"));
-        assertStateUnchanged();
+        verify(state).scanPatron("p123");
     }
 
     @Test
-    void displaysMessageWhenBookCheckedOutTwice() {
-        scanner.scanPatronId(PATRON_JOE_ID);
-        when(holdingService.find("123:1")).thenReturn(holdingWithAvailability);
-        state.scanHolding("123:1");
-        when(holdingService.find("123:1")).thenReturn(holdingWithUnavailability);
+    void displaysErrorWhenInvalidBarcodeScanned() {
+        scanner.scan("123");
 
-        state.scanHolding("123:1");
-
-        assertMessageDisplayed(String.format(ScanStationStateCheckout.MSG_ALREADY_CHECKED_OUT, "123:1"));
-        assertStateUnchanged();
-        assertThat(TimestampSource.isExhausted(), equalTo(true));
+        verify(display).showMessage(ScanStation.MSG_BAR_CODE_NOT_RECOGNIZED);
     }
 
     @Test
-    void changesStateToReturnsWhenCompletePressed() {
-        scanner.scanPatronId(PATRON_JOE_ID);
+    void inventoryIdScannedDelegatesToScanInventoryCard() {
+        setScannerToMockState();
+        String validInventoryId = "i" + "whatever";
 
-        state.pressComplete();
+        scanner.scan(validInventoryId);
 
-        assertCurrentState(ScanStationStateReturns.class);
-        assertMessageDisplayed(String.format(MSG_COMPLETED_CHECKOUT, PATRON_JOE_ID));
+        verify(state).scanInventoryCard();
     }
 
     @Test
-    void displaysWarningWhenBranchIdScanned() {
-        state.scanBranchId("b123");
+    void pressCompleteDelegatesToState() {
+        setScannerToMockState();
 
-        assertStateUnchanged();
-        assertMessageDisplayed(MSG_COMPLETE_CHECKOUT_FIRST);
+        scanner.pressComplete();
+
+        verify(state).pressComplete();
+    }
+
+    @Test
+    void showMessageDelegatesToListener() {
+        scanner.showMessage("Hey");
+
+        verify(display).showMessage("Hey");
+    }
+
+    @Test
+    void setPatronIdUpdatesPatronIfExists() {
+        Patron jane = new Patron("p123", "jane");
+        when(patronService.find("p123")).thenReturn(jane);
+
+        scanner.scanPatronId("p123");
+
+        assertThat(scanner.getPatron()).isSameAs(jane);
+        assertMessageDisplayed(String.format(ScanStation.MSG_PATRON_SET_TO, "jane"));
+    }
+
+    private void assertMessageDisplayed(String text) {
+        verify(display).showMessage(text);
+    }
+
+    @Test
+    void setPatronIdDoesNotUpdatePatronIfNotExists() {
+        when(patronService.find("p123")).thenReturn(null);
+
+        scanner.scanPatronId("p123");
+
+        assertThat(scanner.getPatron()).isNull();
+        assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_PATRON, "p123"));
+    }
+
+    @Test
+    void setBranchIdUpdatesBranchIfExists() {
+        Branch branch = new Branch("b123", "West");
+        when(branchService.find("b123")).thenReturn(branch);
+
+        scanner.scanBranchId("b123");
+
+        assertThat(scanner.getBranch()).isSameAs(branch);
+        assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, "West"));
+    }
+
+    @Test
+    void setBranchIdDoesNotUpdateBranchIfNotExists() {
+        Branch westBranch = new Branch("b222", "");
+        scanner.setBranch(westBranch);
+        when(branchService.find("b123")).thenReturn(null);
+
+        scanner.scanBranchId("b123");
+
+        assertThat(scanner.getBranch()).isSameAs(westBranch);
+        assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_BRANCH, "b123"));
     }
 }

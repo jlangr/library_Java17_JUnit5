@@ -3,7 +3,6 @@ package com.langrsoft.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.langrsoft.domain.Branch;
 import com.langrsoft.service.library.BranchService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,11 +33,6 @@ class BranchControllerTest {
     BranchService branchService;
     @InjectMocks
     BranchController branchController;
-
-    BranchRequest branchRequest1;
-    BranchRequest branchRequest2;
-    private Branch branch1;
-    private Branch branch2;
 
     @BeforeEach
     public void setup() {

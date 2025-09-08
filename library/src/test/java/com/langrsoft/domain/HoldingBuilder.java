@@ -8,7 +8,7 @@ public class HoldingBuilder {
     private Material material = new Material("1", "", "1", "", "");
     private Branch branch = Branch.CHECKED_OUT;
     private int copyNumber = 1;
-    private Date checkoutDate = null;
+    private Date checkoutDate;
     private String author;
     private String title;
 
@@ -18,7 +18,7 @@ public class HoldingBuilder {
     }
 
     public HoldingBuilder classification(String classification) {
-        this.material.setClassification(classification);
+        material.setClassification(classification);
         return this;
     }
 
@@ -48,13 +48,10 @@ public class HoldingBuilder {
     }
 
     public Holding build() {
-        if (author != null)
-            material.setAuthor(author);
-        if (title != null)
-            material.setTitle(title);
+        if (author != null) material.setAuthor(author);
+        if (title != null) material.setTitle(title);
         var holding = new Holding(material, branch, copyNumber);
-        if (checkoutDate != null)
-            holding.checkOut(checkoutDate);
+        if (checkoutDate != null) holding.checkOut(checkoutDate);
         return holding;
     }
 }

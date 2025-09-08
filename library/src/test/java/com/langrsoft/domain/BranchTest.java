@@ -1,15 +1,15 @@
+// library/src/test/java/com/langrsoft/domain/BranchTest.java
 package com.langrsoft.domain;
 
 import org.junit.jupiter.api.Test;
 import testutil.EqualityTester;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class BranchTest {
     @Test
     void defaultsIdToEmpty() {
-        assertThat(new Branch("alpha").getScanCode(), equalTo(""));
+        assertThat(new Branch("alpha").getScanCode()).isEqualTo("");
     }
 
     @Test

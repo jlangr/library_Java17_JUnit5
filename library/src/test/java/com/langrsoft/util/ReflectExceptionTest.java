@@ -2,8 +2,7 @@ package com.langrsoft.util;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ReflectExceptionTest {
     @Test
@@ -12,6 +11,6 @@ class ReflectExceptionTest {
 
         var reflectException = new ReflectException(cause);
 
-        assertThat(reflectException.getCause().getMessage(), equalTo("alpha"));
+        assertThat(reflectException.getCause().getMessage()).isEqualTo("alpha");
     }
 }

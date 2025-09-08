@@ -3,9 +3,7 @@ package com.langrsoft.service.scanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 
@@ -28,12 +26,12 @@ public abstract class ScanStationStateTestBase extends MockedScannerSubsystemFie
     }
 
     protected void assertCurrentState(Class<?> expectedState) {
-        assertThat(scanner.getCurrentState(), instanceOf(expectedState));
+        assertThat(scanner.getCurrentState()).isInstanceOf(expectedState);
     }
 
     @Test
     void toStringSpecifiesStateName() {
         var className = state.getClass().getSimpleName();
-        assertThat(state.toString(), equalTo("state: " + className));
+        assertThat(state.toString()).isEqualTo("state: " + className);
     }
 }

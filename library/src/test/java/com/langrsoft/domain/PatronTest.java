@@ -4,9 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import testutil.EqualityTester;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static testutil.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PatronTest {
     private Patron jane;
@@ -18,17 +16,17 @@ class PatronTest {
 
     @Test
     void defaultsIdToEmpty() {
-        assertThat(jane.getId(), equalTo(""));
+        assertThat(jane.getId()).isEqualTo("");
     }
 
     @Test
     void fineBalanceIsZeroOnCreation() {
-        assertThat(jane.fineBalance(), equalTo(0));
+        assertThat(jane.fineBalance()).isEqualTo(0);
     }
 
     @Test
     void holdingsAreEmptyOnCreation() {
-        assertThat(jane.holdingMap().isEmpty(), equalTo(true));
+        assertThat(jane.holdingMap().isEmpty()).isTrue();
     }
 
     @Test
@@ -37,7 +35,7 @@ class PatronTest {
 
         jane.add(holding);
 
-        assertThat(jane.holdingMap().holdings(), hasExactlyItemsInAnyOrder(holding));
+        assertThat(jane.holdingMap().holdings()).containsExactly(holding);
     }
 
     @Test
@@ -47,14 +45,14 @@ class PatronTest {
 
         jane.remove(holding);
 
-        assertThat(jane.holdingMap().isEmpty(), equalTo(true));
+        assertThat(jane.holdingMap().isEmpty()).isTrue();
     }
 
     @Test
     void storesFines() {
         jane.addFine(10);
 
-        assertThat(jane.fineBalance(), equalTo(10));
+        assertThat(jane.fineBalance()).isEqualTo(10);
     }
 
     @Test
@@ -63,7 +61,7 @@ class PatronTest {
 
         jane.addFine(30);
 
-        assertThat(jane.fineBalance(), equalTo(40));
+        assertThat(jane.fineBalance()).isEqualTo(40);
     }
 
     @Test
@@ -72,7 +70,7 @@ class PatronTest {
 
         jane.remit(25);
 
-        assertThat(jane.fineBalance(), equalTo(15));
+        assertThat(jane.fineBalance()).isEqualTo(15);
     }
 
     @Test

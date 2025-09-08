@@ -4,8 +4,7 @@ import com.langrsoft.domain.Branch;
 import com.langrsoft.domain.Patron;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class ScanStationTest extends MockedScannerSubsystemFields {
@@ -18,7 +17,7 @@ class ScanStationTest extends MockedScannerSubsystemFields {
 
     @Test
     void initializesToWaitingState() {
-        assertThat(scanner.getCurrentState(), instanceOf(ScanStationStateWaiting.class));
+        assertThat(scanner.getCurrentState()).isInstanceOf(ScanStationStateWaiting.class);
     }
 
     @Test
@@ -88,7 +87,7 @@ class ScanStationTest extends MockedScannerSubsystemFields {
 
         scanner.scanPatronId("p123");
 
-        assertThat(scanner.getPatron(), is(sameInstance(jane)));
+        assertThat(scanner.getPatron()).isSameAs(jane);
         assertMessageDisplayed(String.format(ScanStation.MSG_PATRON_SET_TO, "jane"));
     }
 
@@ -102,7 +101,7 @@ class ScanStationTest extends MockedScannerSubsystemFields {
 
         scanner.scanPatronId("p123");
 
-        assertThat(scanner.getPatron(), is(nullValue()));
+        assertThat(scanner.getPatron()).isNull();
         assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_PATRON, "p123"));
     }
 
@@ -113,7 +112,7 @@ class ScanStationTest extends MockedScannerSubsystemFields {
 
         scanner.scanBranchId("b123");
 
-        assertThat(scanner.getBranch(), is(sameInstance(branch)));
+        assertThat(scanner.getBranch()).isSameAs(branch);
         assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, "West"));
     }
 
@@ -125,7 +124,7 @@ class ScanStationTest extends MockedScannerSubsystemFields {
 
         scanner.scanBranchId("b123");
 
-        assertThat(scanner.getBranch(), is(sameInstance(westBranch)));
+        assertThat(scanner.getBranch()).isSameAs(westBranch);
         assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_BRANCH, "b123"));
     }
 }

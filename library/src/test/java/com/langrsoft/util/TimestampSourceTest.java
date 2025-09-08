@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static testutil.LessThan.lessThan;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TimestampSourceTest {
     static final Date NEW_YEARS_DAY = DateUtil.create(2011, Calendar.JANUARY, 1);
@@ -22,7 +20,7 @@ class TimestampSourceTest {
     void retrievesSinglePushedTime() {
         TimestampSource.queueNextTime(NEW_YEARS_DAY);
 
-        assertThat(TimestampSource.now(), equalTo(NEW_YEARS_DAY));
+        assertThat(TimestampSource.now()).isEqualTo(NEW_YEARS_DAY);
     }
 
     @Test
@@ -31,22 +29,22 @@ class TimestampSourceTest {
         TimestampSource.queueNextTime(NEW_YEARS_DAY);
         TimestampSource.queueNextTime(groundhogDay);
 
-        assertThat(TimestampSource.now(), equalTo(NEW_YEARS_DAY));
-        assertThat(TimestampSource.now(), equalTo(groundhogDay));
+        assertThat(TimestampSource.now()).isEqualTo(NEW_YEARS_DAY);
+        assertThat(TimestampSource.now()).isEqualTo(groundhogDay);
     }
 
     @Test
     void isNotExhaustedWhenTimeQueued() {
         TimestampSource.queueNextTime(NEW_YEARS_DAY);
-        assertThat(TimestampSource.isExhausted(), equalTo(false));
+        assertThat(TimestampSource.isExhausted()).isFalse();
     }
 
     @Test
     void isExhaustedWhenNoTimeQueued() {
-        assertThat(TimestampSource.isExhausted(), equalTo(true));
+        assertThat(TimestampSource.isExhausted()).isTrue();
         TimestampSource.queueNextTime(NEW_YEARS_DAY);
         TimestampSource.now();
-        assertThat(TimestampSource.isExhausted(), equalTo(true));
+        assertThat(TimestampSource.isExhausted()).isTrue();
     }
 
     @Test
@@ -56,6 +54,6 @@ class TimestampSourceTest {
         var now = new Date();
         TimestampSource.now();
         var retrievedNow = TimestampSource.now();
-        assertThat(retrievedNow.getTime() - now.getTime(), lessThan(100));
+        assertThat(retrievedNow.getTime() - now.getTime()).isLessThan(100);
     }
 }

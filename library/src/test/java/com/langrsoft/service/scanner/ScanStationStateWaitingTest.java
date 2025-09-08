@@ -4,8 +4,7 @@ import com.langrsoft.domain.Branch;
 import org.junit.jupiter.api.Test;
 
 import static com.langrsoft.service.scanner.ScanStationStateWaiting.MSG_SCAN_BRANCH_ID_FIRST;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 class ScanStationStateWaitingTest extends ScanStationStateTestBase {
@@ -24,7 +23,7 @@ class ScanStationStateWaitingTest extends ScanStationStateTestBase {
 
         assertCurrentState(ScanStationStateReturns.class);
         assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, westBranch.getName()));
-        assertThat(scanner.getBranchId(), equalTo("b123"));
+        assertThat(scanner.getBranchId()).isEqualTo("b123");
     }
 
     @Test

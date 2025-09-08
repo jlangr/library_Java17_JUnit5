@@ -3,11 +3,8 @@ package com.langrsoft.util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static testutil.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
 
 class MultiMapTest {
     private MultiMap<Object, Object> map;
@@ -19,9 +16,9 @@ class MultiMapTest {
 
     @Test
     void isEmptyOnCreation() {
-        assertThat(map.size(), equalTo(0));
-        assertThat(map.valuesSize(), equalTo(0));
-        assertThat(map.isEmpty(), is(true));
+        assertThat(map.size()).isEqualTo(0);
+        assertThat(map.valuesSize()).isEqualTo(0);
+        assertThat(map.isEmpty()).isTrue();
     }
 
     @Test
@@ -30,7 +27,7 @@ class MultiMapTest {
 
         var values = map.get("a");
 
-        assertThat(values, hasExactlyItemsInAnyOrder("alpha"));
+        assertThat(values).containsExactlyInAnyOrder("alpha");
     }
 
     @Test
@@ -38,7 +35,7 @@ class MultiMapTest {
         map.put("a", "");
         map.put("b", "");
 
-        assertThat(map.size(), equalTo(2));
+        assertThat(map.size()).isEqualTo(2);
     }
 
     @Test
@@ -48,7 +45,7 @@ class MultiMapTest {
 
         var values = map.get("a");
 
-        assertThat(values, hasExactlyItemsInAnyOrder("alpha2", "alpha1"));
+        assertThat(values).containsExactlyInAnyOrder("alpha1", "alpha2");
     }
 
     @Test
@@ -57,7 +54,7 @@ class MultiMapTest {
         map.put("b", "beta1");
         map.put("b", "beta2");
 
-        assertThat(map.valuesSize(), equalTo(3));
+        assertThat(map.valuesSize()).isEqualTo(3);
     }
 
     @Test
@@ -67,13 +64,13 @@ class MultiMapTest {
 
         var values = map.get("b");
 
-        assertThat(values, hasExactlyItemsInAnyOrder("beta"));
+        assertThat(values).containsExactlyInAnyOrder("beta");
     }
 
     @Test
     void throwsOnPutOfNullKey() {
         assertThrows(NullPointerException.class, () ->
-                map.put(null, ""));
+           map.put(null, ""));
     }
 
     @Test
@@ -83,8 +80,8 @@ class MultiMapTest {
 
         map.clear();
 
-        assertThat(map.size(), equalTo(0));
-        assertThat(map.valuesSize(), equalTo(0));
+        assertThat(map.size()).isEqualTo(0);
+        assertThat(map.valuesSize()).isEqualTo(0);
     }
 
     @Test
@@ -94,6 +91,6 @@ class MultiMapTest {
 
         var values = map.values();
 
-        assertThat(values, hasExactlyItemsInAnyOrder("alpha", "beta"));
+        assertThat(values).containsExactlyInAnyOrder("alpha", "beta");
     }
 }

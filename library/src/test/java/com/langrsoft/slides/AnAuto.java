@@ -2,9 +2,7 @@ package com.langrsoft.slides;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static testutil.LessThan.lessThan;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AnAuto {
     @Test
@@ -14,7 +12,7 @@ class AnAuto {
 
         auto.PressStartButton();
 
-        assertThat(auto.RPM(), is(both(greaterThan(950)).and(lessThan(1100))));
+        assertThat(auto.RPM()).isGreaterThan(950).isLessThan(1100);
     }
 
     static class Auto {

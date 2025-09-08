@@ -9,9 +9,7 @@ import testutil.EqualityTester;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /*
 This test class is a mess. Some opportunities for cleanup:
@@ -46,45 +44,42 @@ class HoldingTest {
     @Test
     void branchDefaultsToCheckedOutWhenCreated() {
         var holding = new Holding(THE_TRIAL);
-        assertThat(holding, not(nullValue()));
-        assertThat(holding.getBranch(), equalTo(Branch.CHECKED_OUT));
+        assertThat(holding).isNotNull();
+        assertThat(holding.getBranch()).isEqualTo(Branch.CHECKED_OUT);
     }
 
     @Test
     void copyNumberDefaultsTo1WhenCreated() {
         var holding = new Holding(THE_TRIAL, eastBranch);
-        assertThat(holding.getCopyNumber(), equalTo(1));
+        assertThat(holding.getCopyNumber()).isEqualTo(1);
     }
 
     @Test
     void canSetCopyNumber() {
         h.setCopyNumber(2);
-
-        assertThat(h.getCopyNumber(), equalTo(2));
+        assertThat(h.getCopyNumber()).isEqualTo(2);
     }
 
     @Test
     void changesBranchOnTransfer() {
         h.transfer(westBranch);
-        assertThat(h.getBranch(), equalTo(westBranch));
+        assertThat(h.getBranch()).isEqualTo(westBranch);
     }
 
     @Test
-    void ck() {
+    void checkOutAndCheckInFlow() {
         h.checkOut(TODAY);
-        assertThat(h.dateCheckedOut(), equalTo(TODAY));
-        assertThat(h.dateDue().after(TODAY), equalTo(true));
-        assertThat(h.getBranch(), equalTo(Branch.CHECKED_OUT));
-        assertThat(h.isAvailable(), equalTo(false));
+        assertThat(h.dateCheckedOut()).isEqualTo(TODAY);
+        assertThat(h.dateDue()).isAfter(TODAY);
+        assertThat(h.getBranch()).isEqualTo(Branch.CHECKED_OUT);
+        assertThat(h.isAvailable()).isFalse();
 
-        // try again
         h.checkOut(TODAY);
         Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
         h.checkIn(tomorrow, eastBranch);
-//        System.out.println("tomorrow:" + tomorrow);
-        assertThat(h.dateLastCheckedIn(), equalTo(tomorrow));
-        assertThat(h.isAvailable(), equalTo(true));
-        assertThat(h.getBranch(), equalTo(eastBranch));
+        assertThat(h.dateLastCheckedIn()).isEqualTo(tomorrow);
+        assertThat(h.isAvailable()).isTrue();
+        assertThat(h.getBranch()).isEqualTo(eastBranch);
     }
 
     @Test
@@ -96,51 +91,43 @@ class HoldingTest {
 
     @Test
     void dateDueNullWhenCheckedOutIsNull() {
-        assertThat(h.dateDue(), equalTo(null));
+        assertThat(h.dateDue()).isNull();
     }
 
     @Test
     void daysLateIsZeroWhenDateDueIsNull() {
-        assertThat(h.daysLate(), equalTo(0));
+        assertThat(h.daysLate()).isEqualTo(0);
     }
 
     @Test
-    void testSomething() {
-        // movie
+    void dateDueForVariousMaterialTypes() {
         checkOutToday(DR_STRANGELOVE, eastBranch);
-        var expected = addDays(TODAY, MaterialType.DVD.getCheckoutPeriod());
         assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), h.dateDue());
 
-        // childrens movie
         checkOutToday(THE_REVENANT, eastBranch);
-        expected = addDays(TODAY, MaterialType.NEW_RELEASE_DVD.getCheckoutPeriod());
-        assertDateEquals(expected, h.dateDue());
+        assertDateEquals(addDays(TODAY, MaterialType.NEW_RELEASE_DVD.getCheckoutPeriod()), h.dateDue());
     }
 
     @Test
     void answersDaysLateOfZeroWhenReturnedSameDay() {
         checkOutToday(THE_TRIAL, eastBranch);
         var daysLate = h.checkIn(TODAY, eastBranch);
-        assertThat(daysLate, equalTo(0));
+        assertThat(daysLate).isEqualTo(0);
     }
 
     @Test
     void answersDaysLateOfZeroWhenReturnedOnDateDue() {
         checkOutToday(THE_TRIAL, eastBranch);
         int daysLate = h.checkIn(h.dateDue(), eastBranch);
-        assertThat(daysLate, equalTo(0));
+        assertThat(daysLate).isEqualTo(0);
     }
 
     @Test
     void answersDaysLateWhenReturnedAfterDueDate() {
-        try {
-            checkOutToday(THE_TRIAL, eastBranch);
-            Date date = addDays(h.dateDue(), 3);
-            int days = h.checkIn(date, eastBranch);
-            assertThat(days, equalTo(3));
-        } catch (RuntimeException notReallyExpected) {
-            fail();
-        }
+        checkOutToday(THE_TRIAL, eastBranch);
+        Date date = addDays(h.dateDue(), 3);
+        int days = h.checkIn(date, eastBranch);
+        assertThat(days).isEqualTo(3);
     }
 
     private void checkOutToday(Material material, Branch branch) {
@@ -158,35 +145,31 @@ class HoldingTest {
         var expectedYear = calendar.get(Calendar.YEAR);
         var expectedDayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
         calendar.setTime(actualDate);
-        assertThat(calendar.get(Calendar.YEAR), equalTo(expectedYear));
-        assertThat(calendar.get(Calendar.DAY_OF_YEAR), equalTo(expectedDayOfYear));
+        assertThat(calendar.get(Calendar.YEAR)).isEqualTo(expectedYear);
+        assertThat(calendar.get(Calendar.DAY_OF_YEAR)).isEqualTo(expectedDayOfYear);
     }
 
     Holding holding1 = new Holding(THE_TRIAL, eastBranch, 1);
-    Holding holding1Copy1 = new Holding(THE_TRIAL, westBranch, 1); // diff loc but same copy
+    Holding holding1Copy1 = new Holding(THE_TRIAL, westBranch, 1);
     Holding holding1Copy2 = new Holding(THE_TRIAL, Branch.CHECKED_OUT, 1);
-    Holding holding2 = new Holding(THE_TRIAL, eastBranch, 2); // 2nd copy
-    Holding holding1Subtype = new Holding(THE_TRIAL, eastBranch,
-            1) {
-    };
+    Holding holding2 = new Holding(THE_TRIAL, eastBranch, 2);
+    Holding holding1Subtype = new Holding(THE_TRIAL, eastBranch, 1) {};
 
     @Test
     void toStringContainsHoldingAttributes() {
-       var s = holding1.toString();
-
-       assertThat(s, containsString(THE_TRIAL.getAuthor()));
-       assertThat(s, containsString(holding1.getBranch().getName()));
+        var s = holding1.toString();
+        assertThat(s).contains(THE_TRIAL.getAuthor());
+        assertThat(s).contains(holding1.getBranch().getName());
     }
 
     @Test
     void equality() {
-        new EqualityTester(holding1, holding1Copy1, holding1Copy2, holding2,
-                holding1Subtype).verify();
+        new EqualityTester(holding1, holding1Copy1, holding1Copy2, holding2, holding1Subtype).verify();
     }
 
     @Test
     void hashCodes() {
-        assertThat(holding1.hashCode(), equalTo(holding1Copy1.hashCode()));
-        assertThat(holding1.hashCode(), not(equalTo(holding2.hashCode())));
+        assertThat(holding1.hashCode()).isEqualTo(holding1Copy1.hashCode());
+        assertThat(holding1.hashCode()).isNotEqualTo(holding2.hashCode());
     }
 }

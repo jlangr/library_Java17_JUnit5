@@ -1,16 +1,13 @@
 package com.langrsoft.domain;
 
 import com.langrsoft.external.Material;
+import com.langrsoft.persistence.HoldingStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.langrsoft.persistence.HoldingStore;
 
 import java.util.ArrayList;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static testutil.HasExactlyItems.hasExactlyItems;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CatalogTest {
     Catalog catalog = new Catalog();
@@ -23,19 +20,19 @@ class CatalogTest {
 
     @Test
     void isEmptyOnCreation() {
-        assertThat(catalog.size(), equalTo(0));
+        assertThat(catalog.size()).isEqualTo(0);
     }
 
     @Test
     void incrementsSizeWhenMaterialAdded() {
         catalog.add(holdingBuilder.build());
 
-        assertThat(catalog.size(), equalTo(1));
+        assertThat(catalog.size()).isEqualTo(1);
     }
 
     @Test
     void answersEmptyForNonexistentMaterial() {
-        assertThat(catalog.findAll("nonexistentid").isEmpty(), equalTo(true));
+        assertThat(catalog.findAll("nonexistentid")).isEmpty();
     }
 
     @Test
@@ -48,7 +45,7 @@ class CatalogTest {
 
         var retrieved1 = catalog.find(barcode);
         var retrieved2 = catalog.find(barcode2);
-        assertThat(holdings, equalTo(asList(retrieved1, retrieved2)));
+        assertThat(holdings).containsExactly(retrieved1, retrieved2);
     }
 
     private String addHoldingWithClassification(String classification) {
@@ -64,8 +61,8 @@ class CatalogTest {
 
         var retrieved = catalog.findAll("123");
 
-        assertThat(retrieved.size(), equalTo(1));
-        assertThat(retrieved.get(0).getBarcode(), equalTo(barcode1));
+        assertThat(retrieved).hasSize(1);
+        assertThat(retrieved.get(0).getBarcode()).isEqualTo(barcode1);
     }
 
     @Test
@@ -75,7 +72,7 @@ class CatalogTest {
 
         var retrieved = catalog.find(barcode);
 
-        assertThat(retrieved, equalTo(holding));
+        assertThat(retrieved).isEqualTo(holding);
     }
 
     @Test
@@ -86,7 +83,7 @@ class CatalogTest {
 
         var retrieved = catalog.find(barcode);
 
-        assertThat(retrieved.getCopyNumber(), equalTo(2));
+        assertThat(retrieved.getCopyNumber()).isEqualTo(2);
     }
 
     @Test
@@ -98,6 +95,6 @@ class CatalogTest {
         for (var holding : catalog)
             results.add(holding.getBarcode());
 
-        assertThat(results, hasExactlyItems(barcode1, barcode2));
+        assertThat(results).containsExactlyInAnyOrder(barcode1, barcode2);
     }
 }

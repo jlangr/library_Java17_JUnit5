@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.sameInstance;
-import static testutil.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class HoldingMapTest {
     private HoldingMap map;
@@ -22,31 +19,31 @@ class HoldingMapTest {
 
     @Test
     void isEmptyWhenCreated() {
-        assertThat(map.isEmpty(), equalTo(true));
+        assertThat(map.isEmpty()).isTrue();
     }
 
     @Test
     void hasSizeZeroWhenCreated() {
-        assertThat(map.size(), equalTo(0));
+        assertThat(map.size()).isEqualTo(0);
     }
 
     @Test
     void containsFailsWhenHoldingNotFound() {
-        assertThat(map.contains(holding), equalTo(false));
+        assertThat(map.contains(holding)).isFalse();
     }
 
     @Test
     void containsAddedHolding() {
         map.add(holding);
 
-        assertThat(map.contains(holding), equalTo(true));
+        assertThat(map.contains(holding)).isTrue();
     }
 
     @Test
     void sizeIncrementedOnAddingHolding() {
         map.add(holding);
 
-        assertThat(map.size(), equalTo(1));
+        assertThat(map.size()).isEqualTo(1);
     }
 
     @Test
@@ -55,7 +52,7 @@ class HoldingMapTest {
 
         var retrieved = map.get(holding.getBarcode());
 
-        assertThat(retrieved, sameInstance(holding));
+        assertThat(retrieved).isSameAs(holding);
     }
 
     @Test
@@ -67,7 +64,7 @@ class HoldingMapTest {
 
         var holdings = map.holdings();
 
-        assertThat(holdings, hasExactlyItemsInAnyOrder(holdingA, holdingB));
+        assertThat(holdings).containsExactlyInAnyOrder(holdingA, holdingB);
     }
 
     @Test
@@ -76,7 +73,7 @@ class HoldingMapTest {
 
         map.remove(holding);
 
-        assertThat(map.contains(holding), equalTo(false));
+        assertThat(map.contains(holding)).isFalse();
     }
 
     @Test
@@ -85,7 +82,7 @@ class HoldingMapTest {
 
         map.remove(holding);
 
-        assertThat(map.size(), equalTo(0));
+        assertThat(map.size()).isEqualTo(0);
     }
 
     @Test
@@ -99,6 +96,6 @@ class HoldingMapTest {
         for (var holding : map)
             retrieved.add(holding);
 
-        assertThat(retrieved, hasExactlyItemsInAnyOrder(holdingA, holdingB));
+        assertThat(retrieved).containsExactlyInAnyOrder(holdingA, holdingB);
     }
 }

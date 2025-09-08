@@ -3,8 +3,7 @@ package com.langrsoft.util;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReflectUtilTest {
@@ -25,7 +24,7 @@ class ReflectUtilTest {
 
             var result = reflectUtil.mapAccessorToString(method, object, String.class);
 
-            assertThat(result, equalTo("smelt"));
+            assertThat(result).isEqualTo("smelt");
         }
 
         @Test
@@ -37,7 +36,7 @@ class ReflectUtilTest {
             var object = new CannotRun();
 
             assertThrows(ReflectException.class, () ->
-                    reflectUtil.mapAccessorToString(badMethod, object, String.class));
+               reflectUtil.mapAccessorToString(badMethod, object, String.class));
         }
 
         @Test
@@ -49,7 +48,7 @@ class ReflectUtilTest {
             var object = new Sample();
 
             assertThrows(ReflectException.class, () ->
-                    reflectUtil.mapAccessorToString(method, object, String.class));
+               reflectUtil.mapAccessorToString(method, object, String.class));
         }
     }
 
@@ -64,13 +63,13 @@ class ReflectUtilTest {
 
             var method = reflectUtil.getMethod("myMethod", Sample.class);
 
-            assertThat("myMethod", equalTo(method.getName()));
+            assertThat(method.getName()).isEqualTo("myMethod");
         }
 
         @Test
         void rethrowsNoSuchMethodException() {
             assertThrows(ReflectException.class,
-                    () -> reflectUtil.getMethod("nope", String.class));
+               () -> reflectUtil.getMethod("nope", String.class));
         }
     }
 }
