@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +28,7 @@ class PatronControllerTest {
 
     @InjectMocks
     PatronController patronController;
+
     @Mock
     PatronService patronService;
 
@@ -44,38 +44,39 @@ class PatronControllerTest {
         when(patronService.add("a name")).thenReturn("anID");
 
         var result = mockMvc.perform(postAsJson("/patrons", request))
-                .andExpect(status().isOk())
-                .andReturn();
+           .andExpect(status().isOk())
+           .andReturn();
 
         var id = result.getResponse().getContentAsString();
-        assertThat(id, equalTo("anID"));
+        assertThat(id).isEqualTo("anID");
     }
-
 
     @Test
     void retrieveAll() throws Exception {
         var patron1 = new Patron("1", "A");
         var patron2 = new Patron("2", "B");
-        when (patronService.allPatrons())
-                .thenReturn(List.of(patron1, patron2));
+        when(patronService.allPatrons())
+           .thenReturn(List.of(patron1, patron2));
 
         var results = mockMvc.perform(get("/patrons"))
-                .andReturn();
+           .andReturn();
 
         var retrieved = resultContent(results, PatronRequest[].class);
         var names = Arrays.stream(retrieved)
-                        .map(PatronRequest::getName).collect(toList());
-        assertThat(names, equalTo(List.of("A", "B")));
+           .map(PatronRequest::getName)
+           .collect(toList());
+
+        assertThat(names).isEqualTo(List.of("A", "B"));
     }
 
     @Test
-    public void retrieve() throws Exception {
+    void retrieve() throws Exception {
         when(patronService.find("42")).thenReturn(new Patron("xyz"));
 
         var results = mockMvc.perform(get("/patrons/42"))
-                .andExpect(status().isOk())
-                .andReturn();
+           .andExpect(status().isOk())
+           .andReturn();
 
-        assertThat(resultContent(results, PatronRequest.class).getName(), equalTo("xyz"));
+        assertThat(resultContent(results, PatronRequest.class).getName()).isEqualTo("xyz");
     }
 }

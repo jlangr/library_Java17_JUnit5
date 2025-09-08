@@ -19,8 +19,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -52,7 +51,7 @@ class HoldingControllerTest {
             var request = new AddHoldingRequest("sourceId", "b1");
 
             mockMvc.perform(postAsJson("/holdings", request))
-                    .andExpect(status().isOk());
+               .andExpect(status().isOk());
 
             verify(holdingService).add("sourceId", "b1");
         }
@@ -66,7 +65,7 @@ class HoldingControllerTest {
             var checkoutRequest = new CheckoutRequest("p1", "QA123:42", checkoutDate);
 
             mockMvc.perform(postAsJson("/holdings/checkout", checkoutRequest))
-                    .andExpect(status().isOk());
+               .andExpect(status().isOk());
 
             verify(holdingService).checkOut("p1", "QA123:42", checkoutDate);
         }
@@ -75,10 +74,10 @@ class HoldingControllerTest {
         void returnsConflictWhenServiceThrowsAlreadyCheckedOut() throws Exception {
             var checkoutRequest = new CheckoutRequest("", "", new Date());
             doThrow(HoldingAlreadyCheckedOutException.class)
-                    .when(holdingService).checkOut(anyString(), anyString(), any(Date.class));
+               .when(holdingService).checkOut(anyString(), anyString(), any(Date.class));
 
             mockMvc.perform(postAsJson("/holdings/checkout", checkoutRequest))
-                    .andExpect(status().isConflict());
+               .andExpect(status().isConflict());
         }
     }
 
@@ -89,7 +88,7 @@ class HoldingControllerTest {
             var checkinRequest = new CheckinRequest("QA123:1", TODAY, "b1");
 
             mockMvc.perform(postAsJson("/holdings/checkin", checkinRequest))
-                    .andExpect(status().isOk());
+               .andExpect(status().isOk());
 
             verify(holdingService).checkIn("QA123:1", TODAY, "b1");
         }
@@ -104,12 +103,12 @@ class HoldingControllerTest {
             when(holdingService.find("QA123:1")).thenReturn(holding);
 
             var result = mockMvc.perform(get("/holdings/QA123:1"))
-                    .andExpect(status().isOk())
-                    .andReturn();
+               .andExpect(status().isOk())
+               .andReturn();
 
             var retrieved = resultContent(result, HoldingResponse.class);
-            assertThat(retrieved.getBarcode(), equalTo(holding.getBarcode()));
-            assertThat(retrieved.getAuthor(), equalTo("Heller"));
+            assertThat(retrieved.getBarcode()).isEqualTo(holding.getBarcode());
+            assertThat(retrieved.getAuthor()).isEqualTo("Heller");
         }
     }
 
@@ -121,16 +120,18 @@ class HoldingControllerTest {
             var holding1 = new HoldingBuilder().author("Heller").branch(branch).build();
             var holding2 = new HoldingBuilder().author("Kafka").branch(branch).build();
             when(holdingService.findByBranch("b1"))
-                    .thenReturn(List.of(holding1, holding2));
+               .thenReturn(List.of(holding1, holding2));
 
             var result = mockMvc.perform(get("/holdings?branchScanCode=b1"))
-                    .andExpect(status().isOk())
-                    .andReturn();
+               .andExpect(status().isOk())
+               .andReturn();
 
             var retrieved = resultContent(result, HoldingResponse[].class);
             var authors = Arrays.stream(retrieved)
-                    .map(HoldingResponse::getAuthor).toList();
-            assertThat(authors, equalTo(List.of("Heller", "Kafka")));
+               .map(HoldingResponse::getAuthor)
+               .toList();
+
+            assertThat(authors).isEqualTo(List.of("Heller", "Kafka"));
         }
     }
 }

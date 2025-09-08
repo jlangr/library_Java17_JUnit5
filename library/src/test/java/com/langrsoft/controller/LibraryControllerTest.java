@@ -17,8 +17,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import static java.util.Calendar.MARCH;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,7 +43,7 @@ class LibraryControllerTest {
     @Test
     void clearsAllData() throws Exception {
         mockMvc.perform(post("/clear"))
-                .andExpect(status().isOk());
+           .andExpect(status().isOk());
 
         verify(libraryData).deleteBranchesHoldingsPatrons();
     }
@@ -64,12 +63,12 @@ class LibraryControllerTest {
             mockMvc.perform(postAsJson("/materials", materialRequest));
 
             var result = mockMvc.perform(get("/retrieveMaterial/QB234"))
-                    .andExpect(status().isOk())
-                    .andReturn();
+               .andExpect(status().isOk())
+               .andReturn();
 
             var retrieved = resultContent(result, Material.class);
-            assertThat(retrieved.getAuthor(), equalTo("Kafka"));
-            assertThat(retrieved.getYear(), equalTo("1923"));
+            assertThat(retrieved.getAuthor()).isEqualTo("Kafka");
+            assertThat(retrieved.getYear()).isEqualTo("1923");
         }
     }
 
@@ -81,7 +80,7 @@ class LibraryControllerTest {
 
             mockMvc.perform(postAsJson("/current_date", date));
 
-            assertThat(retrieveCurrentDate(), equalTo(date));
+            assertThat(retrieveCurrentDate()).isEqualTo(date);
         }
 
         @Test
@@ -90,7 +89,7 @@ class LibraryControllerTest {
 
             mockMvc.perform(post("/reset_current_date"));
 
-            assertThat(retrieveCurrentDate(), equalTo(DateUtil.toDate(LocalDate.now())));
+            assertThat(retrieveCurrentDate()).isEqualTo(DateUtil.toDate(LocalDate.now()));
         }
 
         private Date retrieveCurrentDate() throws Exception {
@@ -98,5 +97,4 @@ class LibraryControllerTest {
             return resultContent(result, Date.class);
         }
     }
-
 }

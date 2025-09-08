@@ -2,8 +2,7 @@ package com.langrsoft.controller;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PatronRequestTest {
     @Test
@@ -11,7 +10,8 @@ public class PatronRequestTest {
         var patronRequest = new PatronRequest();
         patronRequest.name = "myName";
         patronRequest.id = "42";
-        assertThat(patronRequest.toString(), containsString("myName"));
-        assertThat(patronRequest.toString(), containsString("42"));
+
+        assertThat(patronRequest.toString()).contains("myName");
+        assertThat(patronRequest.toString()).contains("42");
     }
 }

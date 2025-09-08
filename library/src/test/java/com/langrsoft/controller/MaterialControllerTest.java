@@ -9,8 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,16 +30,16 @@ class MaterialControllerTest {
     @Test
     void getMaterialType() throws Exception {
         var result = mockMvc.perform(get("/material/BOOK"))
-                .andReturn();
+           .andReturn();
 
         var materialType = resultContent(result, MaterialType.class);
         assertSame(MaterialType.BOOK, materialType);
-        assertThat(materialType.getDailyFine(), equalTo(MaterialType.BOOK.getDailyFine()));
+        assertThat(materialType.getDailyFine()).isEqualTo(MaterialType.BOOK.getDailyFine());
     }
 
     @Test
     void getMaterialTypeReturns404OnInvalidMaterialType() throws Exception {
-        var result = mockMvc.perform(get("/material/BADTYPE"))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/material/BADTYPE"))
+           .andExpect(status().isNotFound());
     }
 }

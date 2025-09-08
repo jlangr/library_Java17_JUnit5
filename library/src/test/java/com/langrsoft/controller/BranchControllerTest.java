@@ -14,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,12 +43,12 @@ class BranchControllerTest {
         when(branchService.add("branch1name")).thenReturn("newId1");
 
         var result = mockMvc.perform(post("/branches")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(branchRequest1)))
-                .andExpect(status().isOk())
-                .andReturn();
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(branchRequest1)))
+           .andExpect(status().isOk())
+           .andReturn();
 
-        assertThat(contentAsString(result), equalTo("newId1"));
+        assertThat(contentAsString(result)).isEqualTo("newId1");
     }
 
     @Test
@@ -58,15 +56,15 @@ class BranchControllerTest {
         var branch1 = new Branch("b1", "branch A");
         var branch2 = new Branch("b2", "branch B");
         when(branchService.allBranches())
-                .thenReturn(asList(branch1, branch2));
+           .thenReturn(asList(branch1, branch2));
 
         var result = mockMvc.perform(get("/branches"))
-                .andExpect(status().isOk())
-                .andReturn();
+           .andExpect(status().isOk())
+           .andReturn();
 
-        assertThat(resultContent(result, BranchRequest[].class),
-                arrayContaining(
-                        new BranchRequest(branch1),
-                        new BranchRequest(branch2)));
+        assertThat(resultContent(result, BranchRequest[].class))
+           .containsExactly(
+              new BranchRequest(branch1),
+              new BranchRequest(branch2));
     }
 }
