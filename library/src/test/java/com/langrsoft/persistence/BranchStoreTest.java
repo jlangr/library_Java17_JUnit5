@@ -4,9 +4,7 @@ import com.langrsoft.domain.Branch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static testutil.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class BranchStoreTest {
     private BranchStore store;
@@ -24,7 +22,7 @@ class BranchStoreTest {
 
         store.save(branch);
 
-        assertThat(branch.getScanCode(), startsWith("b"));
+        assertThat(branch.getScanCode()).startsWith("b");
     }
 
     @Test
@@ -35,7 +33,7 @@ class BranchStoreTest {
 
         store.save(branchB);
 
-        assertThat(branchA.getScanCode(), not(equalTo(branchB.getScanCode())));
+        assertThat(branchA.getScanCode()).isNotEqualTo(branchB.getScanCode());
     }
 
     @Test
@@ -44,7 +42,7 @@ class BranchStoreTest {
 
         store.save(branch);
 
-        assertThat(branch.getScanCode(), equalTo("b1964"));
+        assertThat(branch.getScanCode()).isEqualTo("b1964");
     }
 
     @Test
@@ -53,7 +51,7 @@ class BranchStoreTest {
 
         var retrieved = store.findByName("name");
 
-        assertThat(retrieved.getName(), equalTo("name"));
+        assertThat(retrieved.getName()).isEqualTo("name");
     }
 
     @Test
@@ -64,7 +62,7 @@ class BranchStoreTest {
 
         var retrieved = store.findByName("name");
 
-        assertThat(branch, not(sameInstance(retrieved)));
+        assertThat(branch).isNotSameAs(retrieved);
     }
 
     @Test
@@ -74,7 +72,7 @@ class BranchStoreTest {
 
         var branches = store.getAll();
 
-        assertThat(branches, hasExactlyItemsInAnyOrder(branch));
+        assertThat(branches).containsExactly(branch);
     }
 
     @Test
@@ -83,17 +81,17 @@ class BranchStoreTest {
 
         var retrieved = store.findByScanCode(EAST_BRANCH.getScanCode());
 
-        assertThat(retrieved, is(EAST_BRANCH));
+        assertThat(retrieved).isEqualTo(EAST_BRANCH);
     }
 
     @Test
     void findsCheckedOutBranch() {
-        assertThat(store.findByScanCode(Branch.CHECKED_OUT.getScanCode()),
-                is(sameInstance(Branch.CHECKED_OUT)));
+        assertThat(store.findByScanCode(Branch.CHECKED_OUT.getScanCode()))
+           .isSameAs(Branch.CHECKED_OUT);
     }
 
     @Test
     void findsBranchByScanCodeReturnsNullWhenNotFound() {
-        assertThat(store.findByScanCode(""), nullValue());
+        assertThat(store.findByScanCode("")).isNull();
     }
 }

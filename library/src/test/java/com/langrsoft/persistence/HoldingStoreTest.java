@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static testutil.CollectionsUtil.soleElement;
 
@@ -55,18 +54,18 @@ class HoldingStoreTest {
 
             @Test
             void returnsListContainingSavedHoldings() {
-                assertThat(soleElement(retrieved).getMaterial(), equalTo(savedHolding.getMaterial()));
+                assertThat(soleElement(retrieved).getMaterial()).isEqualTo(savedHolding.getMaterial());
             }
 
             @Test
             void returnsNewInstance() {
-                assertThat(soleElement(retrieved), not(sameInstance(savedHolding)));
+                assertThat(soleElement(retrieved)).isNotSameAs(savedHolding);
             }
         }
 
         @Test
         void returnsEmptyListWhenNothingFound() {
-            assertThat(store.findByClassification("nonexistent"), empty());
+            assertThat(store.findByClassification("nonexistent")).isEmpty();
         }
 
         private String classification(Holding holding) {
@@ -86,12 +85,12 @@ class HoldingStoreTest {
         void returnsMatchingHolding() {
             var holding = store.findByBarcode(savedHolding.getBarcode());
 
-            assertThat(holding.getBarcode(), equalTo(savedHolding.getBarcode()));
+            assertThat(holding.getBarcode()).isEqualTo(savedHolding.getBarcode());
         }
 
         @Test
         void returnsNullWhenNotFound() {
-            assertThat(store.findByBarcode("NONEXISTENT:1"), nullValue());
+            assertThat(store.findByBarcode("NONEXISTENT:1")).isNull();
         }
     }
 
@@ -105,7 +104,7 @@ class HoldingStoreTest {
 
         @Test
         void returnsEmptyListWhenNotFound() {
-            assertThat(store.findByBranch("nonexistent scancode"), empty());
+            assertThat(store.findByBranch("nonexistent scancode")).isEmpty();
         }
 
         @Test
@@ -116,7 +115,7 @@ class HoldingStoreTest {
 
             var holdings = store.findByBranch("scancode");
 
-            assertThat(holdings, contains(holding));
+            assertThat(holdings).containsExactly(holding);
         }
     }
 }

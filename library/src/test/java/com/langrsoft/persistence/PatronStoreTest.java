@@ -5,11 +5,9 @@ import com.langrsoft.domain.Patron;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static testutil.CollectionsUtil.soleElement;
-import static testutil.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
 
 class PatronStoreTest {
     PatronStore store;
@@ -27,7 +25,7 @@ class PatronStoreTest {
 
         var patrons = store.getAll();
 
-        assertThat(soleElement(patrons), equalTo(patronSmith));
+        assertThat(soleElement(patrons)).isEqualTo(patronSmith);
     }
 
     @Test
@@ -36,7 +34,7 @@ class PatronStoreTest {
 
         store.add(patron);
 
-        assertThat(patron.getId().startsWith("p"), is(true));
+        assertThat(patron.getId()).startsWith("p");
     }
 
     @Test
@@ -47,7 +45,7 @@ class PatronStoreTest {
         store.add(patronA);
         store.add(patronB);
 
-        assertThat(patronA.getId(), not(equalTo(patronB.getId())));
+        assertThat(patronA.getId()).isNotEqualTo(patronB.getId());
     }
 
     @Test
@@ -56,7 +54,7 @@ class PatronStoreTest {
 
         store.add(patron);
 
-        assertThat(store.find("p12345").getId(), equalTo("p12345"));
+        assertThat(store.find("p12345").getId()).isEqualTo("p12345");
     }
 
     @Test
@@ -65,7 +63,7 @@ class PatronStoreTest {
 
         var found = store.find(patronSmith.getId());
 
-        assertThat(found, not(sameInstance(patronSmith)));
+        assertThat(found).isNotSameAs(patronSmith);
     }
 
     @Test
@@ -76,14 +74,14 @@ class PatronStoreTest {
 
         var patron = store.find(patronSmith.getId());
 
-        assertThat(patron.holdingMap().holdings(), hasExactlyItemsInAnyOrder(holding));
+        assertThat(patron.holdingMap().holdings()).containsExactly(holding);
     }
 
     @Test
     void throwsOnAddingHoldingToNonexistentPatron() {
         var holding = new HoldingBuilder().build();
         assertThrows(PatronNotFoundException.class, () ->
-                store.addHoldingToPatron(patronSmith, holding));
+           store.addHoldingToPatron(patronSmith, holding));
     }
 
     @Test
@@ -92,6 +90,6 @@ class PatronStoreTest {
 
         var found = store.find(patronSmith.getId());
 
-        assertThat(found.getName(), equalTo(patronSmith.getName()));
+        assertThat(found.getName()).isEqualTo(patronSmith.getName());
     }
 }
