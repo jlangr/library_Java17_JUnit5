@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,19 +39,19 @@ class HoldingService_WithBranchCreatedTest {
 
         var holdings = service.allHoldings();
 
-        assertThat(holdings.size(), equalTo(3));
+        assertThat(holdings.size()).isEqualTo(3);
     }
 
     @Test
     void storesNewHoldingAtBranch() {
         var barcode = addHolding();
 
-        assertThat(service.find(barcode).getBranch().getScanCode(), equalTo(branchScanCode));
+        assertThat(service.find(barcode).getBranch().getScanCode()).isEqualTo(branchScanCode);
     }
 
     @Test
     void findByBarCodeReturnsNullWhenNotFound() {
-        assertThat(service.find("999:1"), nullValue());
+        assertThat(service.find("999:1")).isNull();
     }
 
     @Test
@@ -63,32 +61,32 @@ class HoldingService_WithBranchCreatedTest {
         service.transfer(barcode, branchScanCode);
 
         var holding = service.find(barcode);
-        assertThat(holding.getBranch().getScanCode(), equalTo(branchScanCode));
+        assertThat(holding.getBranch().getScanCode()).isEqualTo(branchScanCode);
     }
 
     @Test
     void throwsOnTransferOfNonexistentHolding() {
         assertThrows(HoldingNotFoundException.class, () ->
-                service.transfer("XXX:1", branchScanCode));
+           service.transfer("XXX:1", branchScanCode));
     }
 
     @Test
     void holdingIsAvailableWhenNotCheckedOut() {
         var barcode = addHolding();
 
-        assertThat(service.isAvailable(barcode), equalTo(true));
+        assertThat(service.isAvailable(barcode)).isTrue();
     }
 
     @Test
     void availabilityCheckThrowsWhenHoldingNotFound() {
         assertThrows(HoldingNotFoundException.class, () ->
-                service.isAvailable("345:1"));
+           service.isAvailable("345:1"));
     }
 
     @Test
     void checkinThrowsWhenHoldingIdNotFound() {
         var date = new Date();
         assertThrows(HoldingNotFoundException.class, () ->
-                service.checkIn("999:1", date, branchScanCode));
+           service.checkIn("999:1", date, branchScanCode));
     }
 }

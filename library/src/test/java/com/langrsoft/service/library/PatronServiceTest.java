@@ -4,8 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import com.langrsoft.persistence.PatronStore;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PatronServiceTest {
@@ -21,7 +20,7 @@ class PatronServiceTest {
     void answersGeneratedId() {
         var scanCode = service.add("name");
 
-        assertThat(scanCode, startsWith("p"));
+        assertThat(scanCode).startsWith("p");
     }
 
     @Test
@@ -30,24 +29,24 @@ class PatronServiceTest {
 
         var patron = service.find("p123");
 
-        assertThat(patron.getName(), equalTo("xyz"));
+        assertThat(patron.getName()).isEqualTo("xyz");
     }
 
     @Test
     void rejectsPatronIdNotStartingWithP() {
         assertThrows(InvalidPatronIdException.class, () ->
-                service.add("234", ""));
+           service.add("234", ""));
     }
 
     @Test
     void rejectsAddOfDuplicatePatron() {
         service.add("p556", "");
         assertThrows(DuplicatePatronException.class, () ->
-            service.add("p556", ""));
+           service.add("p556", ""));
     }
 
     @Test
     void answersNullWhenPatronNotFound() {
-        assertThat(service.find("nonexistent id"), nullValue());
+        assertThat(service.find("nonexistent id")).isNull();
     }
 }

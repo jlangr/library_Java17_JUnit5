@@ -7,8 +7,7 @@ import com.langrsoft.domain.ClassificationApiFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,19 +33,19 @@ class HoldingServiceTest {
 
         var holding = service.find(barcode);
 
-        assertThat(holding.getMaterial().getSourceId(), equalTo(isbn));
+        assertThat(holding.getMaterial().getSourceId()).isEqualTo(isbn);
     }
 
     @Test
     void addThrowsWhenSourceIdNotFound() {
         assertThrows(InvalidSourceIdException.class, () ->
-            service.add("nonexistent", branchScanCode));
+           service.add("nonexistent", branchScanCode));
     }
 
     @Test
     void throwsExceptionWhenBranchNotFound() {
         var thrown = assertThrows(BranchNotFoundException.class, () ->
-                    service.add("", "badBranchId"));
-        assertThat(thrown.getMessage(), equalTo("Branch not found: badBranchId"));
+           service.add("", "badBranchId"));
+        assertThat(thrown.getMessage()).isEqualTo("Branch not found: badBranchId");
     }
 }

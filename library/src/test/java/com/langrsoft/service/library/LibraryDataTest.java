@@ -8,8 +8,7 @@ import com.langrsoft.domain.Patron;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,8 +34,8 @@ class LibraryDataTest {
 
         new LibraryData().deleteBranchesHoldingsPatrons();
 
-        assertThat(patronService.allPatrons().isEmpty(), equalTo(true));
-        assertThat(holdingService.allHoldings().isEmpty(), equalTo(true));
-        assertThat(branchService.allBranches().isEmpty(), equalTo(true));
+        assertThat(patronService.allPatrons()).isEmpty();
+        assertThat(holdingService.allHoldings()).isEmpty();
+        assertThat(branchService.allBranches()).isEmpty();
     }
 }

@@ -7,8 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +24,7 @@ class HoldingService_FindByBranchTest {
 
     private void addHolding(String sourceId, String branchScanCode) {
         when(classificationApi.retrieveMaterial(sourceId))
-                .thenReturn(new Material(sourceId, "", "", "", ""));
+           .thenReturn(new Material(sourceId, "", "", "", ""));
         service.add(sourceId, branchScanCode);
     }
 
@@ -40,8 +39,8 @@ class HoldingService_FindByBranchTest {
         var holdings = service.findByBranch(branchAScanCode);
 
         var holdingSourceIds = holdings.stream()
-                .map(h -> h.getMaterial().getSourceId())
-                .toList();
-        assertThat(holdingSourceIds, equalTo(asList("123", "456")));
+           .map(h -> h.getMaterial().getSourceId())
+           .toList();
+        assertThat(holdingSourceIds).containsExactly("123", "456");
     }
 }

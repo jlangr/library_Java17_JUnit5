@@ -5,10 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import com.langrsoft.util.ListUtil;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static testutil.HasExactlyItems.hasExactlyItems;
 
 class BranchServiceTest {
     private BranchService service;
@@ -25,27 +23,27 @@ class BranchServiceTest {
 
         var branch = service.find("b2");
 
-        assertThat(branch.getName(), equalTo("name"));
+        assertThat(branch.getName()).isEqualTo("name");
     }
 
     @Test
     void rejectsDuplicateScanCode() {
         service.add("", "b559");
         assertThrows(DuplicateBranchCodeException.class, () ->
-                service.add("", "b559"));
+           service.add("", "b559"));
     }
 
     @Test
     void rejectsScanCodeNotStartingWithB() {
         assertThrows(InvalidBranchCodeException.class, () ->
-                service.add("", "c2234"));
+           service.add("", "c2234"));
     }
 
     @Test
     void answersGeneratedId() {
         var scanCode = service.add("");
 
-        assertThat(scanCode.startsWith("b"), equalTo(true));
+        assertThat(scanCode).startsWith("b");
     }
 
     @Test
@@ -54,8 +52,8 @@ class BranchServiceTest {
 
         var branch = service.find(scanCode);
 
-        assertThat(branch.getName(), equalTo("a branch"));
-        assertThat(branch.getScanCode(), equalTo(scanCode));
+        assertThat(branch.getName()).isEqualTo("a branch");
+        assertThat(branch.getScanCode()).isEqualTo(scanCode);
     }
 
     @Test
@@ -66,6 +64,6 @@ class BranchServiceTest {
         var all = service.allBranches();
 
         var scanCodes = new ListUtil().map(all, "getScanCode", Branch.class, String.class);
-        assertThat(scanCodes, hasExactlyItems(eastScanCode, westScanCode));
+        assertThat(scanCodes).containsExactly(eastScanCode, westScanCode);
     }
 }
