@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 class SomeBasicJUnitTests {
     @Disabled("uncomment when ready")
     @Test
     void supportsBasicMath() {
-        assertThat(4 * 8, equalTo(null /* what really? */));
+        assertThat(4 * 8).isEqualTo(32);
     }
 
     @Disabled("uncomment when ready")
@@ -24,7 +24,7 @@ class SomeBasicJUnitTests {
 
         numbers.add(1);
 
-        assertThat(numbers, equalTo(null /* what really? */));
+        assertThat(numbers).isEqualTo(asList(12, 1, 1, 1, 2, 1, 3, 1));
     }
 
     @Disabled("uncomment when ready")
@@ -32,9 +32,11 @@ class SomeBasicJUnitTests {
     void doublesEachElementInAList() {
         List<Integer> numbers = List.of(2, 5, 10, 105);
 
-        var result = new ArrayList<>(numbers); // replace with code that passes the test!
+        var result = numbers.stream()
+           .map(n -> n * 2)
+           .toList();
 
-        assertThat(result, equalTo(asList(4, 10, 20, 210)));
+        assertThat(result).isEqualTo(asList(4, 10, 20, 210));
     }
 
     @Disabled("uncomment when ready")
@@ -42,8 +44,6 @@ class SomeBasicJUnitTests {
     void handlesInterestingFloatPointResults() {
         var result = 0.1 + 0.2;
 
-        assertThat(result, equalTo(0.3));
-        /* Replace 0.0 with a better matcher involving 0.3.
-           How do we best compare against floating point numbers? */
+        assertThat(result).isCloseTo(0.3, within(1e-10));
     }
 }

@@ -1,12 +1,4 @@
-//package util;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Disabled;
-//import org.junit.jupiter.api.Test;
-//
-//import static org.hamcrest.MatcherAssert.assertThat;
-//import static org.hamcrest.Matchers.equalTo;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
+//package com.langrsoft.exercises;
 //
 //// 0. Uncomment the whole thing.
 //// 1. Un-ignore the next commented-out test method.
@@ -18,67 +10,79 @@
 //// 6. If there is a commented-out assertion, uncomment it. It should fail. If not, return to step 5.
 //// 7. Return to step 1.
 //
+//
+//import com.langrsoft.util.InvalidNameException;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Disabled;
+//import org.junit.jupiter.api.Test;
+//
+//import static org.assertj.core.api.Assertions.assertThat;
+//import static org.junit.jupiter.api.Assertions.assertThrows;
+//
 //class AnAuthorNameNormalizer {
-//    private AuthorNameNormalizer normalizer;
+//   private AuthorNameNormalizer normalizer;
 //
-//    @BeforeEach
-//    void create() {
-//        normalizer = new AuthorNameNormalizer();
-//    }
+//   @BeforeEach
+//   void create() {
+//      normalizer = new AuthorNameNormalizer();
+//   }
 //
-//    @Disabled
-//    @Test
-//    void returnsEmptyStringWhenEmpty() {
-//        assertThat(normalizer.normalize(""), equalTo(""));
-//    }
+//   @Disabled
+//   @Test
+//   void returnsEmptyStringWhenEmpty() {
+//      assertThat(normalizer.normalize("")).isEqualTo("");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void returnsSingleWordName() {
-//        assertThat(normalizer.normalize("Plato"), equalTo("Plato"));
-//    }
+//   @Disabled
+//   @Test
+//   void returnsSingleWordName() {
+//      assertThat(normalizer.normalize("Plato")).isEqualTo("Plato");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void returnsLastFirstWhenFirstLastProvided() {
-//      assertThat(normalizer.normalize("Haruki Murakami"), equalTo("Murakami, Haruki"));
-//    }
+//   @Disabled
+//   @Test
+//   void returnsLastFirstWhenFirstLastProvided() {
+//      assertThat(normalizer.normalize("Haruki Murakami")).isEqualTo("Murakami, Haruki");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void trimsLeadingAndTrailingWhitespace() {
-//        assertThat(normalizer.normalize("  Big Boi   "), equalTo("Boi, Big"));
-//    }
+//   @Disabled
+//   @Test
+//   void trimsLeadingAndTrailingWhitespace() {
+//      assertThat(normalizer.normalize("  Big Boi   ")).isEqualTo("Boi, Big");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void initializesMiddleName() {
-//        assertThat(normalizer.normalize("Henry David Thoreau"), equalTo("Thoreau, Henry D."));
-//    }
+//   @Disabled
+//   @Test
+//   void initializesMiddleName() {
+//      assertThat(normalizer.normalize("Henry David Thoreau")).isEqualTo("Thoreau, Henry D.");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void doesNotInitializeOneLetterMiddleName() {
-//        assertThat(normalizer.normalize("Harry S Truman"), equalTo("Truman, Harry S"));
-//    }
+//   @Disabled
+//   @Test
+//   void doesNotInitializeOneLetterMiddleName() {
+//      assertThat(normalizer.normalize("Harry S Truman")).isEqualTo("Truman, Harry S");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void initializesEachOfMultipleMiddleNames() {
-//        assertThat(normalizer.normalize("Julia Scarlett Elizabeth Louis-Dreyfus"), equalTo("Louis-Dreyfus, Julia S. E."));
-//    }
+//   @Disabled
+//   @Test
+//   void initializesEachOfMultipleMiddleNames() {
+//      assertThat(normalizer.normalize("Julia Scarlett Elizabeth Louis-Dreyfus"))
+//         .isEqualTo("Louis-Dreyfus, Julia S. E.");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void appendsSuffixesToEnd() {
-//        assertThat(normalizer.normalize("Martin Luther King, Jr."), equalTo("King, Martin L., Jr."));
-//    }
+//   @Disabled
+//   @Test
+//   void appendsSuffixesToEnd() {
+//      assertThat(normalizer.normalize("Martin Luther King, Jr."))
+//         .isEqualTo("King, Martin L., Jr.");
+//   }
 //
-//    @Disabled
-//    @Test
-//    void throwsWhenNameContainsTwoCommas() {
-//        var thrown = assertThrows(InvalidNameException.class, () ->
-//            normalizer.normalize("Thurston, Howell, III"));
-//        assertThat(thrown.getMessage(), equalTo("name contains 2 commas; maximum is one comma"));
-//    }
+//   @Disabled
+//   @Test
+//   void throwsWhenNameContainsTwoCommas() {
+//      var thrown = assertThrows(InvalidNameException.class, () ->
+//         normalizer.normalize("Thurston, Howell, III"));
+//      assertThat(thrown.getMessage())
+//         .isEqualTo("name contains 2 commas; maximum is one comma");
+//   }
 //}
