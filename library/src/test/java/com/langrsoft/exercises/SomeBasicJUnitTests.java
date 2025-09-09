@@ -11,39 +11,45 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 class SomeBasicJUnitTests {
-    @Disabled("uncomment when ready")
     @Test
     void supportsBasicMath() {
-        assertThat(4 * 8).isEqualTo(32);
+// uncomment and fix when ready
+//        assertThat(4 * 8).isEqualTo(what?);
     }
 
-    @Disabled("uncomment when ready")
     @Test
     void appendsItemToListUsingAdd() {
         var numbers = new ArrayList<>(asList(12, 1, 1, 1, 2, 1, 3));
 
         numbers.add(1);
 
-        assertThat(numbers).isEqualTo(asList(12, 1, 1, 1, 2, 1, 3, 1));
+// uncomment and fix when ready
+//        assertThat(numbers).containsExactly(12, 1, ..what?);
     }
 
-    @Disabled("uncomment when ready")
+    @Disabled("remove this line and fix the test when ready")
     @Test
     void doublesEachElementInAList() {
         List<Integer> numbers = List.of(2, 5, 10, 105);
 
-        var result = numbers.stream()
-           .map(n -> n * 2)
+        // fill out the lambda with appropriate code
+        List<Integer> result = numbers.stream()
+//           .map(n -> /* what */)
            .toList();
 
         assertThat(result).isEqualTo(asList(4, 10, 20, 210));
     }
 
-    @Disabled("uncomment when ready")
+//    @Disabled("uncomment and fix when ready")
     @Test
     void handlesInterestingFloatPointResults() {
         var result = 0.1 + 0.2;
 
-        assertThat(result).isCloseTo(0.3, within(1e-10));
+        // Unncomment this assertion and demonstrate that it fails. Why?
+        // assertThat(result).isEqualTo(0.3);
+
+        // use isCloseTo instead. See:
+        // https://www.javadoc.io/static/org.assertj/assertj-core/3.24.2/org/assertj/core/api/AbstractDoubleAssert.html#isCloseTo(double,org.assertj.core.data.Offset)
+        // assertThat(result).isCloseTo(/* ... fill out the code needed here ... */);
     }
 }
