@@ -119,8 +119,20 @@ class HoldingTest {
       void checkIn() {
          holding.checkOut(TODAY);
          holding.checkIn(TOMORROW, eastBranch);
+      }
+
+      @Test
+      void updatesDateLastCheckedIn() {
          assertThat(holding.dateLastCheckedIn()).isEqualTo(TOMORROW);
+      }
+
+      @Test
+      void makesHoldingAvailable() {
          assertThat(holding.isAvailable()).isTrue();
+      }
+
+      @Test
+      void updatesBranchToReturnedBranch() {
          assertThat(holding.getBranch()).isEqualTo(eastBranch);
       }
    }
