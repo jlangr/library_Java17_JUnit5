@@ -46,12 +46,12 @@ class HoldingService_WithBranchCreatedTest {
     void storesNewHoldingAtBranch() {
         var barcode = addHolding();
 
-        assertThat(service.find(barcode).getBranch().getScanCode()).isEqualTo(branchScanCode);
+        assertThat(service.findHolding(barcode).getBranch().getScanCode()).isEqualTo(branchScanCode);
     }
 
     @Test
     void findByBarCodeReturnsNullWhenNotFound() {
-        assertThat(service.find("999:1")).isNull();
+        assertThat(service.findHolding("999:1")).isNull();
     }
 
     @Test
@@ -60,7 +60,7 @@ class HoldingService_WithBranchCreatedTest {
 
         service.transfer(barcode, branchScanCode);
 
-        var holding = service.find(barcode);
+        var holding = service.findHolding(barcode);
         assertThat(holding.getBranch().getScanCode()).isEqualTo(branchScanCode);
     }
 
