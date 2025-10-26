@@ -116,21 +116,11 @@ public class HoldingService {
         c.setTime(hld.dateDue());
         int d = Calendar.DAY_OF_YEAR;
 
-        // deal with leap year
-        var leapDays = 0;
-        if (c.getActualMaximum(d) == 366) {
-            if (c.get(d) == 60) { // leap day
-                leapDays = 1;
-            }
-        }
-
         if (hld.dateLastCheckedIn().after(c.getTime())) // is it late?
             isLate = true;
 
         if (isLate) {
             int daysLate = hld.daysLate(); // calculate # of days past due
-            if (daysLate > 0)
-                daysLate = daysLate - leapDays;
             int fineBasis = hld.getMaterial().getFormat().getDailyFine();
             switch (hld.getMaterial().getFormat()) {
                 case BOOK:
