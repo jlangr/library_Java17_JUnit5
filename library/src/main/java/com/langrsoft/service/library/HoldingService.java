@@ -4,12 +4,12 @@ import com.langrsoft.domain.*;
 import com.langrsoft.external.Material;
 import com.langrsoft.persistence.PatronStore;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class HoldingService {
    private final Catalog catalog = new Catalog();
+   private PatronService patronService = new PatronService();
 
    public String add(String sourceId, String branchId) {
       var branch = findBranch(branchId);
@@ -90,10 +90,10 @@ public class HoldingService {
 
       holding.checkIn(date, getBranch(branchScanCode));
 
-      var patron = locatePatronWithCheckedOutHolding(holding);
+      var patron = patronService.patronWithCheckedOutHolding(holding);
       patron.remove(holding);
 
-      if (isLate(holding))
+      if (holding.isLate())
          applyFine(holding, patron);
       return holding.daysLate();
    }
@@ -118,20 +118,4 @@ public class HoldingService {
       }
    }
 
-   private boolean isLate(Holding holding) {
-      var calendar = Calendar.getInstance();
-      calendar.setTime(holding.dateDue());
-      return holding.dateLastCheckedIn().after(calendar.getTime());
-   }
-
-   private Patron locatePatronWithCheckedOutHolding(Holding holding) {
-      for (var patron : new PatronService().allPatrons()) {
-         var holdings = patron.holdingMap();
-         for (Holding patronHolding : holdings) {
-            if (holding.getBarcode().equals(patronHolding.getBarcode()))
-               return patron;
-         }
-      }
-      return null;
-   }
 }
