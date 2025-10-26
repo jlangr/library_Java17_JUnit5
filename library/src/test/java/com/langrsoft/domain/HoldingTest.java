@@ -74,7 +74,6 @@ class HoldingTest {
         assertThat(h.getBranch()).isEqualTo(Branch.CHECKED_OUT);
         assertThat(h.isAvailable()).isFalse();
 
-        h.checkOut(TODAY);
         Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
         h.checkIn(tomorrow, eastBranch);
         assertThat(h.dateLastCheckedIn()).isEqualTo(tomorrow);
