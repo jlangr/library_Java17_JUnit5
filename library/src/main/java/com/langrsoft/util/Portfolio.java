@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class Portfolio {
    private Map<String, Integer> holdings = new HashMap<>();
+   private StockLookupService lookupService;
 
    public void purchase(String symbol, int shares) {
       if (shares <= 0)
@@ -35,5 +36,15 @@ public class Portfolio {
 
    private boolean isSelloff(String symbol, int shares) {
       return shares(symbol) == shares;
+   }
+
+   public int value() {
+      if (isEmpty())
+         return 0;
+      return lookupService.currentPrice("NOK");
+   }
+
+   public void setLookupService(StockLookupService lookupService) {
+      this.lookupService = lookupService;
    }
 }
