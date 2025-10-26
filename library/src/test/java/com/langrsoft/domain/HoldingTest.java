@@ -111,14 +111,15 @@ class HoldingTest {
       }
    }
 
+   final static Date TOMORROW = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
+
    @Nested
-   class WhenCheckedIn() {
+   class WhenCheckedIn {
       @BeforeEach
       void checkIn() {
          holding.checkOut(TODAY);
-         Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
-         holding.checkIn(tomorrow, eastBranch);
-         assertThat(holding.dateLastCheckedIn()).isEqualTo(tomorrow);
+         holding.checkIn(TOMORROW, eastBranch);
+         assertThat(holding.dateLastCheckedIn()).isEqualTo(TOMORROW);
          assertThat(holding.isAvailable()).isTrue();
          assertThat(holding.getBranch()).isEqualTo(eastBranch);
       }
