@@ -8,6 +8,7 @@ import java.util.Set;
 public class Portfolio {
    private Map<String, Integer> holdings = new HashMap<>();
    private StockLookupService lookupService;
+   private Auditor auditor;
 
    public void purchase(String symbol, int shares) {
       if (shares <= 0)
@@ -28,6 +29,7 @@ public class Portfolio {
    }
 
    public void sell(String symbol, int shares) {
+      auditor.logSale(symbol, shares);
       if (isSelloff(symbol, shares))
          holdings.remove(symbol);
       else
