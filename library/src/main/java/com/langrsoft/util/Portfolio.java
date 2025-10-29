@@ -41,7 +41,13 @@ public class Portfolio {
    public int value() {
       if (isEmpty())
          return 0;
-      return lookupService.currentPrice("NOK");
+
+      int totalValue = 0;
+      for (var symbol : holdings.keySet()) {
+         int currentPrice = lookupService.currentPrice(symbol);
+         totalValue += currentPrice * shares(symbol);
+      }
+      return totalValue;
    }
 
    public void setLookupService(StockLookupService lookupService) {
