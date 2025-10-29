@@ -1,22 +1,23 @@
 package com.langrsoft.util;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class APortfolioValue {
    private static final int NOKIA_CURRENT_PRICE = 7;
    private static final int APPLE_CURRENT_PRICE = 200;
-   Portfolio portfolio = new Portfolio();
-   StockLookupService service = mock(StockLookupService.class);
 
-   @BeforeEach
-   void injectLookupServiceStub() {
-      portfolio.setLookupService(service);
-   }
+   @InjectMocks
+   Portfolio portfolio;
+   @Mock
+   StockLookupService service;
 
    @Test
    void isWorthNothingWhenCreated() {
