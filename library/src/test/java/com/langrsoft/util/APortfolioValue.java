@@ -3,10 +3,12 @@ package com.langrsoft.util;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class APortfolioValue {
    private static final int NOKIA_CURRENT_PRICE = 7;
-   private static final int APPLE_CURRENT_PRICE = 7;
+   private static final int APPLE_CURRENT_PRICE = 200;
    Portfolio portfolio = new Portfolio();
 
    @Test
@@ -16,12 +18,8 @@ public class APortfolioValue {
 
    @Test
    void isWorthSymbolPriceForSingleSharePurchase() {
-      var service = new StockLookupService() {
-         @Override
-         public int currentPrice(String symbol) {
-            return NOKIA_CURRENT_PRICE;
-         }
-      };
+      var service = mock(StockLookupService.class);
+      when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
       portfolio.setLookupService(service);
 
       portfolio.purchase("NOK", 1);
