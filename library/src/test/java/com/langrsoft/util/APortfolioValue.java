@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +37,15 @@ public class APortfolioValue {
    @Test
    void isWorthSymbolPriceTimesNumberOfShares() {
       when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
+
+      portfolio.purchase("NOK",42);
+
+      assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42);
+   }
+
+   @Test
+   void demonstratesArgumentMatchers() {
+      when(service.currentPrice(anyString())).thenReturn(NOKIA_CURRENT_PRICE);
 
       portfolio.purchase("NOK",42);
 

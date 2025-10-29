@@ -43,7 +43,9 @@ public class Portfolio {
          return 0;
 
       return holdings.keySet().stream()
-         .map(symbol -> lookupService.currentPrice(symbol) * shares(symbol))
+//         .map(symbol -> lookupService.currentPrice(symbol) * shares(symbol))
+         // deliberately broken but still passes the arg matcher test:
+         .map(symbol -> lookupService.currentPrice("XXX" + symbol) * shares(symbol))
          .reduce(0, Integer::sum);
    }
 
