@@ -1,5 +1,6 @@
 package com.langrsoft.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,6 +11,12 @@ public class APortfolioValue {
    private static final int NOKIA_CURRENT_PRICE = 7;
    private static final int APPLE_CURRENT_PRICE = 200;
    Portfolio portfolio = new Portfolio();
+   StockLookupService service = mock(StockLookupService.class);
+
+   @BeforeEach
+   void injectLookupServiceStub() {
+      portfolio.setLookupService(service);
+   }
 
    @Test
    void isWorthNothingWhenCreated() {
@@ -18,9 +25,7 @@ public class APortfolioValue {
 
    @Test
    void isWorthSymbolPriceForSingleSharePurchase() {
-      var service = mock(StockLookupService.class);
       when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
-      portfolio.setLookupService(service);
 
       portfolio.purchase("NOK", 1);
 
@@ -29,13 +34,7 @@ public class APortfolioValue {
 
    @Test
    void isWorthSymbolPriceTimesNumberOfShares() {
-      var service = new StockLookupService() {
-         @Override
-         public int currentPrice(String symbol) {
-            return NOKIA_CURRENT_PRICE;
-         }
-      };
-      portfolio.setLookupService(service);
+      when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
 
       portfolio.purchase("NOK",42);
 
@@ -44,15 +43,8 @@ public class APortfolioValue {
 
    @Test
    void totalsValuesForAllSymbols() {
-      var service = new StockLookupService() {
-         @Override
-         public int currentPrice(String symbol) {
-            return symbol.equals("NOK")
-                     ? NOKIA_CURRENT_PRICE
-                     : APPLE_CURRENT_PRICE;
-         }
-      };
-      portfolio.setLookupService(service);
+      when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
+      when(service.currentPrice("AAPL")).thenReturn(APPLE_CURRENT_PRICE);
 
       portfolio.purchase("NOK",42);
       portfolio.purchase("AAPL",10);
