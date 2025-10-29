@@ -1,5 +1,7 @@
 package com.langrsoft.util;
 
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,5 +63,26 @@ public class APortfolioValue {
       portfolio.purchase("AAPL",10);
 
       assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42 + APPLE_CURRENT_PRICE * 10);
+   }
+
+   @Disabled
+   @Test
+   public void argumentMatchesUseOneUseAll() {
+      when(service.historicalClosingPrice("NOK", anyInt())).thenReturn(42);
+      int daysAgo = new java.util.Random().nextInt();
+
+      var result = service.historicalClosingPrice("NOK", daysAgo);
+
+      assertThat(result).isEqualTo(42);
+   }
+
+   @Test
+   public void argumentMatchesUseOneUseAllWorking() {
+      when(service.historicalClosingPrice(eq("NOK"), anyInt())).thenReturn(42);
+      int daysAgo = new java.util.Random().nextInt();
+
+      var result = service.historicalClosingPrice("NOK", daysAgo);
+
+      assertThat(result).isEqualTo(42);
    }
 }
