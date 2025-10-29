@@ -42,9 +42,14 @@ public class Portfolio {
       if (isEmpty())
          return 0;
 
-      return holdings.keySet().stream()
-         .map(symbol -> lookupService.currentPrice(symbol) * shares(symbol))
-         .reduce(0, Integer::sum);
+      try {
+         return holdings.keySet().stream()
+            .map(symbol -> lookupService.currentPrice(symbol) * shares(symbol))
+            .reduce(0, Integer::sum);
+      }
+      catch (SecurityException e) {
+         throw new ServiceException();
+      }
    }
 
    public void setLookupService(StockLookupService lookupService) {
