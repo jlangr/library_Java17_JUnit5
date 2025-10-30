@@ -1,11 +1,15 @@
 package com.langrsoft.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.Clock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,48 +25,59 @@ public class APortfolioValue {
    Portfolio portfolio;
    @Mock
    StockLookupService service;
+   @Mock
+   Auditor auditor;
+   Clock clock;
 
    @Test
    void isWorthNothingWhenCreated() {
       assertThat(portfolio.value()).isEqualTo(0);
    }
 
-   @Test
-   void isWorthSymbolPriceForSingleSharePurchase() {
-      when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
+   @Nested
+   class NeedingStockExchange {
+      @BeforeEach
+      void setup() {
+      when(service.exchangeLookup(anyString())).thenReturn(new Exchange("NYSE", "New York Stock Exchange"));
+      }
 
-      portfolio.purchase("NOK", 1);
+      @Test
+      void isWorthSymbolPriceForSingleSharePurchase() {
+         when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
 
-      assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE);
-   }
+         portfolio.purchase("NOK", 1);
 
-   @Test
-   void isWorthSymbolPriceTimesNumberOfShares() {
-      when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
+         assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE);
+      }
 
-      portfolio.purchase("NOK",42);
+      @Test
+      void isWorthSymbolPriceTimesNumberOfShares() {
+         when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
 
-      assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42);
-   }
+         portfolio.purchase("NOK", 42);
 
-   @Test
-   void demonstratesArgumentMatchers() {
-      when(service.currentPrice(anyString())).thenReturn(NOKIA_CURRENT_PRICE);
+         assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42);
+      }
 
-      portfolio.purchase("NOK",42);
+      @Test
+      void demonstratesArgumentMatchers() {
+         when(service.currentPrice(anyString())).thenReturn(NOKIA_CURRENT_PRICE);
 
-      assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42);
-   }
+         portfolio.purchase("NOK", 42);
 
-   @Test
-   void totalsValuesForAllSymbols() {
-      when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
-      when(service.currentPrice("AAPL")).thenReturn(APPLE_CURRENT_PRICE);
+         assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42);
+      }
 
-      portfolio.purchase("NOK",42);
-      portfolio.purchase("AAPL",10);
+      @Test
+      void totalsValuesForAllSymbols() {
+         when(service.currentPrice("NOK")).thenReturn(NOKIA_CURRENT_PRICE);
+         when(service.currentPrice("AAPL")).thenReturn(APPLE_CURRENT_PRICE);
 
-      assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42 + APPLE_CURRENT_PRICE * 10);
+         portfolio.purchase("NOK", 42);
+         portfolio.purchase("AAPL", 10);
+
+         assertThat(portfolio.value()).isEqualTo(NOKIA_CURRENT_PRICE * 42 + APPLE_CURRENT_PRICE * 10);
+      }
    }
 
    @Disabled
@@ -88,6 +103,7 @@ public class APortfolioValue {
 
    @Test
    void throwsServiceException() {
+      when(service.exchangeLookup("NOK")).thenReturn(new Exchange("NYSE", "New York Stock Exchange"));
       when(service.currentPrice(anyString())).thenThrow(new SecurityException());
       portfolio.purchase("NOK",10);
 

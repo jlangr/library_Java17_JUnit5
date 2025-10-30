@@ -1,25 +1,53 @@
 package com.langrsoft.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.UUID;
+import java.util.function.Supplier;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class APortfolio {
+   static final Exchange NYSE = new Exchange("NYSE", "New York Stock Exchange");
+
    @InjectMocks
    Portfolio portfolio;
 
    @Mock
    Auditor auditor;
 
+   @Mock
+   StockLookupService lookupService;
+
+   @Mock
+   Supplier<String> uuidSource;
+
    // This should be organized around behaviors, not characteristics.
+   @BeforeEach
+   void setup() {
+      when(lookupService.exchangeLookup(anyString())).thenReturn(NYSE);
+   }
 
    @Nested
    class IsEmpty {
@@ -92,7 +120,6 @@ public class APortfolio {
       @Test
       void throwsWhenPurchasingNonPositiveShares() {
          assertThrows(InvalidPurchaseException.class, () -> portfolio.purchase("AAPL", 0));
-
       }
 
       @Test
@@ -144,6 +171,62 @@ public class APortfolio {
          portfolio.sell("NOK", 10);
 
          verify(auditor).logSale("NOK", 10);
+      }
+
+      @BeforeEach
+      void setup() {
+         when(lookupService.exchangeLookup("NOK")).thenReturn(NYSE);
+      }
+
+      @Test
+      void auditsTradeTransactionOnPurchaseVerifyByPopulatingExpectedObject() {
+         TradeTransaction.uuidSource = () -> "UUID12345";
+         var timestamp = Instant.parse("2025-10-28T12:00:00Z");
+         TradeTransaction.clock = Clock.fixed(timestamp, ZoneOffset.UTC);
+         portfolio.setBrokerageId("BRK123");
+
+         portfolio.purchase("NOK", 10);
+
+         var expectedTransaction = new TradeTransaction(
+            "NOK", 10, timestamp, "BR-123309", NYSE.exchange(), "UUID12345"
+         );
+         verify(auditor).logPurchase(expectedTransaction);
+      }
+
+      org.mockito.ArgumentCaptor<TradeTransaction> captor =
+         ArgumentCaptor.forClass(TradeTransaction.class);
+
+      @Test
+      void auditsTradeTransactionVerifyUsingArgCapture() {
+         portfolio.purchase("NOK", 30);
+
+         verify(auditor).logPurchase(captor.capture());
+         var transaction = captor.getValue();
+         assertThat(transaction.symbol()).isEqualTo("NOK");
+         assertThat(transaction.shares()).isEqualTo(30);
+         assertThat(transaction.exchange()).isEqualTo("NYSE");
+      }
+
+      @Test
+      void auditsTradeTransactionVerifyUsingAssertJ() {
+         portfolio.purchase("NOK", 30);
+
+         verify(auditor).logPurchase(captor.capture());
+         var transaction = captor.getValue();
+         assertThat(transaction)
+            .extracting(TradeTransaction::symbol, TradeTransaction::shares, TradeTransaction::exchange)
+            .containsExactly("NOK", 30, "NYSE");
+      }
+
+      @Test
+      void auditsTradeTransactionOnPurchase() {
+         portfolio.purchase("NOK", 10);
+
+         verify(auditor).logPurchase(argThat(transaction ->
+            transaction.symbol().equals("NOK") &&
+            transaction.shares() == 10 &&
+            transaction.exchange().equals("NYSE")
+         ));
       }
    }
 }

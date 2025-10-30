@@ -1,19 +1,29 @@
 package com.langrsoft.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.time.Clock;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class Portfolio {
    private Map<String, Integer> holdings = new HashMap<>();
    private StockLookupService lookupService;
    private Auditor auditor;
+   private List<TradeTransaction> transactions = new ArrayList<>();
+   private Clock clock = Clock.systemUTC();
+   private Supplier<String> uuidSource;
+   private String brokerageId;
 
    public void purchase(String symbol, int shares) {
       if (shares <= 0)
          throw new InvalidPurchaseException();
+      auditor.logPurchase(createTransaction(symbol, shares));
       holdings.put(symbol, shares(symbol) + shares);
+   }
+
+   private TradeTransaction createTransaction(String symbol, int shares) {
+      return new TradeTransaction(symbol,
+         shares,
+         lookupService.exchangeLookup(symbol).exchange());
    }
 
    public int uniqueSymbolCount() {
@@ -56,5 +66,18 @@ public class Portfolio {
 
    public void setLookupService(StockLookupService lookupService) {
       this.lookupService = lookupService;
+   }
+
+   public List<TradeTransaction> transactions(String nok) {
+      return transactions;
+   }
+
+   public void setClock(Clock clock) {
+      this.clock = clock;
+   }
+
+   public void setBrokerageId(String brokerageId) {
+      this.brokerageId = brokerageId;
+
    }
 }
