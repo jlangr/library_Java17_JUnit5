@@ -41,7 +41,7 @@ public class AuthorNameNormalizer {
 
             retrunname = retrunname  + middleName;
         }
-
+        //Return the processed name
         return retrunname;
     }
 
