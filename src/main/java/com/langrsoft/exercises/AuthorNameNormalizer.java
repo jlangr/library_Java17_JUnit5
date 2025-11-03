@@ -10,6 +10,10 @@ public class AuthorNameNormalizer {
 
 
     public String normalize(String name) {
+        String[] names = name.split(" ");
+        if (names.length >1){
+          return names[1] + ", " + names[0];
+        }
         return name;
 
     }
