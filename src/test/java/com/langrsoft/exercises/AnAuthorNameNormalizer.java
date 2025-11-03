@@ -37,7 +37,6 @@ class AnAuthorNameNormalizer {
       assertThat(normalizer.normalize("Plato")).isEqualTo("Plato");
    }
 
-   @Disabled
    @Test
    void returnsLastFirstWhenFirstLastProvided() {
       assertThat(normalizer.normalize("Haruki Murakami")).isEqualTo("Murakami, Haruki");
