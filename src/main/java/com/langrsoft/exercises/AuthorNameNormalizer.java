@@ -14,7 +14,7 @@ public class AuthorNameNormalizer {
 
 
     public String normalize(String name) {
-        String[] strings = name.split(" ");
+        String[] strings = name.trim().split(" ");
         String result = "";
         for (int i = strings.length - 1; i >= 0; i--) {
             if (i != strings.length - 1) {
