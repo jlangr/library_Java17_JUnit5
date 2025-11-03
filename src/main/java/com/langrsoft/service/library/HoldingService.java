@@ -116,26 +116,34 @@ public class HoldingService {
         c.setTime(hld.dateDue());
         int d = Calendar.DAY_OF_YEAR;
 
-        if (hld.dateLastCheckedIn().after(c.getTime())) // is it late?
+        if (isLate(hld, c)) // is it late?
             isLate = true;
 
         if (isLate) {
-            int daysLate = hld.daysLate(); // calculate # of days past due
-            int fineBasis = hld.getMaterial().getFormat().getDailyFine();
-            switch (hld.getMaterial().getFormat()) {
-                case BOOK:
-                    f.addFine(fineBasis * daysLate);
-                    break;
-                case DVD:
-                    int fine = Math.min(1000, 100 + fineBasis * daysLate);
-                    f.addFine(fine);
-                    break;
-                case NEW_RELEASE_DVD:
-                    f.addFine(fineBasis * daysLate);
-                    break;
-            }
-            return daysLate;
+            return applyFines(hld, f);
         }
         return 0;
+    }
+
+    private int applyFines(Holding hld, Patron f) {
+        int daysLate = hld.daysLate(); // calculate # of days past due
+        int fineBasis = hld.getMaterial().getFormat().getDailyFine();
+        switch (hld.getMaterial().getFormat()) {
+            case BOOK:
+                f.addFine(fineBasis * daysLate);
+                break;
+            case DVD:
+                int fine = Math.min(1000, 100 + fineBasis * daysLate);
+                f.addFine(fine);
+                break;
+            case NEW_RELEASE_DVD:
+                f.addFine(fineBasis * daysLate);
+                break;
+        }
+        return daysLate;
+    }
+
+    private boolean isLate(Holding hld, Calendar c) {
+        return hld.dateLastCheckedIn().after(c.getTime());
     }
 }
