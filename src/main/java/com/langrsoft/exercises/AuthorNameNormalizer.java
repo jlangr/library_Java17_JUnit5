@@ -1,10 +1,6 @@
 package com.langrsoft.exercises;
 
 
-import com.langrsoft.util.NotYetImplementedException;
-
-import java.util.Arrays;
-
 public class AuthorNameNormalizer {
 
     // hints:
@@ -17,26 +13,28 @@ public class AuthorNameNormalizer {
         String[] strings = name.trim().split(" ");
         String result = "";
         String middleString = null;
-        for (int i = strings.length - 1; i >= 0; i--) {
-            if (i != strings.length - 1) {
-                if (strings.length == 3 && i == strings.length - 2) {
-                    middleString = strings[i];
-                    continue;
-                } else {
-                    result = result + ", ";
+        if (strings.length <= 1) {
+            return name;
+        }
+        if (strings.length > 1) {
+            result = strings[strings.length - 1] + ", ";
+            result = result + strings[0];
+        }
+        if (strings.length > 2) {
+            for (int i = 1; i < strings.length - 1; i++) {
+                middleString = strings[i];
+                if (middleString != null) {
+                    result = result + " " + middleString.charAt(0) + (middleString.length() > 1 ? "." : "");
                 }
             }
-            result = result + strings[i];
-        }
-        if (middleString != null) {
-            result = result + " " + middleString.charAt(0) + (middleString.length() > 1 ? "." : "");
         }
         return result;
     }
 
     // See http://stackoverflow.com/questions/275944/java-how-do-i-count-the-number-of-occurrences-of-a-char-in-a-string
     // ... if you need to convert to < Java 8
-    /* private */ long count(String string, char c) {
+    /* private */
+    long count(String string, char c) {
         return string.chars().filter(ch -> ch == c).count();
     }
 }
