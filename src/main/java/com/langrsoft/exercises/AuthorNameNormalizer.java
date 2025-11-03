@@ -19,17 +19,17 @@ public class AuthorNameNormalizer {
         String middleString = null;
         for (int i = strings.length - 1; i >= 0; i--) {
             if (i != strings.length - 1) {
-                if(strings.length == 3 && i == strings.length-2){
+                if (strings.length == 3 && i == strings.length - 2) {
                     middleString = strings[i];
                     continue;
-                }else {
+                } else {
                     result = result + ", ";
                 }
             }
             result = result + strings[i];
         }
-        if (middleString != null){
-           result = result + " "+ middleString.charAt(0)+".";
+        if (middleString != null) {
+            result = result + " " + middleString.charAt(0) + (middleString.length() > 1 ? "." : "");
         }
         return result;
     }
