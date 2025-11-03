@@ -1,8 +1,6 @@
 package com.langrsoft.exercises;
 
 
-import com.langrsoft.util.NotYetImplementedException;
-
 public class AuthorNameNormalizer {
 
     // hints:
@@ -11,8 +9,9 @@ public class AuthorNameNormalizer {
     // - You might find the code simpler later if you use a LinkedList instead of an array.
 
 
-    public String normalize(String string) {
-        throw new NotYetImplementedException();
+    public String normalize(String name) {
+        return name;
+
     }
 
     // See http://stackoverflow.com/questions/275944/java-how-do-i-count-the-number-of-occurrences-of-a-char-in-a-string
