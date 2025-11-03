@@ -16,11 +16,20 @@ public class AuthorNameNormalizer {
     public String normalize(String name) {
         String[] strings = name.trim().split(" ");
         String result = "";
+        String middleString = null;
         for (int i = strings.length - 1; i >= 0; i--) {
             if (i != strings.length - 1) {
-                result = result + ", ";
+                if(strings.length == 3 && i == strings.length-2){
+                    middleString = strings[i];
+                    continue;
+                }else {
+                    result = result + ", ";
+                }
             }
             result = result + strings[i];
+        }
+        if (middleString != null){
+           result = result + " "+ middleString.charAt(0)+".";
         }
         return result;
     }
