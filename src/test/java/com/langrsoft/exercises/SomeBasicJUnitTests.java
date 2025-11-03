@@ -13,6 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SomeBasicJUnitTests {
     @Test
     void supportsBasicMath() {
+
+// uncomment and fix when ready
+
         assertThat(4 * 8).isEqualTo(32);
     }
 
@@ -24,6 +27,7 @@ class SomeBasicJUnitTests {
 
 // uncomment and fix when ready
         assertThat(numbers).containsExactly(12, 1, 1, 1, 2, 1, 3, 1);
+      assertThat(numbers).containsExactly(12, 1, 1,1, 2,1,3,1);
     }
 
 //    @Disabled("remove this line and fix the test when ready")
@@ -37,6 +41,7 @@ class SomeBasicJUnitTests {
            .toList();
 
         assertThat(result).isEqualTo(asList(4, 10, 20, 210));
+        //assertThat(result).isEqualTo(asList(2, 5, 10, 105));
     }
 
 //    @Disabled("uncomment and fix when ready")
@@ -45,8 +50,11 @@ class SomeBasicJUnitTests {
         var result = 0.1 + 0.2;
 
         // Unncomment this assertion and demonstrate that it fails. Why?
+
 //         assertThat(result).isEqualTo(0.3);
 
+         //assertThat(result).isEqualTo(0);
+        assertThat(result).isCloseTo(0.3, Offset.offset(.00001));
         // use isCloseTo instead. See:
         // https://www.javadoc.io/static/org.assertj/assertj-core/3.24.2/org/assertj/core/api/AbstractDoubleAssert.html#isCloseTo(double,org.assertj.core.data.Offset)
          assertThat(result).isCloseTo(0.3, Offset.offset(0.00001));
