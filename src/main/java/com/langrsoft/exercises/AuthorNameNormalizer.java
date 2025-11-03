@@ -9,7 +9,17 @@ public class AuthorNameNormalizer {
     // - You might find the code simpler later if you use a LinkedList instead of an array.
 
 
-    public String normalize(String name) {
+    public String normalize(String name ) {
+        String[] splitoncomma = name.split(",");
+        if(splitoncomma.length ==2){
+            String string1 = nameprocessor(splitoncomma[0]);
+            String suffix = splitoncomma[1].trim();
+            return string1 + ", " +suffix;
+        }
+        return nameprocessor(name);
+    }
+
+    public String nameprocessor(String name) {
         String retrunname = name.trim();
 
         String[] names = retrunname.split(" ");
@@ -33,7 +43,6 @@ public class AuthorNameNormalizer {
         }
 
         return retrunname;
-
     }
 
     // See http://stackoverflow.com/questions/275944/java-how-do-i-count-the-number-of-occurrences-of-a-char-in-a-string
