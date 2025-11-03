@@ -20,6 +20,10 @@ public class AuthorNameNormalizer {
 
         if (names.length >2){
             String middleName  = names[1].substring(0,1) + ".";
+            if (names[1].length() == 1)
+            {
+                middleName = names[1].substring(0,1);
+            }
             retrunname = retrunname  + " " + middleName;
         }
 
