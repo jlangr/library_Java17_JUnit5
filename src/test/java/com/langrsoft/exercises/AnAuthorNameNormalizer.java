@@ -32,7 +32,6 @@ class AnAuthorNameNormalizer {
       assertThat(normalizer.normalize("")).isEqualTo("");
    }
 
-   @Disabled
    @Test
    void returnsSingleWordName() {
       assertThat(normalizer.normalize("Plato")).isEqualTo("Plato");
