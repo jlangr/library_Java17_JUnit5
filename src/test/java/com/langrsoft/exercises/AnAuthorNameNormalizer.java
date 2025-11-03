@@ -64,7 +64,7 @@ class AnAuthorNameNormalizer {
       assertThat(normalizer.normalize("Harry S Truman")).isEqualTo("Truman, Harry S");
    }
 
-   @Disabled
+   //@Disabled
    @Test
    void initializesEachOfMultipleMiddleNames() {
       assertThat(normalizer.normalize("Julia Scarlett Elizabeth Louis-Dreyfus"))

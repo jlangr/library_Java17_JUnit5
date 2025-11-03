@@ -19,12 +19,17 @@ public class AuthorNameNormalizer {
         }
 
         if (names.length >2){
-            String middleName  = names[1].substring(0,1) + ".";
-            if (names[1].length() == 1)
-            {
-                middleName = names[1].substring(0,1);
+            String middleName ="";
+            for(int index = 1;index<names.length-1; index++) {
+
+                String midNameTemp = " "+ names[index].substring(0,1);
+                if (names[index].length() != 1) {
+                    midNameTemp  =  midNameTemp + ".";
+                }
+                middleName = middleName.concat( midNameTemp);
             }
-            retrunname = retrunname  + " " + middleName;
+
+            retrunname = retrunname  + middleName;
         }
 
         return retrunname;
