@@ -10,7 +10,8 @@ public class AuthorNameNormalizer {
 
 
     public String normalize(String name) {
-        String[] strings = name.trim().split(" ");
+        String[] originalSplit = name.trim().split(",");
+        String[] strings = originalSplit[0].split(" ");
         String result = "";
         String middleString = null;
         if (strings.length <= 1) {
@@ -27,6 +28,9 @@ public class AuthorNameNormalizer {
                     result = result + " " + middleString.charAt(0) + (middleString.length() > 1 ? "." : "");
                 }
             }
+        }
+        if(originalSplit.length > 1) {
+            result = result + ", " + originalSplit [1].trim();
         }
         return result;
     }
