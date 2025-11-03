@@ -13,10 +13,17 @@ public class AuthorNameNormalizer {
         String retrunname = name.trim();
 
         String[] names = retrunname.split(" ");
+
         if (names.length >1){
-           return names[1] + ", " + names[0];
+            retrunname =  names[names.length-1] + ", " + names[0] ;
         }
-        return name;
+
+        if (names.length >2){
+            String middleName  = names[1].substring(0,1) + ".";
+            retrunname = retrunname  + " " + middleName;
+        }
+
+        return retrunname;
 
     }
 
