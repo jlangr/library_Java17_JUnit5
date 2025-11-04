@@ -45,4 +45,13 @@ public class AStockPortfolio {
    void containsNoSharesForSymbolNotPurchased() {
       assertThat(stockPortfolio.shares("MSFT")).isEqualTo(0);
    }
+
+   @Test
+   void returnsSharesPurchased() {
+      stockPortfolio.purchase("NOK", 10);
+
+      var result = stockPortfolio.shares("NOK");
+
+      assertThat(result).isEqualTo(10);
+   }
 }
