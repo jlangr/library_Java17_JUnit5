@@ -15,6 +15,6 @@ public class StockPortfolio {
     }
 
     public int getShareCount(String symbol){
-        throw new UnsupportedOperationException("Not implemented yet");
+        return 0;
     }
 }
