@@ -14,7 +14,7 @@ public class APortfolio {
 
     @Test
     public void testForZeroPurchase(){
-
+        Assert.assertEquals(0, port.getUniqueCount());
     }
 
     @Test
@@ -23,4 +23,14 @@ public class APortfolio {
         Assert.assertEquals(1, port.getUniqueCount());
 
     }
+
+    @Test
+    public void testForMultiplePurchaseOfDifferentSymbols(){
+        port.purchase("AAPL", 10);
+        port.purchase("GOOGL", 5);
+        port.purchase("MSFT", 8);
+        Assert.assertEquals(3, port.getUniqueCount());
+
+    }
+
 }
