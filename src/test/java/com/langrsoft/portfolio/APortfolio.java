@@ -33,4 +33,21 @@ public class APortfolio {
 
     }
 
+
+    @Test
+    public void testForMultiplePurchaseOfSimilarKindOfSymbols(){
+        port.purchase("AAPL", 10);
+        port.purchase("AAP", 5);
+        Assert.assertEquals(2, port.getUniqueCount());
+
+    }
+
+    @Test
+    public void testForMultiplePurchaseOfSameSymbol(){
+        port.purchase("AAPL", 10);
+        port.purchase("AAPL", 5);
+        port.purchase("AAPL", 8);
+        Assert.assertEquals(1, port.getUniqueCount());
+
+    }
 }
