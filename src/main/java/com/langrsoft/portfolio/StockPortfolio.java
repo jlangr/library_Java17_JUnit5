@@ -1,9 +1,7 @@
 package com.langrsoft.portfolio;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class StockPortfolio {
    private Map<String, Integer> sharesMap = new HashMap<>();
