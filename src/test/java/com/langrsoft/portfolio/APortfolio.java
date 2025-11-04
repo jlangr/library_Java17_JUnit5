@@ -51,4 +51,11 @@ public class APortfolio {
         Assert.assertEquals(1, port.getUniqueCount());
 
     }
+
+    //Z check for 0 value for symbol not purchased
+    //O Purchase 1 share for a symbol and check if we get value 1
+    //M Purchase multiple share wiht different number and check the value
+    //M Purchase multiple time same share and check the value
+    //B Purchase stock and add non valid value or 0. Check for exception
+    //E validate the message in custom Exception
 }
