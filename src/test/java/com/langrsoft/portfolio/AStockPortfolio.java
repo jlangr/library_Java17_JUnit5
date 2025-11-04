@@ -40,4 +40,9 @@ public class AStockPortfolio {
 
       assertThat(stockPortfolio.uniqueSymbols()).isEqualTo(1);
    }
+
+   @Test
+   void containsNoSharesForSymbolNotPurchased() {
+      assertThat(stockPortfolio.shares("MSFT")).isEqualTo(0);
+   }
 }

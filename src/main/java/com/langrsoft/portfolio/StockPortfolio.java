@@ -13,4 +13,8 @@ public class StockPortfolio {
    public void purchase(String symbol, int shares) {
       symbols.add(symbol);
    }
+
+   public int shares(String symbol) {
+      return 0;
+   }
 }
