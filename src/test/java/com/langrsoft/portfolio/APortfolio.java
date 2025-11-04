@@ -54,7 +54,7 @@ public class APortfolio {
 
     //Z check for 0 value for symbol not purchased
     //O Purchase 1 share for a symbol and check if we get value 1
-    //M Purchase multiple share wiht different number and check the value
+    //M Purchase multiple share with different number and check the value
     //M Purchase multiple time same share and check the value
     //B Purchase stock and add non valid value or 0. Check for exception
     //E validate the message in custom Exception
@@ -68,5 +68,11 @@ public class APortfolio {
     public void tesForOneSharePurchase(){
         port.purchase("TSLA", 1);
         Assert.assertEquals(1, port.getShareCount("TSLA"));
+    }
+
+    @Test
+    public void testForMultipleSharePurchase(){
+        port.purchase("TSLA", 5);
+        Assert.assertEquals(5, port.getShareCount("TSLA"));
     }
 }
