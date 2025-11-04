@@ -32,4 +32,12 @@ public class AStockPortfolio {
 
       assertThat(stockPortfolio.uniqueSymbols()).isEqualTo(2);
    }
+
+   @Test
+   void doesNotIncrementUniqueSymbolsAfterPurchaseSameSymbol() {
+      stockPortfolio.purchase("NOK", 10);
+      stockPortfolio.purchase("NOK", 5);
+
+      assertThat(stockPortfolio.uniqueSymbols()).isEqualTo(1);
+   }
 }

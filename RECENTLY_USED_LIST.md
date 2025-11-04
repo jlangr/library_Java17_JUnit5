@@ -26,10 +26,5 @@ Has multiple unique symbols after purchases of different symbols
     purchase(AAPL, 15)
     assert uniqueSymbols() == 2
 
-Has multiple unique symbols with purchases of similar symbols
-    purchase(NOKI, 10)
-    purchase(NOK, 15)
-    assert uniqueSymbols() == 2
-
 Don't forget these cases:
     Can a purchase fail?
