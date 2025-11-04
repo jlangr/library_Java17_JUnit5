@@ -12,9 +12,7 @@ public class StockPortfolio {
     }
 
     public void purchase(Stock stock) throws InvalidStockQtyException {
-        if (stock.getStockQty() < 1) {
-            throw new InvalidStockQtyException("Invalid stock quantity");
-        }
+        validateStockQty(stock);
         Optional<Stock> existingStock = stockList.stream()
                 .filter(s -> s.getStockName().equals(stock.getStockName()))
                 .findFirst();
@@ -23,6 +21,12 @@ public class StockPortfolio {
             stock1.setStockQty(stock1.getStockQty() + stock.getStockQty());
         } else {
             stockList.add(stock);
+        }
+    }
+
+    private static void validateStockQty(Stock stock) throws InvalidStockQtyException {
+        if (stock.getStockQty() < 1) {
+            throw new InvalidStockQtyException("Invalid stock quantity");
         }
     }
 
