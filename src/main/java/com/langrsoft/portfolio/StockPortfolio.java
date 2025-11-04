@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class StockPortfolio {
-   private int uniqueSymbols;
    private Set<String> symbols = new HashSet<>();
 
    public int uniqueSymbols() {
@@ -12,7 +11,6 @@ public class StockPortfolio {
    }
 
    public void purchase(String symbol, int shares) {
-      uniqueSymbols++;
       symbols.add(symbol);
    }
 }
