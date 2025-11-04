@@ -14,7 +14,11 @@ public class StockPortfolio {
         return stocks.size();
     }
 
-    public int getShareCount(String symbol){
-        return 0;
+    public int getShareCount(String symbol) {
+        if (stocks.contains(symbol)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
