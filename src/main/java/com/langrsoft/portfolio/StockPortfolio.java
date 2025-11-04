@@ -13,7 +13,7 @@ public class StockPortfolio {
 
    public void purchase(String symbol, int shares) {
       symbols.add(symbol);
-      this.shares = shares;
+      this.shares += shares;
    }
 
    public int shares(String symbol) {

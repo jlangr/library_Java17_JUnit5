@@ -50,8 +50,15 @@ public class AStockPortfolio {
    void returnsSharesPurchased() {
       stockPortfolio.purchase("NOK", 10);
 
-      var result = stockPortfolio.shares("NOK");
+      assertThat(stockPortfolio.shares("NOK")).isEqualTo(10);
+   }
 
-      assertThat(result).isEqualTo(10);
+   @Test
+   void accumulatesSharesForSameSymbolPurchase() {
+      stockPortfolio.purchase("NOK", 10);
+
+      stockPortfolio.purchase("NOK", 15);
+
+      assertThat(stockPortfolio.shares("NOK")).isEqualTo(25);
    }
 }
