@@ -1,21 +1,13 @@
 package com.langrsoft.portfolio;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class StockPortfolio {
 
-    Map<String, Integer> stocks = new HashMap<>();
+    Set<String> stocks = new HashSet<>();
     public void purchase(String symbol, int count){
-        // Check if the symbol already exists in the portfolio
-        if(stocks.containsKey(symbol)){
-            // If it exists, update the count
-            int existingCount = stocks.get(symbol);
-            stocks.put(symbol, existingCount + count);
-        } else {
-            // If it doesn't exist, add a new entry
-            stocks.put(symbol, count);
-        }
+        stocks.add(symbol);
     }
 
     public int getUniqueCount(){
