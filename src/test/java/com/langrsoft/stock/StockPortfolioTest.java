@@ -1,7 +1,7 @@
 package com.langrsoft.stock;
 
-import com.langrsoft.util.InvalidNameException;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,7 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StockPortfolioTest {
 
-    StockPortfolio stockPortfolio = new StockPortfolio();
+    StockPortfolio stockPortfolio;
+
+    @BeforeEach
+    void create() {
+        stockPortfolio = new StockPortfolio();
+    }
 
     @Test
     public void noPurchase() {
@@ -49,12 +54,30 @@ public class StockPortfolioTest {
     }
 
     @Test
+    void getStockCountWhenNoStock() {
+        Assert.assertEquals(stockPortfolio.getStockCount("AAPL"), 0);
+    }
+
+    @Test
     void getStockCount() throws InvalidStockQtyException {
         Stock stock1 = new Stock();
         stock1.setStockName("NOK");
         stock1.setNumberOfShares(2);
         stockPortfolio.purchase(stock1);
         Assert.assertEquals(stockPortfolio.getStockCount("NOK"), 2);
+    }
+
+    @Test
+    void getStockCountWhenMultiplePurchase() throws InvalidStockQtyException {
+        Stock purchase1 = new Stock();
+        purchase1.setStockName("NOK");
+        purchase1.setNumberOfShares(2);
+        stockPortfolio.purchase(purchase1);
+        Stock purchase2 = new Stock();
+        purchase2.setStockName("NOK");
+        purchase2.setNumberOfShares(2);
+        stockPortfolio.purchase(purchase2);
+        Assert.assertEquals(stockPortfolio.getStockCount("NOK"), 4);
     }
 
     @Test

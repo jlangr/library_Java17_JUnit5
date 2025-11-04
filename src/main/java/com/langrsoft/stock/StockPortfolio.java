@@ -21,7 +21,15 @@ public class StockPortfolio {
         if (stock.getNumberOfShares() < 1) {
             throw new InvalidStockQtyException("Invalid stock quantity");
         }
-        stockList.add(stock);
+        Optional<Stock> existingStock = stockList.stream()
+                .filter(s -> s.getStockName().equals(stock.getStockName()))
+                .findFirst();
+        if (existingStock.isPresent()) {
+            Stock stock1 = existingStock.get();
+            stock1.setNumberOfShares(stock1.getNumberOfShares() + stock.getNumberOfShares());
+        } else {
+            stockList.add(stock);
+        }
     }
 
     public boolean isManyPurchase() {
