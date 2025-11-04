@@ -61,4 +61,13 @@ public class AStockPortfolio {
 
       assertThat(stockPortfolio.shares("NOK")).isEqualTo(25);
    }
+
+   @Test
+   void separatesSharesBySymbol() {
+      stockPortfolio.purchase("NOK", 10);
+      stockPortfolio.purchase("AAPL", 5);
+
+      assertThat(stockPortfolio.shares("NOK")).isEqualTo(10);
+      assertThat(stockPortfolio.shares("AAPL")).isEqualTo(5);
+   }
 }
