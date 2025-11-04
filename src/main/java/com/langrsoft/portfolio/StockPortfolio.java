@@ -6,18 +6,20 @@ import java.util.Map;
 import java.util.Set;
 
 public class StockPortfolio {
-   private Set<String> symbols = new HashSet<>();
-   private int shares;
    private Map<String, Integer> sharesMap = new HashMap<>();
 
    public int uniqueSymbols() {
-      return symbols.size();
+      return sharesMap.size();
    }
 
    public void purchase(String symbol, int shares) {
-      symbols.add(symbol);
-      this.shares += shares;
+      throwWhenNotPositive(shares);
       sharesMap.put(symbol, shares + shares(symbol));
+   }
+
+   private void throwWhenNotPositive(int shares) {
+      if (shares <= 0)
+         throw new InvalidPurchaseException();
    }
 
    public int shares(String symbol) {

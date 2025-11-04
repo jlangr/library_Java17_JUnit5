@@ -2,8 +2,11 @@ package com.langrsoft.portfolio;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AStockPortfolio {
    StockPortfolio stockPortfolio;
@@ -69,5 +72,12 @@ public class AStockPortfolio {
 
       assertThat(stockPortfolio.shares("NOK")).isEqualTo(10);
       assertThat(stockPortfolio.shares("AAPL")).isEqualTo(5);
+   }
+
+   @ParameterizedTest
+   @ValueSource(ints = {0, -1})
+   void throwsWhenPurchasingNonPositiveShares(int shares) {
+      assertThrows(InvalidPurchaseException.class,
+         () -> stockPortfolio.purchase("NOK", shares));
    }
 }
