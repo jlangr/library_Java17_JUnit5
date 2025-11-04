@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class APortfolio {
+public class AStockPortfolio {
    @Test
    void contains0UniqueSymbolsWhenNoPurchases() {
       var stockPortfolio = new StockPortfolio();

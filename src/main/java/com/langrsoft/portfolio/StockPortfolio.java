@@ -1,7 +1,13 @@
 package com.langrsoft.portfolio;
 
 public class StockPortfolio {
+   private int uniqueSymbols;
+
    public int uniqueSymbols() {
-      return 0;
+      return uniqueSymbols;
+   }
+
+   public void purchase(String symbol, int shares) {
+      uniqueSymbols = 1;
    }
 }
