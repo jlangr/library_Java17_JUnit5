@@ -4,21 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Long.sum;
-
 public class StockPortfolio {
     List<Stock> stockList = new ArrayList<>();
 
-    public int getNumberOfStocks() {
-        int numberOfStocks = 0;
-        for (Stock stock : stockList) {
-            numberOfStocks += stock.getNumberOfShares();
-        }
-        return numberOfStocks;
+    public int getUniqueNumberOfStocks() {
+        return stockList.size();
     }
 
     public void purchase(Stock stock) throws InvalidStockQtyException {
-        if (stock.getNumberOfShares() < 1) {
+        if (stock.getStockQty() < 1) {
             throw new InvalidStockQtyException("Invalid stock quantity");
         }
         Optional<Stock> existingStock = stockList.stream()
@@ -26,31 +20,21 @@ public class StockPortfolio {
                 .findFirst();
         if (existingStock.isPresent()) {
             Stock stock1 = existingStock.get();
-            stock1.setNumberOfShares(stock1.getNumberOfShares() + stock.getNumberOfShares());
+            stock1.setStockQty(stock1.getStockQty() + stock.getStockQty());
         } else {
             stockList.add(stock);
         }
     }
 
     public boolean isManyPurchase() {
-        boolean flag = false;
-        String prevStock = null;
-        for (Stock stock : stockList) {
-            if (prevStock == null) {
-                prevStock = stock.getStockName();
-            }
-            if (!stock.getStockName().equals(prevStock)) {
-                flag = true;
-            }
-        }
-        return flag;
+        return getUniqueNumberOfStocks() > 1;
     }
 
 
     public int getStockCount(String stockName) {
         return stockList.stream()
                 .filter(stock -> stock.getStockName().equals(stockName))
-                .map(stock -> stock.getNumberOfShares())
+                .map(stock -> stock.getStockQty())
                 .mapToInt(Integer::intValue).sum();
     }
 }

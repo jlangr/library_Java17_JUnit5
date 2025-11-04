@@ -18,37 +18,37 @@ public class StockPortfolioTest {
 
     @Test
     public void noPurchase() {
-        Assert.assertEquals(stockPortfolio.getNumberOfStocks(), 0);
+        Assert.assertEquals(stockPortfolio.getUniqueNumberOfStocks(), 0);
     }
 
     @Test
     void purchase() throws InvalidStockQtyException {
         Stock stock = new Stock();
         stock.setStockName("NOK");
-        stock.setNumberOfShares(1);
+        stock.setStockQty(1);
         stockPortfolio.purchase(stock);
-        Assert.assertEquals(stockPortfolio.getNumberOfStocks(), 1);
+        Assert.assertEquals(stockPortfolio.getUniqueNumberOfStocks(), 1);
     }
 
     @Test
     void manyPurchase() throws InvalidStockQtyException {
         Stock stock = new Stock();
         stock.setStockName("NOK");
-        stock.setNumberOfShares(2);
+        stock.setStockQty(2);
         stockPortfolio.purchase(stock);
-        Assert.assertEquals(stockPortfolio.getNumberOfStocks(), 2);
+        Assert.assertEquals(stockPortfolio.getUniqueNumberOfStocks(), 1);
     }
 
     @Test
     void differentStockPurchase() throws InvalidStockQtyException {
         Stock stock = new Stock();
         stock.setStockName("NOK");
-        stock.setNumberOfShares(2);
+        stock.setStockQty(2);
         stockPortfolio.purchase(stock);
 
         Stock stock1 = new Stock();
         stock1.setStockName("NOKI");
-        stock1.setNumberOfShares(2);
+        stock1.setStockQty(2);
         stockPortfolio.purchase(stock1);
         Assert.assertEquals(stockPortfolio.isManyPurchase(), true);
     }
@@ -62,7 +62,7 @@ public class StockPortfolioTest {
     void getStockCount() throws InvalidStockQtyException {
         Stock stock1 = new Stock();
         stock1.setStockName("NOK");
-        stock1.setNumberOfShares(2);
+        stock1.setStockQty(2);
         stockPortfolio.purchase(stock1);
         Assert.assertEquals(stockPortfolio.getStockCount("NOK"), 2);
     }
@@ -71,11 +71,11 @@ public class StockPortfolioTest {
     void getStockCountWhenMultiplePurchase() throws InvalidStockQtyException {
         Stock purchase1 = new Stock();
         purchase1.setStockName("NOK");
-        purchase1.setNumberOfShares(2);
+        purchase1.setStockQty(2);
         stockPortfolio.purchase(purchase1);
         Stock purchase2 = new Stock();
         purchase2.setStockName("NOK");
-        purchase2.setNumberOfShares(2);
+        purchase2.setStockQty(2);
         stockPortfolio.purchase(purchase2);
         Assert.assertEquals(stockPortfolio.getStockCount("NOK"), 4);
     }
@@ -84,7 +84,7 @@ public class StockPortfolioTest {
     void rejectInvalidStockQty() {
         Stock stock1 = new Stock();
         stock1.setStockName("NOK");
-        stock1.setNumberOfShares(0);
+        stock1.setStockQty(0);
         var thrown = assertThrows(InvalidStockQtyException.class, () ->
                 stockPortfolio.purchase(stock1));
         assertThat(thrown.getMessage())
