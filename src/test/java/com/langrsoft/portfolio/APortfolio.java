@@ -58,4 +58,9 @@ public class APortfolio {
     //M Purchase multiple time same share and check the value
     //B Purchase stock and add non valid value or 0. Check for exception
     //E validate the message in custom Exception
+
+    @Test
+    public void tesForNoSharesPurchased(){
+        Assert.assertEquals(0, port.getShareCount("AAPL"));
+    }
 }

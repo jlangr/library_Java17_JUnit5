@@ -13,4 +13,8 @@ public class StockPortfolio {
     public int getUniqueCount(){
         return stocks.size();
     }
+
+    public int getShareCount(String symbol){
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 }
