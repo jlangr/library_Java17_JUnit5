@@ -63,4 +63,10 @@ public class APortfolio {
     public void tesForNoSharesPurchased(){
         Assert.assertEquals(0, port.getShareCount("AAPL"));
     }
+
+    @Test
+    public void tesForOneSharePurchase(){
+        port.purchase("TSLA", 1);
+        Assert.assertEquals(1, port.getShareCount("TSLA"));
+    }
 }
