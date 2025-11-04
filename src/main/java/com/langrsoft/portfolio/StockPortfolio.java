@@ -8,6 +8,6 @@ public class StockPortfolio {
    }
 
    public void purchase(String symbol, int shares) {
-      uniqueSymbols = 1;
+      uniqueSymbols++;
    }
 }
