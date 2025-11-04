@@ -6,9 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class APortfolio {
 
-    StockPortfolio port;
+    StockPortfolio port = new StockPortfolio();
+
     @BeforeEach
-    void instantiate() {
+    public void instantiate() {
         port = new StockPortfolio();
     }
 
