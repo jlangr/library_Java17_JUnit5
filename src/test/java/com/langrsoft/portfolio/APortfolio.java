@@ -1,8 +1,14 @@
 package com.langrsoft.portfolio;
 
+import com.langrsoft.util.InvalidNameException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.security.InvalidParameterException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class APortfolio {
 
@@ -73,6 +79,41 @@ public class APortfolio {
     @Test
     public void testForMultipleSharePurchase(){
         port.purchase("TSLA", 5);
-        Assert.assertEquals(5, port.getShareCount("TSLA"));
+        port.purchase("TSLA", 6);
+        Assert.assertEquals(11, port.getShareCount("TSLA"));
+    }
+
+    @Test
+    public void testForMultipleSharesPurchase(){
+        port.purchase("TSLA", 5);
+        port.purchase("AAPL", 10);
+        //port.purchase("X", 0);
+        Assert.assertEquals(10, port.getShareCount("AAPL"));
+        //Assert.assertEquals(5, port.getShareCount("TSLA"));
+    }
+
+    @Test
+    public void testForInvalidSharesCountPurchase(){
+
+
+        var thrown = assertThrows(InvalidParameterException.class, () ->
+                port.purchase("TSLA", 0));
+        assertThat(thrown.getMessage())
+                .isEqualTo("Purchase count should be more than 0");
+
+
+    }
+
+
+    @Test
+    public void testForNegativeSharesCountPurchase(){
+
+
+        var thrown = assertThrows(InvalidParameterException.class, () ->
+                port.purchase("TSLA", -1));
+        assertThat(thrown.getMessage())
+                .isEqualTo("Purchase count should be more than 0");
+
+
     }
 }
