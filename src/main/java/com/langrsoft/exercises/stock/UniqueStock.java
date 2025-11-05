@@ -36,4 +36,11 @@ public class UniqueStock {
     }
 
 
+    public boolean checkEmptyWallet() {
+        return false;
+    }
+
+    public boolean sellStock(String nok, int i) {
+        return false;
+    }
 }

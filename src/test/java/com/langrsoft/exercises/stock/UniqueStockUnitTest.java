@@ -84,7 +84,16 @@ public class UniqueStockUnitTest {
 
     @Test
     public void emptyWallet() {
+        assertThat(uniqueStock.checkEmptyWallet()).isTrue();
+        uniqueStock.purchaseStock("APL", 20);
+        assertThat(uniqueStock.checkEmptyWallet()).isFalse();
+    }
 
+    @Ignore ("Not implemented yet")
+    @Test
+    public void sellStock() {
+        //TODO: Check wallet in the end and Negative Scenarios
+        assertThat(uniqueStock.sellStock("NOK", 20)).isTrue();
     }
 
 }
