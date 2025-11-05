@@ -54,18 +54,20 @@ public class UniqueStockUnitTest {
         }
     }
 
-
     @Test
     public void buyInvalidNumberOfStocks() {
+        //TODO: throw exception in case of fail to buy a stock
         assertThat(uniqueStock.purchaseStock("NOK", 0)).isEqualTo(false);
         assertThat(uniqueStock.purchaseStock("NOK", -5)).isEqualTo(false);
 
     }
 
     @Test
-    public void buyInvalidStockSymbold() {
+    public void buyInvalidStockSymbol() {
+        //TODO: throw exception in case of fail to buy a stock
         assertThat(uniqueStock.purchaseStock("NO,K", 20)).isEqualTo(false);
         assertThat(uniqueStock.purchaseStock("NO12K", 20)).isEqualTo(false);
+        assertThat(uniqueStock.purchaseStock("", 20)).isEqualTo(false);
     }
 
     @Test
@@ -78,6 +80,11 @@ public class UniqueStockUnitTest {
 
         uniqueStock.purchaseStock("APL", 20);
         assertThat(uniqueStock.checkUniqueStockSymbolCount()).isEqualTo(2);
+    }
+
+    @Test
+    public void emptyWallet() {
+
     }
 
 }
