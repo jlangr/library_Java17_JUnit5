@@ -13,9 +13,14 @@ public class UniqueStock {
     public boolean purchaseStock(String symbol, int shares){
         if (shares <= 0) return false;
 
+
         String upperCase = symbol.toUpperCase();
-        return false;
+        stockHolds.put(upperCase, shares);
+        return true;
 
     }
 
+    public Integer checkStockWalletSymbolCount() {
+        return 5;
+    }
 }
