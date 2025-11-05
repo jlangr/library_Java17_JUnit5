@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UniqueStock {
-    private Map<String, Integer> stockHolds;
+    private final Map<String, Integer> stockHolds;
 
     public UniqueStock() {
         this.stockHolds = new HashMap<>();

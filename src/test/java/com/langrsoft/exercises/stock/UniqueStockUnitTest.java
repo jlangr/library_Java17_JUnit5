@@ -128,6 +128,7 @@ public class UniqueStockUnitTest {
     @Test
     public void sellStockNotOwned() {
         String expectedErrorMessage = "Stock not available in wallet.";
+
         assertThat(uniqueStock.checkEmptyWallet()).isTrue();
 
         var thrownWhenStockNotOwned = assertThrows(StockNotAvailable.class,
