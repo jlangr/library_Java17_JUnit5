@@ -2,6 +2,7 @@ package com.langrsoft.service.library;
 
 import com.langrsoft.domain.*;
 import com.langrsoft.external.Material;
+import com.langrsoft.external.MaterialType;
 import com.langrsoft.persistence.PatronStore;
 
 import java.util.Calendar;
@@ -93,49 +94,54 @@ public class HoldingService {
             throw new HoldingNotFoundException();
 
         // set the holding to returned status
-        HoldingMap holdings = null;
         hld.checkIn(date, branch);
 
-        // locate the patron with the checked out book
-        // could introduce a patron reference ID in the holding...
-        Patron f = null;
-        for (Patron p : new PatronService().allPatrons()) {
-            holdings = p.holdingMap();
-            for (Holding patHld : holdings) {
-                if (hld.getBarcode().equals(patHld.getBarcode()))
-                    f = p;
-            }
-        }
-
-        // remove the book from the patron
-        f.remove(hld);
-
-        // check for late returns
-        boolean isLate = false;
-        Calendar c = Calendar.getInstance();
-        c.setTime(hld.dateDue());
-        int d = Calendar.DAY_OF_YEAR;
-
-        if (hld.dateLastCheckedIn().after(c.getTime())) // is it late?
-            isLate = true;
-
-        if (isLate) {
-            int daysLate = hld.daysLate(); // calculate # of days past due
-            int fineBasis = hld.getMaterial().getFormat().getDailyFine();
-            switch (hld.getMaterial().getFormat()) {
-                case BOOK:
-                    f.addFine(fineBasis * daysLate);
-                    break;
-                case DVD:
-                    int fine = Math.min(1000, 100 + fineBasis * daysLate);
-                    f.addFine(fine);
-                    break;
-                case NEW_RELEASE_DVD:
-                    f.addFine(fineBasis * daysLate);
-                    break;
-            }
-            return daysLate;
+        Patron patron = findPatron(hld);
+        if (isReturnedLate(hld))
+        {
+            return computeFineOnPatron(hld, patron);
         }
         return 0;
+    }
+
+    private static boolean isReturnedLate(Holding hld) {
+        // check for late returns
+        Calendar c = Calendar.getInstance();
+        c.setTime(hld.dateDue());
+        return hld.dateLastCheckedIn().after(c.getTime());
+    }
+
+    private static Integer computeFineOnPatron( Holding hld, Patron patron) {
+        int daysLate = hld.daysLate(); // calculate # of days past due
+        int fineBasis = hld.getMaterial().getFormat().getDailyFine();
+        int baseFine = fineBasis * daysLate;
+        if(hld.getMaterial().getFormat()== MaterialType.DVD){
+            int fine = Math.min(1000, 100 + baseFine);
+            patron.addFine(fine);
+        }
+        else {
+            patron.addFine(baseFine);
+        }
+        return daysLate;
+    }
+
+    private static Patron findPatron(Holding hld) {
+        HoldingMap holdings;
+        // locate the patron with the checked out book
+        // could introduce a patron reference ID in the holding...
+        Patron holdingPatron = null;
+        for (Patron patron : new PatronService().allPatrons()) {
+            holdings = patron.holdingMap();
+            for (Holding patHld : holdings) {
+                if (hld.getBarcode().equals(patHld.getBarcode()))
+                {
+                    holdingPatron = patron;
+                    break;
+                }
+            }
+        }
+        // remove the book from the patron
+        holdingPatron.remove(hld);
+        return holdingPatron;
     }
 }
