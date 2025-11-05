@@ -4,6 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UniqueStockUnitTest {
@@ -16,7 +19,7 @@ public class UniqueStockUnitTest {
     * */
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         uniqueStock = new UniqueStock();
     }
 
@@ -27,17 +30,27 @@ public class UniqueStockUnitTest {
 
     @Test
     public void buyTheSameStockTwice() {
-        assertThat(uniqueStock.purchaseStock("APL",10)).isEqualTo(true);
-        assertThat(uniqueStock.purchaseStock("APL",15)).isEqualTo(true);
+        uniqueStock.purchaseStock("APL",10);
+        uniqueStock.purchaseStock("APL",15);
+
         assertThat(uniqueStock.checkStockWalletSymbolCount("APL")).isEqualTo(25);
     }
 
-    @Disabled
     @Test
     public void buyManyStocks(){
-        assertThat(uniqueStock.purchaseStock("NOK",10)).isEqualTo(true);
-        assertThat(uniqueStock.purchaseStock("APL",15)).isEqualTo(true);
-        assertThat(uniqueStock.purchaseStock("AMZN",15)).isEqualTo(true);
+        Map<String,Integer> expectedStockNumber = new HashMap<>();
+
+        expectedStockNumber.put("NOK", 10);
+        expectedStockNumber.put("APL", 15);
+        expectedStockNumber.put("AMZN", 25);
+
+        uniqueStock.purchaseStock("NOK",10);
+        uniqueStock.purchaseStock("APL",15);
+        uniqueStock.purchaseStock("AMZN",25);
+
+        for (String key : expectedStockNumber.keySet()){
+            assertThat(uniqueStock.checkStockWalletSymbolCount(key)).isEqualTo(expectedStockNumber.get(key));
+        }
     }
 
     @Disabled

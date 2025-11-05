@@ -16,6 +16,7 @@ public class UniqueStock {
         String upperCase = symbol.toUpperCase();
 
         int existingStock = stockHolds.getOrDefault(upperCase, 0);
+
         if (existingStock > 0) {
             stockHolds.put(upperCase, shares + existingStock);
         } else {
