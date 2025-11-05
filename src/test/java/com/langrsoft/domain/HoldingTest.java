@@ -32,6 +32,13 @@ class HoldingTest {
     static final Material THE_REVENANT = new Material("12", "", "11", "", MaterialType.NEW_RELEASE_DVD, "");
     Holding h;
     static final Date TODAY = new Date();
+    static final Date TOMORROW;
+
+    static {
+        Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
+        TOMORROW = tomorrow;
+    }
+
     static final int COPY_NUMBER_1 = 1;
     Branch eastBranch = new Branch("East");
     Branch westBranch = new Branch("West");
@@ -66,6 +73,7 @@ class HoldingTest {
         assertThat(h.getBranch()).isEqualTo(westBranch);
     }
 
+
     @Test
     void checkOutAndCheckInFlow() {
         h.checkOut(TODAY);
@@ -74,9 +82,8 @@ class HoldingTest {
         assertThat(h.getBranch()).isEqualTo(Branch.CHECKED_OUT);
         assertThat(h.isAvailable()).isFalse();
 
-        Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
-        h.checkIn(tomorrow, eastBranch);
-        assertThat(h.dateLastCheckedIn()).isEqualTo(tomorrow);
+        h.checkIn(TOMORROW, eastBranch);
+        assertThat(h.dateLastCheckedIn()).isEqualTo(TOMORROW);
         assertThat(h.isAvailable()).isTrue();
         assertThat(h.getBranch()).isEqualTo(eastBranch);
     }

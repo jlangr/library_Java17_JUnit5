@@ -17,7 +17,7 @@ public class AStockPortfolio {
    }
 
    @Test
-   void contains0UniqueSymbolsWhenNoPurchases() {
+   void contains0UniqueSymbolsWhenNoSharesBought() {
       assertThat(stockPortfolio.uniqueSymbols()).isEqualTo(0);
    }
 
