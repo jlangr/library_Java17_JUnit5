@@ -95,28 +95,29 @@ public class HoldingService {
         patron.remove(holding);
 
         // check for late returns
-        boolean isLate = false;
-        isLate = isLateReturn(holding, isLate);
-        if (isLate) {
-            return getNumberOfDaysLate(holding, patron);
-        }
-        return 0;
+        int numOfDaysLate = getNumberOfDaysLate(holding, patron);
+
+        return numOfDaysLate;
     }
 
     private static int getNumberOfDaysLate(Holding holding, Patron patron) {
-        int daysLate = holding.daysLate(); // calculate # of days past due
-        int fineBasis = holding.getMaterial().getFormat().getDailyFine();
-        switch (holding.getMaterial().getFormat()) {
-            case BOOK:
-                patron.addFine(fineBasis * daysLate);
-                break;
-            case DVD:
-                int fine = Math.min(1000, 100 + fineBasis * daysLate);
-                patron.addFine(fine);
-                break;
-            case NEW_RELEASE_DVD:
-                patron.addFine(fineBasis * daysLate);
-                break;
+
+        int daysLate = 0;
+        boolean isLate = false;
+        isLate = isLateReturn(holding, isLate);
+        if (isLate) {
+            daysLate = holding.daysLate(); // calculate # of days past due
+            int fineBasis = holding.getMaterial().getFormat().getDailyFine();
+            switch (holding.getMaterial().getFormat()) {
+                case NEW_RELEASE_DVD:
+                case BOOK:
+                    patron.addFine(fineBasis * daysLate);
+                    break;
+                case DVD:
+                    int fine = Math.min(1000, 100 + fineBasis * daysLate);
+                    patron.addFine(fine);
+                    break;
+            }
         }
         return daysLate;
     }
@@ -124,7 +125,6 @@ public class HoldingService {
     private static boolean isLateReturn(Holding holding, boolean isLate) {
         Calendar c = Calendar.getInstance();
         c.setTime(holding.dateDue());
-
         if (holding.dateLastCheckedIn().after(c.getTime())) // is it late?
             isLate = true;
         return isLate;
