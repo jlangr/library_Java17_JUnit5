@@ -68,11 +68,15 @@ public class HoldingService {
 
     public void checkOut(String patronId, String barCode, Date date) {
         Holding holding = getValidHolding(barCode);
-        if (!holding.isAvailable())
-            throw new HoldingAlreadyCheckedOutException();
+        checkAvailabilityOfHolding(holding);
         holding.checkOut(date);
 
         addHoldingToPatron(patronId, holding);
+    }
+
+    private static void checkAvailabilityOfHolding(Holding holding) {
+        if (!holding.isAvailable())
+            throw new HoldingAlreadyCheckedOutException();
     }
 
     private static void addHoldingToPatron(String patronId, Holding holding) {
@@ -88,7 +92,7 @@ public class HoldingService {
         holding.checkIn(date, branch);
         Patron patron = locatePatron(holding);
         patron.remove(holding);
-        return  getNumberOfDaysLate(holding, patron);
+        return getNumberOfDaysLate(holding, patron);
     }
 
     private static int getNumberOfDaysLate(Holding holding, Patron patron) {
