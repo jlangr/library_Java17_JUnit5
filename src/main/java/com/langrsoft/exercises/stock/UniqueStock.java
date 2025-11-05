@@ -10,16 +10,8 @@ public class UniqueStock {
         this.stockHolds = new HashMap<>();
     }
 
-    public boolean purchaseStock(String symbol, int shares){
-        if (shares <= 0) {
-                throw new WrongShareAmount("Number of shares must be positive.");
-        }
-
-        if (!symbol.matches("[a-zA-Z]+")) {
-            throw new StockNotAvailable("Wrong symbol.");
-        }
-
-        String upperCase = symbol.toUpperCase();
+    public void purchaseStock(String symbol, int shares){
+        String upperCase = initialValidation(symbol, shares);
 
         int existingStock = stockHolds.getOrDefault(upperCase, 0);
 
@@ -27,6 +19,24 @@ public class UniqueStock {
             stockHolds.put(upperCase, shares + existingStock);
         } else {
             stockHolds.put(upperCase, shares);
+        }
+    }
+
+    public boolean sellStock(String symbol, int shareAmount) {
+        String symbolUpperCase = initialValidation(symbol, shareAmount);
+
+        int existingStock = stockHolds.getOrDefault(symbolUpperCase, 0);
+
+        if (existingStock == 0) throw new StockNotAvailable("Stock not available in wallet.");
+
+        if (existingStock - shareAmount > 0) {
+            stockHolds.put(symbolUpperCase, existingStock - shareAmount);
+        }
+        else if (existingStock - shareAmount == 0) {
+            stockHolds.remove(symbolUpperCase);
+        }
+        else {
+            throw new WrongShareAmount("Not enough shares to sell.");
         }
         return true;
     }
@@ -36,15 +46,22 @@ public class UniqueStock {
     }
 
     public Integer checkUniqueStockSymbolCount() {
-        return stockHolds.keySet().size();
+        return stockHolds.size();
     }
-
 
     public boolean checkEmptyWallet() {
-        return false;
+        return stockHolds.isEmpty();
     }
 
-    public boolean sellStock(String nok, int i) {
-        return false;
+    private String initialValidation(String symbol, int shares) {
+        if (shares <= 0) {
+            throw new WrongShareAmount("Number of shares must be positive.");
+        }
+
+        if (!symbol.matches("[a-zA-Z]+")) {
+            throw new StockNotAvailable("Wrong symbol.");
+        }
+
+        return symbol.toUpperCase();
     }
 }

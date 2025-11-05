@@ -1,7 +1,6 @@
 package com.langrsoft.exercises.stock;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -91,19 +90,58 @@ public class UniqueStockUnitTest {
         assertThat(uniqueStock.checkUniqueStockSymbolCount()).isEqualTo(2);
     }
 
-    @Ignore("Not implemented yet")
     @Test
     public void emptyWallet() {
         assertThat(uniqueStock.checkEmptyWallet()).isTrue();
+
         uniqueStock.purchaseStock("APL", 20);
+
         assertThat(uniqueStock.checkEmptyWallet()).isFalse();
     }
 
-    @Ignore("Not implemented yet")
     @Test
     public void sellStock() {
-        //TODO: Check wallet in the end and Negative Scenarios
-        assertThat(uniqueStock.sellStock("NOK", 20)).isTrue();
+        uniqueStock.purchaseStock("NOK", 10);
+
+        assertThat(uniqueStock.checkStockCount("NOK")).isEqualTo(10);
+
+        assertThat(uniqueStock.sellStock("NOK", 10)).isTrue();
+
+        assertThat(uniqueStock.checkEmptyWallet()).isTrue();
     }
 
+    @Test
+    public void sellMoreSharesThanAvailable() {
+        String expectedErrorMessage = "Not enough shares to sell.";
+
+        uniqueStock.purchaseStock("NOK", 10);
+
+        assertThat(uniqueStock.checkStockCount("NOK")).isEqualTo(10);
+
+        var thrownWhenMoreSharesThanAvailable = assertThrows(WrongShareAmount.class,
+                () -> uniqueStock.sellStock("NOK", 20));
+        assertThat(thrownWhenMoreSharesThanAvailable.getMessage()).isEqualTo(expectedErrorMessage);
+
+        assertThat(uniqueStock.checkStockCount("NOK")).isEqualTo(10);
+    }
+
+    @Test
+    public void sellStockNotOwned() {
+        String expectedErrorMessage = "Stock not available in wallet.";
+        assertThat(uniqueStock.checkEmptyWallet()).isTrue();
+
+        var thrownWhenStockNotOwned = assertThrows(StockNotAvailable.class,
+                () -> uniqueStock.sellStock("APL", 20));
+        assertThat(thrownWhenStockNotOwned.getMessage()).isEqualTo(expectedErrorMessage);
+
+        uniqueStock.purchaseStock("NOK", 10);
+
+        assertThat(uniqueStock.checkStockCount("NOK")).isEqualTo(10);
+
+        var thrownWhenStockNotOwnedAgain = assertThrows(StockNotAvailable.class,
+                () -> uniqueStock.sellStock("APL", 20));
+        assertThat(thrownWhenStockNotOwnedAgain.getMessage()).isEqualTo(expectedErrorMessage);
+
+        assertThat(uniqueStock.checkStockCount("NOK")).isEqualTo(10);
+    }
 }
