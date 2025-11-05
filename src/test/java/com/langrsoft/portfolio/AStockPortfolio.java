@@ -75,9 +75,35 @@ public class AStockPortfolio {
    }
 
    @ParameterizedTest
-   @ValueSource(ints = {0, -1})
+   @ValueSource(ints = {
+      0,
+      -1
+   })
    void throwsWhenPurchasingNonPositiveShares(int shares) {
       assertThrows(InvalidPurchaseException.class,
          () -> stockPortfolio.purchase("NOK", shares));
    }
+
+   @Test
+   void isEmptyWhenNoPurchasesMade() {
+      assertThat(stockPortfolio.isEmpty()).isTrue();
+   }
+
+   @Test
+   void isNotEmptyWhenNoPurchasesMade() {
+      stockPortfolio.purchase("NOK", 10);
+
+      assertThat(stockPortfolio.isEmpty()).isFalse();
+   }
+
+   @Test
+   void sellingSharesReducesShareCount() {
+      stockPortfolio.purchase("NOK", 10);
+
+      stockPortfolio.sell("NOK", 7);
+
+      assertThat(stockPortfolio.shares("NOK")).isEqualTo(3);
+   }
+
+   // does not allow selling more shares than owned
 }

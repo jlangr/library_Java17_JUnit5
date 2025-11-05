@@ -12,7 +12,11 @@ public class StockPortfolio {
 
    public void purchase(String symbol, int shares) {
       throwWhenNotPositive(shares);
-      sharesMap.put(symbol, shares + shares(symbol));
+      applyShareDelta(symbol, shares);
+   }
+
+   public void sell(String symbol, int shares) {
+      applyShareDelta(symbol, -shares);
    }
 
    private void throwWhenNotPositive(int shares) {
@@ -22,5 +26,13 @@ public class StockPortfolio {
 
    public int shares(String symbol) {
       return sharesMap.getOrDefault(symbol, 0);
+   }
+
+   public boolean isEmpty() {
+      return sharesMap.isEmpty();
+   }
+
+   private void applyShareDelta(String symbol, int shares) {
+      sharesMap.put(symbol, shares + shares(symbol));
    }
 }
