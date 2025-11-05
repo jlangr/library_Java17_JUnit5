@@ -60,12 +60,11 @@ public class UniqueStockUnitTest {
         assertThat(uniqueStock.purchaseStock("NOK", 0)).isEqualTo(false);
     }
 
-    @Ignore
     @Test
     public void buyInvalidStockSymbold() {
         assertThat(uniqueStock.purchaseStock("NO,K", 20)).isEqualTo(false);
+        assertThat(uniqueStock.purchaseStock("NO12K", 20)).isEqualTo(false);
     }
-
 
     @Test
     public void checkUniqueStockSymbol() {

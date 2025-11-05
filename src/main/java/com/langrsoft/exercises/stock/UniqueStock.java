@@ -11,7 +11,9 @@ public class UniqueStock {
     }
 
     public boolean purchaseStock(String symbol, int shares){
-        if (shares <= 0) return false;
+        if (shares <= 0 || !symbol.matches("[a-zA-Z]+")) {
+            return false;
+        }
 
         String upperCase = symbol.toUpperCase();
 
