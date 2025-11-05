@@ -8,15 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UniqueStockUnitTest {
     private UniqueStock uniqueStock;
-    /*
-     zero stocks bought
-     One stock bought
-     Many stocks bought
-     buy same stock twice
-    * */
 
     @Before
     public void setUp() {
@@ -56,18 +51,32 @@ public class UniqueStockUnitTest {
 
     @Test
     public void buyInvalidNumberOfStocks() {
-        //TODO: throw exception in case of fail to buy a stock
-        assertThat(uniqueStock.purchaseStock("NOK", 0)).isEqualTo(false);
-        assertThat(uniqueStock.purchaseStock("NOK", -5)).isEqualTo(false);
+        String expectedErrorMessage = "Number of shares must be positive.";
 
+        var thrownWhenZeroShares = assertThrows(WrongShareAmount.class,
+                () -> uniqueStock.purchaseStock("NOK", 0));
+        assertThat(thrownWhenZeroShares.getMessage()).isEqualTo(expectedErrorMessage);
+
+        var thrownWhenNegativeShares = assertThrows(WrongShareAmount.class,
+                () -> uniqueStock.purchaseStock("NOK", -5));
+        assertThat(thrownWhenNegativeShares.getMessage()).isEqualTo(expectedErrorMessage);
     }
 
     @Test
     public void buyInvalidStockSymbol() {
-        //TODO: throw exception in case of fail to buy a stock
-        assertThat(uniqueStock.purchaseStock("NO,K", 20)).isEqualTo(false);
-        assertThat(uniqueStock.purchaseStock("NO12K", 20)).isEqualTo(false);
-        assertThat(uniqueStock.purchaseStock("", 20)).isEqualTo(false);
+        String expectedErrorMessage = "Wrong symbol.";
+
+        var thrownWhenSymbolWithComma = assertThrows(StockNotAvailable.class,
+                () -> uniqueStock.purchaseStock("NO,K", 20));
+        assertThat(thrownWhenSymbolWithComma.getMessage()).isEqualTo(expectedErrorMessage);
+
+        var thrownWhenSymbolWithNumbers = assertThrows(StockNotAvailable.class,
+                () -> uniqueStock.purchaseStock("NO12K", 20));
+        assertThat(thrownWhenSymbolWithNumbers.getMessage()).isEqualTo(expectedErrorMessage);
+
+        var thrownWhenSymbolEmpty = assertThrows(StockNotAvailable.class,
+                () -> uniqueStock.purchaseStock("", 20));
+        assertThat(thrownWhenSymbolEmpty.getMessage()).isEqualTo(expectedErrorMessage);
     }
 
     @Test
@@ -82,6 +91,7 @@ public class UniqueStockUnitTest {
         assertThat(uniqueStock.checkUniqueStockSymbolCount()).isEqualTo(2);
     }
 
+    @Ignore("Not implemented yet")
     @Test
     public void emptyWallet() {
         assertThat(uniqueStock.checkEmptyWallet()).isTrue();
@@ -89,7 +99,7 @@ public class UniqueStockUnitTest {
         assertThat(uniqueStock.checkEmptyWallet()).isFalse();
     }
 
-    @Ignore ("Not implemented yet")
+    @Ignore("Not implemented yet")
     @Test
     public void sellStock() {
         //TODO: Check wallet in the end and Negative Scenarios
