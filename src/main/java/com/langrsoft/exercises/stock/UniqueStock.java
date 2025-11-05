@@ -25,7 +25,13 @@ public class UniqueStock {
         return true;
     }
 
-    public Integer checkStockWalletSymbolCount(String symbol) {
+    public Integer checkStockCount(String symbol) {
         return stockHolds.getOrDefault(symbol.toUpperCase(), 0);
     }
+
+    public Integer checkUniqueStockSymbolCount() {
+        return stockHolds.keySet().size();
+    }
+
+
 }

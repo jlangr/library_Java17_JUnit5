@@ -1,8 +1,8 @@
 package com.langrsoft.exercises.stock;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,50 +24,59 @@ public class UniqueStockUnitTest {
     }
 
     @Test
-    public void buyAStock(){
-        assertThat(uniqueStock.purchaseStock("NOK",10)).isEqualTo(true);
+    public void buyAStock() {
+        uniqueStock.purchaseStock("NOK", 10);
+        assertThat(uniqueStock.checkStockCount("NOK")).isEqualTo(10);
     }
 
     @Test
     public void buyTheSameStockTwice() {
-        uniqueStock.purchaseStock("APL",10);
-        uniqueStock.purchaseStock("APL",15);
+        uniqueStock.purchaseStock("APL", 10);
+        uniqueStock.purchaseStock("APL", 15);
 
-        assertThat(uniqueStock.checkStockWalletSymbolCount("APL")).isEqualTo(25);
+        assertThat(uniqueStock.checkStockCount("APL")).isEqualTo(25);
     }
 
     @Test
-    public void buyManyStocks(){
-        Map<String,Integer> expectedStockNumber = new HashMap<>();
+    public void buyManyStocksAndValidateWallet() {
+        Map<String, Integer> expectedStockNumber = new HashMap<>();
 
         expectedStockNumber.put("NOK", 10);
         expectedStockNumber.put("APL", 15);
         expectedStockNumber.put("AMZN", 25);
 
-        uniqueStock.purchaseStock("NOK",10);
-        uniqueStock.purchaseStock("APL",15);
-        uniqueStock.purchaseStock("AMZN",25);
+        uniqueStock.purchaseStock("NOK", 10);
+        uniqueStock.purchaseStock("APL", 15);
+        uniqueStock.purchaseStock("AMZN", 25);
 
-        for (String key : expectedStockNumber.keySet()){
-            assertThat(uniqueStock.checkStockWalletSymbolCount(key)).isEqualTo(expectedStockNumber.get(key));
+        for (String key : expectedStockNumber.keySet()) {
+            assertThat(uniqueStock.checkStockCount(key)).isEqualTo(expectedStockNumber.get(key));
         }
     }
 
-    @Disabled
+    @Ignore
     @Test
     public void buyInvalidNumberOfStocks() {
         assertThat(uniqueStock.purchaseStock("NOK", 0)).isEqualTo(false);
     }
 
-    @Disabled
+    @Ignore
     @Test
     public void buyInvalidStockSymbold() {
         assertThat(uniqueStock.purchaseStock("NO,K", 20)).isEqualTo(false);
     }
 
-    @Disabled
+
     @Test
-    public void checkUniqueStock(){
-        assertThat(uniqueStock.checkStockWalletSymbolCount("APL")).isEqualTo(1);
+    public void checkUniqueStockSymbol() {
+        uniqueStock.purchaseStock("NOK", 10);
+        assertThat(uniqueStock.checkUniqueStockSymbolCount()).isEqualTo(1);
+
+        uniqueStock.purchaseStock("NOK", 15);
+        assertThat(uniqueStock.checkUniqueStockSymbolCount()).isEqualTo(1);
+
+        uniqueStock.purchaseStock("APL", 20);
+        assertThat(uniqueStock.checkUniqueStockSymbolCount()).isEqualTo(2);
     }
+
 }
