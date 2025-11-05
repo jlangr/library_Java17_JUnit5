@@ -7,12 +7,12 @@ public class UniqueStock {
     private final Map<String, Integer> stockHolds = new HashMap<>();
 
     public void purchaseStock(String symbol, int shares) {
-        String upperCase = initialValidation(symbol, shares);
+        String upperCase = validateAndNormalizeSymbol(symbol, shares);
         stockHolds.merge(upperCase, shares, Integer::sum);
     }
 
     public boolean sellStock(String symbol, int shareAmount) {
-        String symbolUpperCase = initialValidation(symbol, shareAmount);
+        String symbolUpperCase = validateAndNormalizeSymbol(symbol, shareAmount);
         int existingStock = stockHolds.getOrDefault(symbolUpperCase, 0);
 
         if (existingStock == 0) throw new StockNotAvailable("Stock not available in wallet.");
@@ -38,7 +38,7 @@ public class UniqueStock {
         return stockHolds.isEmpty();
     }
 
-    private String initialValidation(String symbol, int shares) {
+    private String validateAndNormalizeSymbol(String symbol, int shares) {
         if (shares <= 0) throw new WrongShareAmount("Number of shares must be positive.");
         if (!symbol.matches("[a-zA-Z]+")) throw new StockNotAvailable("Wrong symbol.");
         return symbol.toUpperCase();
