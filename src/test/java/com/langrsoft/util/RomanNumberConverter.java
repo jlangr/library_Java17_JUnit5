@@ -21,9 +21,12 @@ public class RomanNumberConverter {
 
    List<Conversion> conversions = List.of(
       new Conversion(1000, "M"),
+      new Conversion(900, "CM"),
+      new Conversion(500, "D"),
       new Conversion(400, "CD"),
       new Conversion(100, "C"),
       new Conversion(90, "XC"),
+      new Conversion(50, "L"),
       new Conversion(40, "XL"),
       new Conversion(10, "X"),
       new Conversion(9, "IX"),
