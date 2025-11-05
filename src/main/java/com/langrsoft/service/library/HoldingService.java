@@ -72,6 +72,10 @@ public class HoldingService {
             throw new HoldingAlreadyCheckedOutException();
         holding.checkOut(date);
 
+        addHoldingToPatron(patronId, holding);
+    }
+
+    private static void addHoldingToPatron(String patronId, Holding holding) {
         PatronStore patronAccess = new PatronStore();
         Patron patron = patronAccess.find(patronId);
         patronAccess.addHoldingToPatron(patron, holding);
