@@ -54,10 +54,12 @@ public class UniqueStockUnitTest {
         }
     }
 
-    @Ignore
+
     @Test
     public void buyInvalidNumberOfStocks() {
         assertThat(uniqueStock.purchaseStock("NOK", 0)).isEqualTo(false);
+        assertThat(uniqueStock.purchaseStock("NOK", -5)).isEqualTo(false);
+
     }
 
     @Test
