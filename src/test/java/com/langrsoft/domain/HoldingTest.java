@@ -74,12 +74,27 @@ class HoldingTest {
     }
 
     @Test
-    void checkOutFlow() {
+    void verifyCheckoutDateIsToday() {
         holding.checkOut(TODAY);
         assertThat(holding.dateCheckedOut()).isEqualTo(TODAY);
+    }
+
+    @Test
+    void verifyDueDateIsAfterToday() {
+        holding.checkOut(TODAY);
         assertThat(holding.dateDue()).isAfter(TODAY);
-        assertThat(holding.getBranch()).isEqualTo(Branch.CHECKED_OUT);
+    }
+
+    @Test
+    void afterCheckoutHoldingIsNotAvailable() {
+        holding.checkOut(TODAY);
         assertThat(holding.isAvailable()).isFalse();
+    }
+
+    @Test
+    void afterCheckoutHoldingBranchIsCheckedOut() {
+        holding.checkOut(TODAY);
+        assertThat(holding.getBranch()).isEqualTo(Branch.CHECKED_OUT);
     }
 
     @Test
