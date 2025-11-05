@@ -40,6 +40,6 @@ public class HoldingController {
 
     @GetMapping(value = "/{holdingBarcode}")
     public HoldingResponse retrieve(@PathVariable("holdingBarcode") String holdingBarcode) {
-        return new HoldingResponse(service.find(holdingBarcode));
+        return new HoldingResponse(service.findHoldingForBarcode(holdingBarcode));
     }
 }

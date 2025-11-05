@@ -100,7 +100,7 @@ class HoldingControllerTest {
         void returnsResponseFromService() throws Exception {
             var holding = new HoldingBuilder().build();
             holding.getMaterial().setAuthor("Heller");
-            when(holdingService.find("QA123:1")).thenReturn(holding);
+            when(holdingService.findHoldingForBarcode("QA123:1")).thenReturn(holding);
 
             var result = mockMvc.perform(get("/holdings/QA123:1"))
                .andExpect(status().isOk())

@@ -30,7 +30,7 @@ class HoldingTest {
     static final Material THE_TRIAL = new Material("10", "", "10", "", "");
     static final Material DR_STRANGELOVE = new Material("12", "", "11", "", MaterialType.DVD, "");
     static final Material THE_REVENANT = new Material("12", "", "11", "", MaterialType.NEW_RELEASE_DVD, "");
-    Holding h;
+    Holding initialHolding;
     static final Date TODAY = new Date();
     static final int COPY_NUMBER_1 = 1;
     Branch eastBranch = new Branch("East");
@@ -38,13 +38,12 @@ class HoldingTest {
 
     @BeforeEach
     void setUp() {
-        h = new Holding(THE_TRIAL, eastBranch, COPY_NUMBER_1);
+        initialHolding = new Holding(THE_TRIAL, eastBranch, COPY_NUMBER_1);
     }
 
     @Test
     void branchDefaultsToCheckedOutWhenCreated() {
         var holding = new Holding(THE_TRIAL);
-        assertThat(holding).isNotNull();
         assertThat(holding.getBranch()).isEqualTo(Branch.CHECKED_OUT);
     }
 
@@ -55,83 +54,92 @@ class HoldingTest {
     }
 
     @Test
-    void canSetCopyNumber() {
-        h.setCopyNumber(2);
-        assertThat(h.getCopyNumber()).isEqualTo(2);
+    void updateCopyNumberToDifferentValue() {
+        initialHolding.setCopyNumber(2);
+        assertThat(initialHolding.getCopyNumber()).isEqualTo(2);
     }
 
     @Test
     void changesBranchOnTransfer() {
-        h.transfer(westBranch);
-        assertThat(h.getBranch()).isEqualTo(westBranch);
+        initialHolding.transfer(westBranch);
+        assertThat(initialHolding.getBranch()).isEqualTo(westBranch);
     }
 
     @Test
-    void checkOutAndCheckInFlow() {
-        h.checkOut(TODAY);
-        assertThat(h.dateCheckedOut()).isEqualTo(TODAY);
-        assertThat(h.dateDue()).isAfter(TODAY);
-        assertThat(h.getBranch()).isEqualTo(Branch.CHECKED_OUT);
-        assertThat(h.isAvailable()).isFalse();
+    void checkOutFlow() {
+        initialHolding.checkOut(TODAY);
+        assertThat(initialHolding.dateCheckedOut()).isEqualTo(TODAY);
+        assertThat(initialHolding.dateDue()).isAfter(TODAY);
+        assertThat(initialHolding.getBranch()).isEqualTo(Branch.CHECKED_OUT);
+        assertThat(initialHolding.isAvailable()).isFalse();
+    }
 
-        Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
-        h.checkIn(tomorrow, eastBranch);
-        assertThat(h.dateLastCheckedIn()).isEqualTo(tomorrow);
-        assertThat(h.isAvailable()).isTrue();
-        assertThat(h.getBranch()).isEqualTo(eastBranch);
+    @Test
+    void checkInFlow() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(TODAY);
+        // Add one day to the date
+        calendar.add(Calendar.DATE, 1);
+
+        // Get the updated time (tomorrow)
+        Date tomorrow = calendar.getTime();
+        initialHolding.checkIn(tomorrow, eastBranch);
+        assertThat(initialHolding.dateLastCheckedIn()).isEqualTo(tomorrow);
+        assertThat(initialHolding.isAvailable()).isTrue();
+        assertThat(initialHolding.getBranch()).isEqualTo(eastBranch);
     }
 
     @Test
     void returnDateForStandardBook() {
-        h.checkOut(TODAY);
-        var dateDue = h.dateDue();
+        initialHolding.checkOut(TODAY);
+        var dateDue = initialHolding.dateDue();
         assertDateEquals(addDays(TODAY, MaterialType.BOOK.getCheckoutPeriod()), dateDue);
     }
 
     @Test
     void dateDueNullWhenCheckedOutIsNull() {
-        assertThat(h.dateDue()).isNull();
+        assertThat(initialHolding.dateDue()).isNull();
     }
 
     @Test
     void daysLateIsZeroWhenDateDueIsNull() {
-        assertThat(h.daysLate()).isEqualTo(0);
+        assertThat(initialHolding.daysLate()).isEqualTo(0);
     }
 
     @Test
     void dateDueForVariousMaterialTypes() {
         checkOutToday(DR_STRANGELOVE, eastBranch);
-        assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), h.dateDue());
+        assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), initialHolding.dateDue());
 
         checkOutToday(THE_REVENANT, eastBranch);
-        assertDateEquals(addDays(TODAY, MaterialType.NEW_RELEASE_DVD.getCheckoutPeriod()), h.dateDue());
+        assertDateEquals(addDays(TODAY, MaterialType.NEW_RELEASE_DVD.getCheckoutPeriod()), initialHolding.dateDue());
     }
 
     @Test
     void answersDaysLateOfZeroWhenReturnedSameDay() {
         checkOutToday(THE_TRIAL, eastBranch);
-        var daysLate = h.checkIn(TODAY, eastBranch);
+        var daysLate = initialHolding.checkIn(TODAY, eastBranch);
         assertThat(daysLate).isEqualTo(0);
     }
 
     @Test
     void answersDaysLateOfZeroWhenReturnedOnDateDue() {
         checkOutToday(THE_TRIAL, eastBranch);
-        int daysLate = h.checkIn(h.dateDue(), eastBranch);
+        int daysLate = initialHolding.checkIn(initialHolding.dateDue(), eastBranch);
         assertThat(daysLate).isEqualTo(0);
     }
 
     @Test
     void answersDaysLateWhenReturnedAfterDueDate() {
         checkOutToday(THE_TRIAL, eastBranch);
-        Date date = addDays(h.dateDue(), 3);
-        int days = h.checkIn(date, eastBranch);
+        Date date = addDays(initialHolding.dateDue(), 3);
+        int days = initialHolding.checkIn(date, eastBranch);
         assertThat(days).isEqualTo(3);
     }
 
     private void checkOutToday(Material material, Branch branch) {
-        h = new Holding(material, branch);
-        h.checkOut(TODAY);
+        initialHolding = new Holding(material, branch);
+        initialHolding.checkOut(TODAY);
     }
 
     static Date addDays(Date date, int days) {
