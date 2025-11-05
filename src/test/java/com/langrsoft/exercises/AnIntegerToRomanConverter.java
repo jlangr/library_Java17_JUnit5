@@ -91,4 +91,9 @@ public class AnIntegerToRomanConverter {
     void convertNineHundred() {
         assertThat(romanConverter.convert(900)).isEqualTo("CM");
     }
+
+    @Test
+    void convertEightyThree() {
+        assertThat(romanConverter.convert(83)).isEqualTo("LXXXIII");
+    }
 }

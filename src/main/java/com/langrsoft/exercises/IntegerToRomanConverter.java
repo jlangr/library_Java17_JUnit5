@@ -13,13 +13,14 @@ public class IntegerToRomanConverter {
                 break;
             }
             if (inputNumber > numbers[i]) {
-                if (inputNumber % numbers[i] == 0) {
-                    int loopCount = inputNumber / numbers[i];
-                    for (int j = 0; j < loopCount; j++) {
-                        romanBuilder.append(literals[i]);
+                int afterRemovingBase = inputNumber;
+                for(int j = i; j < numbers.length; j++) {
+                    while (afterRemovingBase >= numbers[j]) {
+                        afterRemovingBase = afterRemovingBase - numbers[j];
+                        romanBuilder.append(literals[j]);
                     }
-                    break;
                 }
+                break;
             }
         }
         return romanBuilder.toString();
