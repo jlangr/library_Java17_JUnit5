@@ -7,20 +7,14 @@ public class IntegerToRomanConverter {
 
     public String convert(int inputNumber) {
         StringBuilder romanBuilder = new StringBuilder();
-        for(int i = 0; i < numbers.length; i++) {
-            if(numbers[i] == inputNumber) {
-                romanBuilder.append(literals[i]);
-                break;
-            }
-            if (inputNumber > numbers[i]) {
-                int afterRemovingBase = inputNumber;
-                for(int j = i; j < numbers.length; j++) {
-                    while (afterRemovingBase >= numbers[j]) {
-                        afterRemovingBase = afterRemovingBase - numbers[j];
-                        romanBuilder.append(literals[j]);
-                    }
-                }
-                break;
+
+        //3784- 3000 + 700 + 80 + 4  ->  1000 + 1000 + 1000 + 500 + 100 +100 + 50 + 10 +10 + 10 +4
+
+        int afterRemovingBase = inputNumber;
+        for(int j = 0; j < numbers.length; j++) {
+            while (afterRemovingBase >= numbers[j]) {
+                afterRemovingBase = afterRemovingBase - numbers[j];
+                romanBuilder.append(literals[j]);
             }
         }
         return romanBuilder.toString();
