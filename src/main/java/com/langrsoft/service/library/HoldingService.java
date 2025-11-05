@@ -77,34 +77,20 @@ public class HoldingService {
         patronAccess.addHoldingToPatron(patron, holding);
     }
 
-    @SuppressWarnings("all") // remove warning suppression once refactored
-    // Note that this method is missing some coverage, which is typical
-    // for a method of this length
+    @SuppressWarnings("all")
     public int checkIn(String barCode, Date date, String branchScanCode) {
         Branch branch = new BranchService().find(branchScanCode);
         Holding holding = getValidHolding(barCode);
-
-        // set the holding to returned status
         holding.checkIn(date, branch);
-
-        // locate the patron with the checked out book
-        // could introduce a patron reference ID in the holding...
         Patron patron = locatePatron(holding);
-
-        // remove the book from the patron
         patron.remove(holding);
-
-        // check for late returns
-        int numOfDaysLate = getNumberOfDaysLate(holding, patron);
-
-        return numOfDaysLate;
+        return  getNumberOfDaysLate(holding, patron);
     }
 
     private static int getNumberOfDaysLate(Holding holding, Patron patron) {
 
         int daysLate = 0;
-        boolean isLate = false;
-        isLate = isLateReturn(holding, isLate);
+        boolean isLate = isLateReturn(holding);
         if (isLate) {
             daysLate = holding.daysLate(); // calculate # of days past due
             int fineBasis = holding.getMaterial().getFormat().getDailyFine();
@@ -122,8 +108,9 @@ public class HoldingService {
         return daysLate;
     }
 
-    private static boolean isLateReturn(Holding holding, boolean isLate) {
+    private static boolean isLateReturn(Holding holding) {
         Calendar c = Calendar.getInstance();
+        boolean isLate = false;
         c.setTime(holding.dateDue());
         if (holding.dateLastCheckedIn().after(c.getTime())) // is it late?
             isLate = true;
