@@ -98,11 +98,21 @@ class HoldingTest {
     }
 
     @Test
-    void checkInFlow() {
+    void verifyBranchForCheckIn() {
+        holding.checkIn(TOMORROW, eastBranch);
+        assertThat(holding.getBranch()).isEqualTo(eastBranch);
+    }
+
+    @Test
+    void verifyLastCheckInDateIsTomorrow() {
         holding.checkIn(TOMORROW, eastBranch);
         assertThat(holding.dateLastCheckedIn()).isEqualTo(TOMORROW);
+    }
+
+    @Test
+    void afterCheckInHoldingIsAvailable() {
+        holding.checkIn(TOMORROW, eastBranch);
         assertThat(holding.isAvailable()).isTrue();
-        assertThat(holding.getBranch()).isEqualTo(eastBranch);
     }
 
     @Test
