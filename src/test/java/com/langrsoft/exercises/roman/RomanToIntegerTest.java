@@ -32,11 +32,9 @@ public class RomanToIntegerTest {
         assertThat(RomanToInteger.convert(3)).isEqualTo("III");
     }
 
-    @Ignore
     @Test
     public void fourRomanNumberTest() {
-
-        assertThat(RomanToInteger.convert(4)).isEqualTo(stringDefault);
+        assertThat(RomanToInteger.convert(4)).isEqualTo("IV");
     }
 
     @Ignore
