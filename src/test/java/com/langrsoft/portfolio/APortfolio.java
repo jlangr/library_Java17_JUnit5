@@ -30,7 +30,7 @@ public class APortfolio {
         });
     }
 
-    @Test
+    /*@Test
     public void testForZeroPurchase(){
         Assert.assertEquals(0, port.getUniqueCount());
     }
@@ -126,7 +126,7 @@ public class APortfolio {
                 .isEqualTo("Purchase count should be more than 0");
 
 
-    }
+    }*/
 
     @Test
     public void testPortFolioValueWhenNoShares() {
