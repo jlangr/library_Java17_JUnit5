@@ -20,12 +20,12 @@ public class APortfolio {
     @BeforeEach
     public void setup() {
         mockStockService = mock(IStockPortFolioService.class);
-        port = new StockPortfolio(new IStockPortFolioService() {
+        /*port = new StockPortfolio(new IStockPortFolioService() {
             @Override
             public int getCurrentPrice(String stockSymbol) {
                 return 0;
             }
-        });
+        });*/
     }
 
     /*@Test
@@ -168,11 +168,10 @@ public class APortfolio {
     final int nokPrice = 6;
     @Test
     public void testPortFolioValueWhenDifferentSharePurchased() {
-        mockStockService = mock(IStockPortFolioService.class);
+        //mockStockService = mock(IStockPortFolioService.class);
+        StockPortfolio port = new StockPortfolio(mockStockService);
         when(mockStockService.getCurrentPrice("AAPL")).thenReturn(aaplPrice);
         when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
-
-        StockPortfolio port = new StockPortfolio(mockStockService);
         port.purchase("NOK", 10);
         port.purchase("AAPL", 20);
         Assert.assertEquals(660, port.getTotalValue());
