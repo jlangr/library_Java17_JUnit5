@@ -1,42 +1,40 @@
 package com.langrsoft.portfolio;
 
-import com.langrsoft.util.InvalidNameException;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.security.InvalidParameterException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class APortfolio {
 
     IStockPortFolioService mockStockService;
-    //StockPortfolio port;
+    IAuditor mockAuditor;
+    StockPortfolio port;
+    final int aaplPrice = 30;
+    final int nokPrice = 6;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         mockStockService = mock(IStockPortFolioService.class);
-        /*port = new StockPortfolio(new IStockPortFolioService() {
-            @Override
-            public int getCurrentPrice(String stockSymbol) {
-                return 0;
-            }
-        });*/
+        mockAuditor = mock(IAuditor.class);
+        port = new StockPortfolio(mockStockService, mockAuditor);
     }
 
-    /*@Test
+    @Test
     public void testForZeroPurchase(){
-        Assert.assertEquals(0, port.getUniqueCount());
+        Assertions.assertEquals(0, port.getUniqueCount());
     }
 
     @Test
     public void testForSinglePurchase(){
         port.purchase("AAPL", 10);
-        Assert.assertEquals(1, port.getUniqueCount());
+        Assertions.assertEquals(1, port.getUniqueCount());
 
     }
 
@@ -45,7 +43,7 @@ public class APortfolio {
         port.purchase("AAPL", 10);
         port.purchase("GOOGL", 5);
         port.purchase("MSFT", 8);
-        Assert.assertEquals(3, port.getUniqueCount());
+        Assertions.assertEquals(3, port.getUniqueCount());
 
     }
 
@@ -54,7 +52,7 @@ public class APortfolio {
     public void testForMultiplePurchaseOfSimilarKindOfSymbols(){
         port.purchase("AAPL", 10);
         port.purchase("AAP", 5);
-        Assert.assertEquals(2, port.getUniqueCount());
+        Assertions.assertEquals(2, port.getUniqueCount());
 
     }
 
@@ -63,7 +61,7 @@ public class APortfolio {
         port.purchase("AAPL", 10);
         port.purchase("AAPL", 5);
         port.purchase("AAPL", 8);
-        Assert.assertEquals(1, port.getUniqueCount());
+        Assertions.assertEquals(1, port.getUniqueCount());
 
     }
 
@@ -76,20 +74,20 @@ public class APortfolio {
 
     @Test
     public void tesForNoSharesPurchased(){
-        Assert.assertEquals(0, port.getShareCount("AAPL"));
+        Assertions.assertEquals(0, port.getShareCount("AAPL"));
     }
 
     @Test
     public void tesForOneSharePurchase(){
         port.purchase("TSLA", 1);
-        Assert.assertEquals(1, port.getShareCount("TSLA"));
+        Assertions.assertEquals(1, port.getShareCount("TSLA"));
     }
 
     @Test
     public void testForMultipleSharePurchase(){
         port.purchase("TSLA", 5);
         port.purchase("TSLA", 6);
-        Assert.assertEquals(11, port.getShareCount("TSLA"));
+        Assertions.assertEquals(11, port.getShareCount("TSLA"));
     }
 
     @Test
@@ -97,7 +95,7 @@ public class APortfolio {
         port.purchase("TSLA", 5);
         port.purchase("AAPL", 10);
         //port.purchase("X", 0);
-        Assert.assertEquals(10, port.getShareCount("AAPL"));
+        Assertions.assertEquals(10, port.getShareCount("AAPL"));
         //Assert.assertEquals(5, port.getShareCount("TSLA"));
     }
 
@@ -124,56 +122,55 @@ public class APortfolio {
                 .isEqualTo("Purchase count should be more than 0");
 
 
-    }*/
+    }
 
     @Test
     public void testPortFolioValueWhenNoShares() {
-        mockStockService = new IStockPortFolioService() {
-            @Override
-            public int getCurrentPrice(String stockSymbol) {
-                return 0;
-            }
-        };
-        StockPortfolio port = new StockPortfolio(mockStockService);
-        Assert.assertEquals(0, port.getTotalValue());
+        Assertions.assertEquals(0, port.getTotalValue());
     }
 
     @Test
     public void testPortFolioValueWhenSingleSharePurchased() {
-        mockStockService = new IStockPortFolioService() {
-            @Override
-            public int getCurrentPrice(String stockSymbol) {
-                return 7;
-            }
-        };
-        StockPortfolio port = new StockPortfolio(mockStockService);
+        when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
         port.purchase("NOK", 1);
-        Assert.assertEquals(7, port.getTotalValue());
+        Assertions.assertEquals(6, port.getTotalValue());
     }
 
     @Test
     public void testPortFolioValueWhenMultipleSharePurchased() {
-        mockStockService = new IStockPortFolioService() {
-            @Override
-            public int getCurrentPrice(String stockSymbol) {
-                return 7;
-            }
-        };
-        StockPortfolio port = new StockPortfolio(mockStockService);
-        port.purchase("NOK", 10);
-        Assert.assertEquals(70, port.getTotalValue());
-    }
-
-    final int aaplPrice = 30;
-    final int nokPrice = 6;
-    @Test
-    public void testPortFolioValueWhenDifferentSharePurchased() {
-        //mockStockService = mock(IStockPortFolioService.class);
-        StockPortfolio port = new StockPortfolio(mockStockService);
-        when(mockStockService.getCurrentPrice("AAPL")).thenReturn(aaplPrice);
         when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
         port.purchase("NOK", 10);
+        Assertions.assertEquals(60, port.getTotalValue());
+    }
+
+
+    @Test
+    public void testPortFolioValueWhenDifferentSharePurchased() {
+        when(mockStockService.getCurrentPrice("AAPL")).thenReturn(aaplPrice);
+        when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
+
+        port.purchase("NOK", 10);
         port.purchase("AAPL", 20);
-        Assert.assertEquals(660, port.getTotalValue());
+        Assertions.assertEquals(660, port.getTotalValue());
+    }
+
+    @Test
+    public void verifyAuditLogAfterPurchase() {
+        when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
+
+        port.purchase("NOK", 10);
+        verify(mockAuditor).logPurchase("NOK", 10);
+        Assertions.assertEquals(60, port.getTotalValue());
+    }
+
+    @Test
+    public void verifyAuditLogAfterMultiplePurchases() {
+        when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
+        when(mockStockService.getCurrentPrice("AAPL")).thenReturn(aaplPrice);
+
+        port.purchase("NOK", 10);
+        port.purchase("AAPL", 20);
+        verify(mockAuditor, times(2)).logPurchase(anyString(), anyInt());
+        Assertions.assertEquals(660, port.getTotalValue());
     }
 }

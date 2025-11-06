@@ -11,8 +11,10 @@ import java.util.Set;
 public class StockPortfolio {
 
     final IStockPortFolioService stockPortFolioService;
-    StockPortfolio(IStockPortFolioService stockPortFolioService) {
+    final IAuditor auditor;
+    StockPortfolio(IStockPortFolioService stockPortFolioService, IAuditor auditor) {
         this.stockPortFolioService = stockPortFolioService;
+        this.auditor = auditor;
     }
     Map<String, Integer> stocks = new HashMap<>();
 
@@ -25,6 +27,7 @@ public class StockPortfolio {
         }
 
         stocks.put(symbol, (existingCount + count));
+        auditor.logPurchase(symbol, count);
 
     }
 
