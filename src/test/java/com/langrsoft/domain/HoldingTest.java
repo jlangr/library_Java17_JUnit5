@@ -51,28 +51,28 @@ class HoldingTest {
     }
 
     @Test
-    void copyNumberDefaultsToOneWhenCreated() {
+    void shouldCopyNumberToOne() {
         var holding = new Holding(THE_TRIAL, eastBranch);
 
         assertThat(holding.getCopyNumber()).isEqualTo(1);
     }
 
     @Test
-    void canSetCopyNumber() {
+    void shouldAllowSettingCopyNumber() {
         holding_All.setCopyNumber(2);
 
         assertThat(holding_All.getCopyNumber()).isEqualTo(2);
     }
 
     @Test
-    void changesBranchOnTransfer() {
+    void shouldChangesBranchOnTransfer() {
         holding_All.transfer(westBranch);
 
         assertThat(holding_All.getBranch()).isEqualTo(westBranch);
     }
 
     @Test
-    void checkOutAndCheckInFlow() {
+    void shouldCheckOutAndCheckInFlow() {
         holding_All.checkOut(TODAY);
 
         assertThat(holding_All.dateCheckedOut()).isEqualTo(TODAY);
@@ -82,20 +82,22 @@ class HoldingTest {
 
         Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
         holding_All.checkIn(tomorrow, eastBranch);
+
         assertThat(holding_All.dateLastCheckedIn()).isEqualTo(tomorrow);
         assertThat(holding_All.isAvailable()).isTrue();
         assertThat(holding_All.getBranch()).isEqualTo(eastBranch);
     }
 
     @Test
-    void returnDateForStandardBook() {
+    void shouldReturnDueDateForStandardBook() {
         holding_All.checkOut(TODAY);
         var dateDue = holding_All.dateDue();
+
         assertDateEquals(addDays(TODAY, MaterialType.BOOK.getCheckoutPeriod()), dateDue);
     }
 
     @Test
-    void dateDueNullWhenCheckedOutIsNull() {
+    void checkDateDueNullWhenCheckedOutIsNull() {
         assertThat(holding_All.dateDue()).isNull();
     }
 
