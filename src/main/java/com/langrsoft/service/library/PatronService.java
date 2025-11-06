@@ -1,5 +1,6 @@
 package com.langrsoft.service.library;
 
+import com.langrsoft.domain.Holding;
 import com.langrsoft.domain.Patron;
 import com.langrsoft.persistence.PatronStore;
 
@@ -32,4 +33,13 @@ public class PatronService {
     public Collection<Patron> allPatrons() {
         return patronAccess.getAll();
     }
+
+   Patron getPatronWithHolding(Holding holding) {
+      for (var eachPatron : allPatrons()) {
+         var hasHolding = eachPatron.hasHolding(holding);
+         if (hasHolding) return eachPatron;
+      }
+      return null;
+   }
+
 }

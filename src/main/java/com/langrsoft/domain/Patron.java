@@ -82,4 +82,13 @@ public class Patron {
     public void remit(int a) {
         bal -= a;
     }
+
+    public boolean hasHolding(Holding holding) {
+       var holdings = holdingMap();
+       for (Holding patHld : holdings) {
+           if (holding.getBarcode().equals(patHld.getBarcode()))
+              return true;
+       }
+       return false;
+    }
 }

@@ -10,8 +10,9 @@ import java.util.List;
 
 public class HoldingService {
     private final Catalog catalog = new Catalog();
+   private PatronService patronService = new PatronService();
 
-    public String add(String sourceId, String branchId) {
+   public String add(String sourceId, String branchId) {
         var branch = findBranch(branchId);
         var holding = new Holding(retrieveMaterialDetails(sourceId), branch);
         catalog.add(holding);
@@ -98,28 +99,11 @@ public class HoldingService {
 
         // locate the patron with the checked out book
         // could introduce a patron reference ID in the holding...
-        Patron f = null;
-        for (Patron p : new PatronService().allPatrons()) {
-            holdings = p.holdingMap();
-            for (Holding patHld : holdings) {
-                if (hld.getBarcode().equals(patHld.getBarcode()))
-                    f = p;
-            }
-        }
+       Patron f = patronService.getPatronWithHolding(hld);
 
-        // remove the book from the patron
         f.remove(hld);
 
-        // check for late returns
-        boolean isLate = false;
-        Calendar c = Calendar.getInstance();
-        c.setTime(hld.dateDue());
-        int d = Calendar.DAY_OF_YEAR;
-
-        if (hld.dateLastCheckedIn().after(c.getTime())) // is it late?
-            isLate = true;
-
-        if (isLate) {
+       if (isLateReturn(hld)) {
             int daysLate = hld.daysLate(); // calculate # of days past due
             int fineBasis = hld.getMaterial().getFormat().getDailyFine();
             switch (hld.getMaterial().getFormat()) {
@@ -138,4 +122,20 @@ public class HoldingService {
         }
         return 0;
     }
+
+   private boolean isLateReturn(Holding hld) {
+      boolean isLate = false;
+      Calendar c = Calendar.getInstance();
+      c.setTime(hld.dateDue());
+      int d = Calendar.DAY_OF_YEAR;
+
+      if (isAfter(hld, c)) // is it late?
+          isLate = true;
+      return isLate;
+   }
+
+   private boolean isAfter(Holding hld, Calendar c) {
+      return hld.dateLastCheckedIn().after(c.getTime());
+   }
+
 }

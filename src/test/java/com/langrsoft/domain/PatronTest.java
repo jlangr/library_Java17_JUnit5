@@ -84,4 +84,33 @@ class PatronTest {
 
         new EqualityTester(patron1, patron1Copy1, patron1Copy2, patron2, patron1Subtype).verify();
     }
+
+    @Test
+    void hasHoldingReturnsFalseWhenNoHoldingsAdded() {
+       Patron patron = new Patron("p1", "Joe");
+
+        assertThat(patron.hasHolding(new HoldingBuilder().build())).isFalse();
+    }
+
+    @Test
+    void hasHoldingReturnsTrueWhenHoldingAddedAndMatches() {
+        Patron patron = new Patron("p1", "Joe");
+        Holding holding = new HoldingBuilder().classification("h1").build();
+
+        patron.add(holding);
+
+        assertThat(patron.hasHolding(holding)).isTrue();
+    }
+
+    @Test
+    void hasHoldingReturnsFalseWhenHoldingAddedAndDoesNotMatch() {
+        Patron patron = new Patron("p1", "Joe");
+        Holding holdingA = new HoldingBuilder().classification("A1").build();
+        Holding holdingB = new HoldingBuilder().classification("B1").build();
+
+        patron.add(holdingA);
+
+        assertThat(patron.hasHolding(holdingB)).isFalse();
+    }
+
 }
