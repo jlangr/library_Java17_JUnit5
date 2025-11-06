@@ -9,15 +9,17 @@ public class Stock {
         return stockName;
     }
 
-    public void setStockName(String stockName) {
+    public Stock setStockName(String stockName) {
         this.stockName = stockName;
+        return this;
     }
 
     public int getStockQty() {
         return stockQty;
     }
 
-    public void setStockQty(int stockQty) {
+    public Stock setStockQty(int stockQty) {
         this.stockQty = stockQty;
+        return this;
     }
 }

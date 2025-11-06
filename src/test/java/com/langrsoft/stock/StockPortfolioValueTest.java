@@ -3,28 +3,18 @@ package com.langrsoft.stock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class StockPortfolioValueTest {
 
     IStockExchange stockExchange;
     StockPortfolio stockPortfolio;
-    Map<String, Integer> stockValue = new HashMap<>();
 
     @BeforeEach
     void create() {
-        stockValue.put("NOK", 10);
-        stockValue.put("APPLE", 20);
-
-        stockExchange = new IStockExchange() {
-            @Override
-            public int getPrice(String stockName) {
-                return stockValue.get(stockName);
-            }
-        };
+        stockExchange = mock(IStockExchange.class);
         stockPortfolio = new StockPortfolio(stockExchange);
     }
 
@@ -35,36 +25,30 @@ public class StockPortfolioValueTest {
 
     @Test
     void oneStockPortfolio() throws InvalidStockQtyException {
-        Stock stock = new Stock();
-        stock.setStockName("NOK");
-        stock.setStockQty(1);
+        when(stockExchange.getPrice("NOK")).thenReturn(10);
+        Stock stock = new Stock().setStockName("NOK").setStockQty(1);
         stockPortfolio.purchase(stock);
         assertThat(stockPortfolio.getPortfolioValue()).isEqualTo(10);
     }
 
     @Test
     void multiPurchaseSameStockPortfolio() throws InvalidStockQtyException {
-        Stock purchase1 = new Stock();
-        purchase1.setStockName("NOK");
-        purchase1.setStockQty(1);
+        when(stockExchange.getPrice("NOK")).thenReturn(10);
+        Stock purchase1 = new Stock().setStockName("NOK").setStockQty(1);
         stockPortfolio.purchase(purchase1);
-        Stock purchase2 = new Stock();
-        purchase2.setStockName("NOK");
-        purchase2.setStockQty(10);
+        Stock purchase2 = new Stock().setStockName("NOK").setStockQty(10);
         stockPortfolio.purchase(purchase2);
         assertThat(stockPortfolio.getPortfolioValue()).isEqualTo(110);
     }
 
     @Test
     void differentStockPortfolio() throws InvalidStockQtyException {
-        Stock purchase1 = new Stock();
-        purchase1.setStockName("NOK");
-        purchase1.setStockQty(1);
+        when(stockExchange.getPrice("NOK")).thenReturn(20);
+        when(stockExchange.getPrice("APPLE")).thenReturn(40);
+        Stock purchase1 = new Stock().setStockName("NOK").setStockQty(1);
         stockPortfolio.purchase(purchase1);
-        Stock purchase2 = new Stock();
-        purchase2.setStockName("APPLE");
-        purchase2.setStockQty(1);
+        Stock purchase2 = new Stock().setStockName("APPLE").setStockQty(1);
         stockPortfolio.purchase(purchase2);
-        assertThat(stockPortfolio.getPortfolioValue()).isEqualTo(30);
+        assertThat(stockPortfolio.getPortfolioValue()).isEqualTo(60);
     }
 }
