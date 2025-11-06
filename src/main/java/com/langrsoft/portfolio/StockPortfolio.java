@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class StockPortfolio {
 
-    IStockPortFolioService stockPortFolioService;
+    final IStockPortFolioService stockPortFolioService;
     StockPortfolio(IStockPortFolioService stockPortFolioService) {
         this.stockPortFolioService = stockPortFolioService;
     }
@@ -52,6 +52,12 @@ public class StockPortfolio {
     }
 
     public int getTotalValue() {
-        return stockPortFolioService.getCurrentPrice("");
+        int totalPrice = 0;
+        for( var entrySet : stocks.entrySet()){
+            String symbol = entrySet.getKey();
+            int count = entrySet.getValue();
+            totalPrice += stockPortFolioService.getCurrentPrice(symbol)*count;
+        }
+        return totalPrice;
     }
 }

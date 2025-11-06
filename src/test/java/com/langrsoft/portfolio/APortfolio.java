@@ -145,4 +145,33 @@ public class APortfolio {
         port.purchase("NOK", 1);
         Assert.assertEquals(7, port.getTotalValue());
     }
+
+    @Test
+    public void testPortFolioValueWhenMultipleSharePurchased() {
+        mockStockService = new IStockPortFolioService() {
+            @Override
+            public int getCurrentPrice(String stockSymbol) {
+                return 7;
+            }
+        };
+        StockPortfolio port = new StockPortfolio(mockStockService);
+        port.purchase("NOK", 10);
+        Assert.assertEquals(70, port.getTotalValue());
+    }
+
+    final int aaplPrice = 30;
+    final int nokPrice = 6;
+    @Test
+    public void testPortFolioValueWhenDifferentSharePurchased() {
+        mockStockService = new IStockPortFolioService() {
+            @Override
+            public int getCurrentPrice(String stockSymbol) {
+                return (stockSymbol.equals("AAPL"))? aaplPrice : nokPrice;
+            }
+        };
+        StockPortfolio port = new StockPortfolio(mockStockService);
+        port.purchase("NOK", 10);
+        port.purchase("AAPL", 20);
+        Assert.assertEquals(660, port.getTotalValue());
+    }
 }
