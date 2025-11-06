@@ -2,7 +2,7 @@ package com.langrsoft.portfolio;
 
 import com.langrsoft.util.InvalidNameException;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.security.InvalidParameterException;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class APortfolio {
 
     IStockPortFolioService mockStockService;
-    StockPortfolio port;
+    //StockPortfolio port;
 
     @BeforeEach
     public void setup() {
