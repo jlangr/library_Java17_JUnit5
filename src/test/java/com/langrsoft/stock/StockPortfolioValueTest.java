@@ -4,18 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class StockPortfolioValueTest {
 
+    IAuditor auditor;
     IStockExchange stockExchange;
     StockPortfolio stockPortfolio;
 
     @BeforeEach
     void create() {
+        auditor = mock(IAuditor.class);
         stockExchange = mock(IStockExchange.class);
-        stockPortfolio = new StockPortfolio(stockExchange);
+        stockPortfolio = new StockPortfolio(auditor, stockExchange);
     }
 
     @Test
@@ -29,6 +30,14 @@ public class StockPortfolioValueTest {
         Stock stock = new Stock().setStockName("NOK").setStockQty(1);
         stockPortfolio.purchase(stock);
         assertThat(stockPortfolio.getPortfolioValue()).isEqualTo(10);
+    }
+
+    @Test
+    void oneStockPurchaseVerify() throws InvalidStockQtyException {
+        when(stockExchange.getPrice("NOK")).thenReturn(10);
+        Stock stock = new Stock().setStockName("NOK").setStockQty(1);
+        stockPortfolio.purchase(stock);
+        verify(auditor).logPurchase(stock.stockName, stock.stockQty);
     }
 
     @Test

@@ -7,13 +7,15 @@ import java.util.Optional;
 public class StockPortfolio {
     List<Stock> stockList = new ArrayList<>();
 
+    IAuditor auditor;
     IStockExchange stockExchange;
 
     public StockPortfolio() {
 
     }
 
-    public StockPortfolio(IStockExchange stockExchange) {
+    public StockPortfolio(IAuditor auditor, IStockExchange stockExchange) {
+        this.auditor = auditor;
         this.stockExchange = stockExchange;
     }
 
@@ -32,6 +34,7 @@ public class StockPortfolio {
         } else {
             stockList.add(stock);
         }
+        auditor.logPurchase(stock.stockName, stock.stockQty);
     }
 
     private static void validateStockQty(Stock stock) throws InvalidStockQtyException {
