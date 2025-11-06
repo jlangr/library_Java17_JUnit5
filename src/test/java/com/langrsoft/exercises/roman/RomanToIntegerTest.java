@@ -1,32 +1,34 @@
 package com.langrsoft.exercises.roman;
 
+import com.langrsoft.exercises.stock.WrongShareAmount;
 import org.junit.Test;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RomanToIntegerTest {
     private final String stringDefault = "anything";
 
     @Test
-    public void zeroRomanNumberTest() {
-        assertThat(RomanToInteger.convert(0)).isEqualTo(stringDefault);
+    public void zeroAndNegativeRomanNumberTest() {
+        var ex1 = assertThrows(WrongInput.class, () -> RomanToInteger.convert(0));
+        assertThat(ex1.getMessage()).isEqualTo("Should not be zero or negative");
+        var ex2 = assertThrows(WrongInput.class, () -> RomanToInteger.convert(-1));
+        assertThat(ex2.getMessage()).isEqualTo("Should not be zero or negative");
     }
 
     @Test
     public void aboveLimitRomanNumberTest() {
-        assertThat(RomanToInteger.convert(4001)).isEqualTo(stringDefault);
-    }
 
-    @Test
-    public void negativeRomanNumberTest() {
-        assertThat(RomanToInteger.convert(-1)).isEqualTo(stringDefault);
+        var ex1 = assertThrows(WrongInput.class, () -> RomanToInteger.convert(4001));
+        assertThat(ex1.getMessage()).isEqualTo("Should not be above 4000");
     }
 
     @Test
     public void beneathFourRomanNumberTest() {
-        assertThat(RomanToInteger.convert(1)).isEqualTo(stringDefault);
-        assertThat(RomanToInteger.convert(3)).isEqualTo(stringDefault);
+        assertThat(RomanToInteger.convert(1)).isEqualTo("I");
+        assertThat(RomanToInteger.convert(3)).isEqualTo("III");
     }
 
     @Test
