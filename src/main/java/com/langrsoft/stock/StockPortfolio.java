@@ -7,6 +7,16 @@ import java.util.Optional;
 public class StockPortfolio {
     List<Stock> stockList = new ArrayList<>();
 
+    IStockExchange stockExchange;
+
+    public StockPortfolio() {
+
+    }
+
+    public StockPortfolio(IStockExchange stockExchange) {
+        this.stockExchange = stockExchange;
+    }
+
     public int getUniqueNumberOfStocks() {
         return stockList.size();
     }
@@ -39,6 +49,12 @@ public class StockPortfolio {
         return stockList.stream()
                 .filter(stock -> stock.getStockName().equals(stockName))
                 .map(stock -> stock.getStockQty())
+                .mapToInt(Integer::intValue).sum();
+    }
+
+    public int getPortfolioValue() {
+        return stockList.stream()
+                .map(stock -> stock.getStockQty() * stockExchange.getPrice(stock.getStockName()))
                 .mapToInt(Integer::intValue).sum();
     }
 }
