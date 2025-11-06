@@ -26,7 +26,7 @@ public class RomanToInteger {
         }
         if (input > 3 && input <= 10) {
             for (int i = 1; i <= input; i++){
-                var result = input - romanNumbers.get(input.);
+               // var result = input - romanNumbers.get(input);
                 stringBuilder.append(romanNumbers.get(5));
             }
             return stringBuilder.toString();
