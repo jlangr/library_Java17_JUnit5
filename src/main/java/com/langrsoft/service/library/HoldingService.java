@@ -98,8 +98,7 @@ public class HoldingService {
     private static int getNumberOfDaysLate(Holding holding, Patron patron) {
 
         int daysLate = 0;
-        boolean isLate = isLateReturn(holding);
-        if (isLate) {
+        if (isLateReturn(holding)) {
             daysLate = holding.daysLate(); // calculate # of days past due
             int fineBasis = holding.getMaterial().getFormat().getDailyFine();
             switch (holding.getMaterial().getFormat()) {

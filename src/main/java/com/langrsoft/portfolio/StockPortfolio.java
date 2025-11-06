@@ -1,5 +1,7 @@
 package com.langrsoft.portfolio;
 
+import com.langrsoft.util.NotYetImplementedException;
+
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +10,10 @@ import java.util.Set;
 
 public class StockPortfolio {
 
+    IStockPortFolioService stockPortFolioService;
+    StockPortfolio(IStockPortFolioService stockPortFolioService) {
+        this.stockPortFolioService = stockPortFolioService;
+    }
     Map<String, Integer> stocks = new HashMap<>();
 
     public void purchase(String symbol, int count){
@@ -43,5 +49,9 @@ public class StockPortfolio {
         } else {
             return 0;
         }*/
+    }
+
+    public int getTotalValue() {
+        return stockPortFolioService.getCurrentPrice("");
     }
 }
