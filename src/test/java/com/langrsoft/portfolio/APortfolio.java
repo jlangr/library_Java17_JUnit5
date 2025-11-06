@@ -9,19 +9,17 @@ import java.security.InvalidParameterException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class APortfolio {
 
     IStockPortFolioService mockStockService;
     StockPortfolio port;
+
     @BeforeEach
-    public void instantiate() {
-        mockStockService = new IStockPortFolioService() {
-            @Override
-            public int getCurrentPrice(String stockSymbol) {
-                return 7;
-            }
-        };
+    public void setup() {
+        mockStockService = mock(IStockPortFolioService.class);
         port = new StockPortfolio(new IStockPortFolioService() {
             @Override
             public int getCurrentPrice(String stockSymbol) {
@@ -170,12 +168,10 @@ public class APortfolio {
     final int nokPrice = 6;
     @Test
     public void testPortFolioValueWhenDifferentSharePurchased() {
-        mockStockService = new IStockPortFolioService() {
-            @Override
-            public int getCurrentPrice(String stockSymbol) {
-                return (stockSymbol.equals("AAPL"))? aaplPrice : nokPrice;
-            }
-        };
+        mockStockService = mock(IStockPortFolioService.class);
+        when(mockStockService.getCurrentPrice("AAPL")).thenReturn(aaplPrice);
+        when(mockStockService.getCurrentPrice("NOK")).thenReturn(nokPrice);
+
         StockPortfolio port = new StockPortfolio(mockStockService);
         port.purchase("NOK", 10);
         port.purchase("AAPL", 20);
