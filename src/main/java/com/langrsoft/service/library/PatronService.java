@@ -7,6 +7,14 @@ import java.util.Collection;
 
 public class PatronService {
     public final PatronStore patronAccess = new PatronStore();
+    private final CheckCredit checkCredit;
+
+    public PatronService(CheckCredit checkCredit) {
+        this.checkCredit = checkCredit;
+    }
+    public PatronService() {
+
+    }
 
     public String add(String name) {
         return save(new Patron(name));

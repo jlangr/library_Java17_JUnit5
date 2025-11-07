@@ -13,7 +13,17 @@ class PatronServiceTest {
     @BeforeEach
     void initialize() {
         PatronStore.deleteAll();
-        service = new PatronService();
+        CheckCredit checkCredit= new CheckCreditSucessStub();
+
+        service = new PatronService(checkCredit);
+
+
+    }
+    @Test
+    void testAdd() {
+        var scanCode = service.add("name","card number");
+
+        assertThat(scanCode).startsWith("p");
     }
 
     @Test
