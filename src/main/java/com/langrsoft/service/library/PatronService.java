@@ -7,11 +7,7 @@ import java.util.Collection;
 
 public class PatronService {
     public final PatronStore patronAccess = new PatronStore();
-    private CheckCredit checkCredit;
-
-    public PatronService(CheckCredit checkCredit) {
-        this.checkCredit = checkCredit;
-    }
+    private CheckCreditStub checkCredit;
 
     public PatronService() {
     }
@@ -45,7 +41,7 @@ public class PatronService {
         if (cardNumber){
             return add(id,name);
         }
-        return null;
+        throw new InvalidCardNumber("Wrong card number");
     }
 
     public String validateCreditTrue(CheckCredit checkCredit, String pid, String name, String cardNumber) {
@@ -53,8 +49,14 @@ public class PatronService {
         return add(pid, name,  checkCredit.hasCreditValid(cardNumber));
     }
 
-    public String validateCreditFalse(CheckCredit checkCredit, String pid, String name, String cardNumber) {
+    public void addValidator(CheckCreditStub checkCreditMock) {
+        this.checkCredit = checkCreditMock;
+    }
 
-        return add(pid, name,  checkCredit.hasCreditFailed(cardNumber));
+    public String add(String pid, String name, String cardNumber) {
+        if(checkCredit.hasCreditValid(cardNumber)){
+            return add(pid, name);
+        }
+        return null;
     }
 }
