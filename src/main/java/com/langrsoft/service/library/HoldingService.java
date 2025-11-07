@@ -2,9 +2,9 @@ package com.langrsoft.service.library;
 
 import com.langrsoft.domain.*;
 import com.langrsoft.external.Material;
+import com.langrsoft.persistence.PatronNotFoundException;
 import com.langrsoft.persistence.PatronStore;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,37 +12,34 @@ public class HoldingService {
     private final Catalog catalog = new Catalog();
 
     public String add(String sourceId, String branchId) {
-        var branch = findBranch(branchId);
-        var holding = new Holding(retrieveMaterialDetails(sourceId), branch);
+        Branch branch = getBranchOrThrow(branchId);
+        Holding holding = new Holding(retrieveMaterialDetails(sourceId), branch);
         catalog.add(holding);
         return holding.getBarcode();
     }
 
     private Material retrieveMaterialDetails(String sourceId) {
-        var material =
-                ClassificationApiFactory.getService().retrieveMaterial(sourceId);
+        Material material = ClassificationApiFactory.getService().retrieveMaterial(sourceId);
         if (material == null)
             throw new InvalidSourceIdException("cannot retrieve material with source ID " + sourceId);
         return material;
     }
 
-    private Branch findBranch(String branchId) {
-        var branch = new BranchService().find(branchId);
+    private Branch getBranchOrThrow(String branchId) {
+        Branch branch = new BranchService().find(branchId);
         if (branch == null)
             throw new BranchNotFoundException("Branch not found: " + branchId);
         return branch;
     }
 
     public boolean isAvailable(String barCode) {
-        var holding = find(barCode);
-        if (holding == null)
-            throw new HoldingNotFoundException();
+        Holding holding = getHoldingOrThrow(barCode);
         return holding.isAvailable();
     }
 
     public HoldingMap allHoldings() {
-        var stack = new HoldingMap();
-        for (var holding : catalog)
+        HoldingMap stack = new HoldingMap();
+        for (Holding holding : catalog)
             stack.add(holding);
         return stack;
     }
@@ -56,24 +53,13 @@ public class HoldingService {
     }
 
     public void transfer(String barcode, String branchScanCode) {
-        Holding holding = find(barcode);
-        if (holding == null)
-            throw new HoldingNotFoundException();
-        Branch branch = new BranchService().find(branchScanCode);
+        Holding holding = getHoldingOrThrow(barcode);
+        Branch branch = getBranchOrThrow(branchScanCode);
         holding.transfer(branch);
     }
 
-    public Date dateDue(String barCode) {
-        Holding holding = find(barCode);
-        if (holding == null)
-            throw new HoldingNotFoundException();
-        return holding.dateDue();
-    }
-
     public void checkOut(String patronId, String barCode, Date date) {
-        Holding holding = find(barCode);
-        if (holding == null)
-            throw new HoldingNotFoundException();
+        Holding holding = getHoldingOrThrow(barCode);
         if (!holding.isAvailable())
             throw new HoldingAlreadyCheckedOutException();
         holding.checkOut(date);
@@ -83,59 +69,54 @@ public class HoldingService {
         patronAccess.addHoldingToPatron(patron, holding);
     }
 
-    @SuppressWarnings("all") // remove warning suppression once refactored
-    // Note that this method is missing some coverage, which is typical
-    // for a method of this length
-    public int checkIn(String barCode, Date date, String branchScanCode) {
-        Branch branch = new BranchService().find(branchScanCode);
-        Holding hld = find(barCode);
-        if (hld == null)
+    public void checkIn(String barCode, Date date, String branchScanCode) {
+        Branch branch = getBranchOrThrow(branchScanCode);
+        Holding holding = getHoldingOrThrow(barCode);
+        holding.checkIn(date, branch);
+
+        Patron patron = findPatronByHolding(holding);
+        patron.remove(holding);
+
+        if (isLateReturn(holding)) {
+            int daysLate = holding.daysLate();
+            int fineBasis = holding.getMaterial().getFormat().getDailyFine();
+            int fine = calculateFine(holding, daysLate, fineBasis);
+            patron.addFine(fine);
+        }
+    }
+
+    private Holding getHoldingOrThrow(String barCode) {
+        Holding holding = find(barCode);
+        if (holding == null)
             throw new HoldingNotFoundException();
+        return holding;
+    }
 
-        // set the holding to returned status
-        HoldingMap holdings = null;
-        hld.checkIn(date, branch);
-
-        // locate the patron with the checked out book
-        // could introduce a patron reference ID in the holding...
-        Patron f = null;
-        for (Patron p : new PatronService().allPatrons()) {
-            holdings = p.holdingMap();
-            for (Holding patHld : holdings) {
-                if (hld.getBarcode().equals(patHld.getBarcode()))
-                    f = p;
+    private Patron findPatronByHolding(Holding holding) {
+        for (Patron patron : new PatronService().allPatrons()) {
+            for (Holding patHld : patron.holdingMap()) {
+                if (holding.getBarcode().equals(patHld.getBarcode()))
+                    return patron;
             }
         }
+        throw new InvalidPatronIdException();
+    }
 
-        // remove the book from the patron
-        f.remove(hld);
+    private boolean isLateReturn(Holding holding) {
+        Date dueDate = holding.dateDue();
+        Date checkedInDate = holding.dateLastCheckedIn();
+        return checkedInDate != null && dueDate != null && checkedInDate.after(dueDate);
+    }
 
-        // check for late returns
-        boolean isLate = false;
-        Calendar c = Calendar.getInstance();
-        c.setTime(hld.dateDue());
-        int d = Calendar.DAY_OF_YEAR;
-
-        if (hld.dateLastCheckedIn().after(c.getTime())) // is it late?
-            isLate = true;
-
-        if (isLate) {
-            int daysLate = hld.daysLate(); // calculate # of days past due
-            int fineBasis = hld.getMaterial().getFormat().getDailyFine();
-            switch (hld.getMaterial().getFormat()) {
-                case BOOK:
-                    f.addFine(fineBasis * daysLate);
-                    break;
-                case DVD:
-                    int fine = Math.min(1000, 100 + fineBasis * daysLate);
-                    f.addFine(fine);
-                    break;
-                case NEW_RELEASE_DVD:
-                    f.addFine(fineBasis * daysLate);
-                    break;
-            }
-            return daysLate;
+    private int calculateFine(Holding holding, int daysLate, int fineBasis) {
+        switch (holding.getMaterial().getFormat()) {
+            case BOOK:
+            case NEW_RELEASE_DVD:
+                return fineBasis * daysLate;
+            case DVD:
+                return Math.min(1000, 100 + fineBasis * daysLate);
+            default:
+                return 0;
         }
-        return 0;
     }
 }

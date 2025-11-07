@@ -13,15 +13,14 @@ class PatronServiceTest {
     @BeforeEach
     void initialize() {
         PatronStore.deleteAll();
-        CheckCredit checkCredit= new CheckCreditSucessStub();
 
-        service = new PatronService(checkCredit);
-
-
+        service.validateCredit(new CheckCreditStub().hasCreditValid());
+        service = new PatronService();
     }
+
     @Test
     void testAdd() {
-        var scanCode = service.add("id","name", "card number");
+        var scanCode = service.add("pid","name", "card number");
 
         assertThat(scanCode).isNotNull();
     }

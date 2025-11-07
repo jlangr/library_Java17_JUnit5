@@ -7,13 +7,13 @@ import java.util.Collection;
 
 public class PatronService {
     public final PatronStore patronAccess = new PatronStore();
-    private final CheckCredit checkCredit;
+    private CheckCredit checkCredit;
 
     public PatronService(CheckCredit checkCredit) {
         this.checkCredit = checkCredit;
     }
-    public PatronService() {
 
+    public PatronService() {
     }
 
     public String add(String name) {
@@ -41,8 +41,14 @@ public class PatronService {
         return patronAccess.getAll();
     }
 
-
-    public Object add(String id, String name, String cardNumber) {
+    public String add(String id, String name, String cardNumber) {
+        if (checkCredit.hasCreditValid(cardNumber)){
+            return add(id,name);
+        }
         return null;
+    }
+
+    public void validateCredit(CheckCredit checkCredit) {
+        this.checkCredit = checkCredit;
     }
 }

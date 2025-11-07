@@ -1,6 +1,5 @@
 package com.langrsoft.exercises.roman;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -8,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RomanToIntegerTest {
-    private final String stringDefault = "anything";
 
     @Test
     public void zeroAndNegativeRomanNumberTest() {
@@ -45,11 +43,10 @@ public class RomanToIntegerTest {
         assertThat(RomanToInteger.convert(6)).isEqualTo("VI");
     }
 
-    @Ignore
     @Test
     public void betweenNineAndThirteenRomanNumberTest() {
-        assertThat(RomanToInteger.convert(9)).isEqualTo(stringDefault);
-        assertThat(RomanToInteger.convert(10)).isEqualTo(stringDefault);
-        assertThat(RomanToInteger.convert(11)).isEqualTo(stringDefault);
+        assertThat(RomanToInteger.convert(9)).isEqualTo("IX");
+        assertThat(RomanToInteger.convert(10)).isEqualTo("X");
+        assertThat(RomanToInteger.convert(11)).isEqualTo("XI");
     }
 }
