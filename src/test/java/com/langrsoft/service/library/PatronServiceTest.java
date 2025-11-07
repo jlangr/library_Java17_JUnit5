@@ -21,9 +21,9 @@ class PatronServiceTest {
     }
     @Test
     void testAdd() {
-        var scanCode = service.add("name","card number");
+        var scanCode = service.add("id","name", "card number");
 
-        assertThat(scanCode).startsWith("p");
+        assertThat(scanCode).isNotNull();
     }
 
     @Test

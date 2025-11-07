@@ -40,4 +40,9 @@ public class PatronService {
     public Collection<Patron> allPatrons() {
         return patronAccess.getAll();
     }
+
+
+    public Object add(String id, String name, String cardNumber) {
+        return null;
+    }
 }
