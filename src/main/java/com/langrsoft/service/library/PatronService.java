@@ -41,14 +41,20 @@ public class PatronService {
         return patronAccess.getAll();
     }
 
-    public String add(String id, String name, String cardNumber) {
-        if (checkCredit.hasCreditValid(cardNumber)){
+    public String add(String id, String name, boolean cardNumber) {
+        if (cardNumber){
             return add(id,name);
         }
         return null;
     }
 
-    public void validateCredit(CheckCredit checkCredit) {
-        this.checkCredit = checkCredit;
+    public String validateCreditTrue(CheckCredit checkCredit, String pid, String name, String cardNumber) {
+
+        return add(pid, name,  checkCredit.hasCreditValid(cardNumber));
+    }
+
+    public String validateCreditFalse(CheckCredit checkCredit, String pid, String name, String cardNumber) {
+
+        return add(pid, name,  checkCredit.hasCreditFailed(cardNumber));
     }
 }
